@@ -7,11 +7,13 @@ public class Monopoly {
      *  linked list. */
     private BoardNode _board;
 
-    /** The deck of Community Chest cards. */
-    private CommunityChest[] _chest;
+    /** The deck of Community Chest cards. Commented out until
+     *  implementation of CommunityChest objects are complete. */
+    // private CommunityChest[] _chest;
 
-    /** The deck of Chance cards. */
-    private Chance[] _chance;
+    /** The deck of Chance cards. Commented out until implementation
+     *  of Chance objects are complete. */
+    // private Chance[] _chance;
 
     /** The players of this game. */
     private Player[] _players;

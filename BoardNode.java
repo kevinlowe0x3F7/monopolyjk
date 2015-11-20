@@ -15,7 +15,7 @@ public class BoardNode {
 
     /** Initializes this node with the given piece PIECE. _prev and
      *  _next are null. */
-    public BoardNode(int piece) {
+    public BoardNode(BoardPiece piece) {
         this._piece = piece;
         this._prev = null;
         this._next = null;
@@ -23,7 +23,7 @@ public class BoardNode {
     }
 
     /** Initializes this node with the given piece PIECE and a
-     *  PREV and NEXT. */
+     *  PREV and NEXT. Assumes that prev and next are not null. */
     public BoardNode(BoardNode prev, BoardPiece piece, BoardNode next) {
         this._piece = piece;
         this._prev = prev;
@@ -61,11 +61,13 @@ public class BoardNode {
     /** Set the previous Node of this BoardNode with PREV. */
     public void setPrevious(BoardNode prev) {
         this._prev = prev;
+        prev._next = this;
     }
 
     /** Set the next Node of this BoardNode with NEXT. */
     public void setNext(BoardNode next) {
         this._next = next;
+        next._prev = this;
     }
 
     /** Returns true if there is a player on this node, false otherwise. */

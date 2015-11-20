@@ -11,7 +11,9 @@ import org.junit.runner.notification.Failure;
 public class MonopolyTests {
 
 	@Test
-	public void testBoardNode() {
+	public void testBoardNodeandMiscBoardPieces() {
+	    BoardNode go = new BoardNode(new GoPiece());
+	    assertEquals("Go", go.piece()name());
     }
 
     public static void main(String[] args) {
