@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Player {
     /** Properties owned by this Player */
     private ArrayList<BoardPiece> _properties;
@@ -44,17 +46,4 @@ public class Player {
     public boolean jailFree() {
         return _jailFree;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
