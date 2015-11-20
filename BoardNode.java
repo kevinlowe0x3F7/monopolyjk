@@ -9,26 +9,26 @@ public class BoardNode {
     private BoardNode _prev;
     /** My next node. */
     private BoardNode _next;
-    /** The ID of the player that is currently on this BoardNode. If there
-     *  is no player on this piece, the value is 0. */
-    private int _id;
+    /** The IDs that are on this node, listed as a boolean array, with
+     *  true indicating that the player is on this node. */
+    private boolean[] _ids;
 
     /** Initializes this node with the given piece PIECE. _prev and
      *  _next are null. */
-    public BoardNode(int piece) {
+    public BoardNode(BoardPiece piece) {
         this._piece = piece;
         this._prev = null;
         this._next = null;
-        this._id = 0;
+        this._id = new boolean[5];
     }
 
     /** Initializes this node with the given piece PIECE and a
-     *  PREV and NEXT. */
+     *  PREV and NEXT. Assumes that prev and next are not null. */
     public BoardNode(BoardNode prev, BoardPiece piece, BoardNode next) {
         this._piece = piece;
         this._prev = prev;
         this._next = next;
-        this._id = 0;
+        this._id = new boolean[5];
         prev._next = this;
         next._prev = this;
     }
@@ -48,24 +48,32 @@ public class BoardNode {
         return _next;
     }
 
-    /** Returns the ID of the player on this node. */
-    public int id() {
-        return _id;
+    /** Returns true if PLAYER is on this node. */
+    public boolean playerHere(Player player) {
+        // return _ids[player.id()];
+        return false;
     }
 
-    /** Sets the ID of this node, replacing it with NEWID. */
-    public void setID(int newID) {
-        _id = newID;
+    /** Adds PLAYER to this node. */
+    public void addPlayer(Player player) {
+        // _ids[player.id()] = true;
+    }
+
+    /** Removes PLAYER from this node. */
+    public void removePlayer(Player player) {
+        // _ids[player.id()] = false;
     }
 
     /** Set the previous Node of this BoardNode with PREV. */
-    public void setPrevious(BoardNode prev) {
+    public void setPrev(BoardNode prev) {
         this._prev = prev;
+        prev._next = this;
     }
 
     /** Set the next Node of this BoardNode with NEXT. */
     public void setNext(BoardNode next) {
         this._next = next;
+        next._prev = this;
     }
 
     /** Returns true if there is a player on this node, false otherwise. */
@@ -73,3 +81,4 @@ public class BoardNode {
         return _id != 0;
     }
 }
+
