@@ -59,7 +59,7 @@ public class BoardNode {
     }
 
     /** Set the previous Node of this BoardNode with PREV. */
-    public void setPrevious(BoardNode prev) {
+    public void setPrev(BoardNode prev) {
         this._prev = prev;
         prev._next = this;
     }
