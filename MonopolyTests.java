@@ -55,6 +55,15 @@ public class MonopolyTests {
 	    assertEquals("54", "Go", curr.piece().name());
     }
 
+    @Test
+    public void testBoard() {
+        Monopoly m = new Monopoly(2);
+        BoardNode test = m.getBoard();
+        for (int i = 0; i < 42; i++) {
+            test = test.next();
+        }
+    }
+
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(MonopolyTests.class);
         for (Failure failure : result.getFailures()) {
