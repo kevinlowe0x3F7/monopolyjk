@@ -107,20 +107,27 @@ public class Monopoly {
 
     /** Initializes a piece of property with the given property INFO. */
     private BoardNode initializeProperty(String[] info) {
-        String name = info[1];
-        String group = info[2];
-        int price = Integer.parseInt(info[3]);
-        int groupNum = Integer.parseInt(info[4]);
-        int[] rent = new int[6];
-        int rentIndex = 0;
-        for (int i = 5; i <= 10; i++) {
-            rent[rentIndex] = Integer.parseInt(info[i]);
-            rentIndex++;
+        if (info[0].equals("railroad")) {
+            return new BoardNode(new Railroad(info[1], info[0],
+                    200, 4, 100));
+        } else if (info[0].equals("utility")) {
+            return new BoardNode(new Utility(info[1],info[0], 150, 2, 75));
+        } else {
+            String name = info[1];
+            String group = info[2];
+            int price = Integer.parseInt(info[3]);
+            int groupNum = Integer.parseInt(info[4]);
+            int[] rent = new int[6];
+            int rentIndex = 0;
+            for (int i = 5; i <= 10; i++) {
+                rent[rentIndex] = Integer.parseInt(info[i]);
+                rentIndex++;
+            }
+            int mortgage = Integer.parseInt(info[11]);
+            int build = Integer.parseInt(info[12]);
+            return new BoardNode(new Street(name, group, price, groupNum,
+                    rent, mortgage, build));
         }
-        int mortgage = Integer.parseInt(info[11]);
-        int build = Integer.parseInt(info[12]);
-        return new BoardNode(new Property(name, group, price, groupNum,
-                rent, mortgage, build));
     }
 
 }

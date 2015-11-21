@@ -60,6 +60,7 @@ public class MonopolyTests {
         Monopoly m = new Monopoly(2);
         BoardNode test = m.getBoard();
         for (int i = 0; i < 42; i++) {
+            System.out.println(test.piece().name());
             test = test.next();
         }
     }
