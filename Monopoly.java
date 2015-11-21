@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.util.Random;
 /** Class that implements the game (Model) for Monopoly.
  *  @author Kevin Lowe
  *  @version 1.0 11/19/2015
@@ -19,6 +20,9 @@ public class Monopoly {
     /** The deck of Chance cards. Commented out until implementation
      *  of Chance objects are complete. */
     // private Chance[] _chance;
+
+    /** My random generator. */
+    private Random _source;
 
     /** The players of this game. */
     private Player[] _players;
@@ -42,6 +46,7 @@ public class Monopoly {
         _players = new Player[numPlayers + 1];
         _numPlayers = numPlayers;
         currentIndex = 1;
+        _source = new Random();
     }
 
     /** Returns the board of this game. */
@@ -56,6 +61,12 @@ public class Monopoly {
         } else {
             currentIndex += 1;
         }
+    }
+
+    /** Rolls a die, returning an integer between 1 and 6. */
+    public int rollDice() {
+        int next = _source.nextInt(6) + 1;
+        return next;
     }
 
     /** Initializes the board as a circular doubly linked list, starting

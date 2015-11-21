@@ -60,8 +60,16 @@ public class MonopolyTests {
         Monopoly m = new Monopoly(2);
         BoardNode test = m.getBoard();
         for (int i = 0; i < 42; i++) {
-            System.out.println(test.piece().name());
             test = test.next();
+        }
+    }
+
+    @Test
+    public void testRandomSource() {
+        Monopoly m = new Monopoly(2);
+        for (int i = 0; i < 20; i++) {
+            int next = m.rollDice();
+            assertTrue(next >= 1 && next <= 6);
         }
     }
 
