@@ -8,8 +8,18 @@ public class Utility extends Property {
     }
 
     @Override
-    public void effect(Player player) {
-        return;
+    public void effect(Player[] players, int turn) {
+        if (isMortgaged()) {
+            return;
+        }
+        Player payer = players[turn];
+        Player owner = players[this.getID()];
+        if (payer.getID() == owner.getID()) {
+            return;
+        } else {
+            // payer.loseMoney(getRent(payer.getLastRoll()));
+            // owner.gainMoney(getRent(payer.getLastRoll()));
+        }
     }
 
     @Override
@@ -17,12 +27,15 @@ public class Utility extends Property {
         return super.name();
     }
 
-    /** Returns the factor for the rent, based on if it is a full set. */
-    public int getFactor() {
+    /** Returns the value of rent based on the dice roll and the factor
+     *  of whether the set is full or not. */
+    public int getRent(int roll) {
+        int factor;
         if (isFull()) {
-            return 8;
+            factor = 10;
         } else {
-            return 3;
+            factor = 4;
         }
+        return roll * factor;
     }
 }

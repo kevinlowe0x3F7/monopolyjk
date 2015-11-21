@@ -7,8 +7,10 @@ public class GoToJail implements BoardPiece {
     private final String _name = "Go to Jail";
 
     @Override
-    public void effect(Player player) {
-        return;
+    public void effect(Player[] players, int turn) {
+        Player jailed = players[turn];
+        // jailed.inJail = true;
+        // sendToJail(jailed);
     }
 
     @Override

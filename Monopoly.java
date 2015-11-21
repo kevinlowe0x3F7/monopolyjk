@@ -39,6 +39,7 @@ public class Monopoly {
         } catch (IOException io) {
             System.out.println(io.toString());
         }
+        _players = new Player[numPlayers + 1];
         _numPlayers = numPlayers;
         currentIndex = 1;
     }

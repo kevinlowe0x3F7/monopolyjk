@@ -12,17 +12,17 @@ public class TaxPiece implements BoardPiece {
     }
 
     @Override
-    public void effect(Player player) {
-        return;
+    public void effect(Player[] players, int turn) {
+        Player current = players[turn];
+        if (_name.equals("Luxury Tax")) {
+            //current.loseMoney(100);
+        } else {
+            //current.loseMoney(200);
+        }
     }
 
     @Override
     public String name() {
         return _name;
-    }
-
-    /** Tax the player. */
-    public void tax() {
-        System.out.println("taxed!");
     }
 }

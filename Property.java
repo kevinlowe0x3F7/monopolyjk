@@ -38,7 +38,7 @@ public abstract class Property implements BoardPiece {
     }
 
     @Override
-    public void effect(Player player) {
+    public void effect(Player[] players, int turn) {
         return;
     }
 

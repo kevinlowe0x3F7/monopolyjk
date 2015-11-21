@@ -7,8 +7,9 @@ public class ChancePiece implements BoardPiece {
     private final String _name = "Chance";
 
     @Override
-    public void effect(Player player) {
-        return;
+    public void effect(Player[] players, int turn) {
+        Player current = players[turn];
+        // current.drawChance();
     }
 
     @Override

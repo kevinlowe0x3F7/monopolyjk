@@ -7,8 +7,9 @@ public class CommunityChestPiece implements BoardPiece {
     private final String _name = "Community Chest";
 
     @Override
-    public void effect(Player player) {
-        return;
+    public void effect(Player[] players, int turn) {
+        Player current = players[turn];
+        // current.drawCommunityChest();
     }
 
     @Override

@@ -23,7 +23,18 @@ public class Street extends Property {
     }
 
     @Override
-    public void effect(Player player) {
+    public void effect(Player[] players, int turn) {
+        if (isMortgaged()) {
+            return;
+        }
+        Player payer = players[turn];
+        Player owner = players[this.getID()];
+        if (payer.getID() == owner.getID()) {
+            return;
+        } else {
+            // payer.loseMoney(this.getRent());
+            // owner.gainMoney(this.getRent());
+        }
         return;
     }
 

@@ -6,7 +6,7 @@ public class FreeParking implements BoardPiece {
     private final String _name = "Free Parking";
     
     @Override
-    public void effect(Player player) {
+    public void effect(Player[] players, int turn) {
         return;
     }
 

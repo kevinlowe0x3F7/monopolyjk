@@ -1,10 +1,14 @@
 /** Interface for a piece of the board in which the piece has some effect
- *  on the player.
+ *  if a player lands on it.
  *  @author Kevin Lowe
  */
 public interface BoardPiece {
-    /** The effect given by this piece of the board on the PLAYER. */
-    public void effect(Player player);
+    /** The effect given by this piece of the board when a player lands
+     *  on it.
+     *  @param players the list of players
+     *  @param turn the index of the current player
+     */
+    public void effect(Player[] players, int turn);
 
     /** Returns the name of this piece. */
     public String name();
