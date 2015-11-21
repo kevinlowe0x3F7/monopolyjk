@@ -52,11 +52,13 @@ public class Property implements BoardPiece {
     }
 
     @Override
-    public void effect(Player player) {
+    public int effect(Player player) {
         if (_isMortgaged) {
-            return;
-        }
-        return;
+            return 0;
+        } else if (_id == 0) {
+            // Unowned, give player the opportunity to buy property.
+        } else if (_group.equals("railroad")) {
+            // Special case, would be implemented by checking the owner
     }
 
     @Override
@@ -139,7 +141,9 @@ public class Property implements BoardPiece {
 
     /** Mortgage this property owned by PLAYER. */
     public void mortgage(Player player) {
-        // if (player.id() != _id) return;
+        if (player.getID() != _id){
+            return;
+        }
         _isMortgaged = true;
         // player.increaseMoney(_mortgage);
     }
@@ -147,5 +151,10 @@ public class Property implements BoardPiece {
     /** Return the cost to build things on this property. */
     public int getCost() {
         return _buildCost;
+    }
+
+    /** Returns true if this property is owned, false otherwise. */
+    public boolean isOwned() {
+        return _id != 0;
     }
 }

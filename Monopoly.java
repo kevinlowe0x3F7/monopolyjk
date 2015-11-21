@@ -26,6 +26,9 @@ public class Monopoly {
     /** The number of players in this game. */
     private final int _numPlayers;
 
+    /** Index to see whose turn it is. */
+    private int currentIndex;
+
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
     public Monopoly(int numPlayers) {
@@ -37,11 +40,21 @@ public class Monopoly {
             System.out.println(io.toString());
         }
         _numPlayers = numPlayers;
+        currentIndex = 1;
     }
 
     /** Returns the board of this game. */
     public BoardNode getBoard() {
         return _board;
+    }
+
+    /** Moves the index to the next player. */
+    private void nextPlayer() {
+        if (currentIndex == _numPlayers) {
+            currentIndex = 1;
+        } else {
+            currentIndex += 1;
+        }
     }
 
     /** Initializes the board as a circular doubly linked list, starting
