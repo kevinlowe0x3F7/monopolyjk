@@ -33,6 +33,9 @@ public class Monopoly {
     /** Index to see whose turn it is. */
     private int currentIndex;
 
+    //** (Joseph) checks if game contiunes */
+    private boolean gameProceed;
+
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
     public Monopoly(int numPlayers) {
@@ -47,6 +50,7 @@ public class Monopoly {
         _numPlayers = numPlayers;
         currentIndex = 1;
         _source = new Random();
+        gameProceed = true;
     }
 
     /** Returns the board of this game. */
@@ -67,6 +71,28 @@ public class Monopoly {
     public int rollDice() {
         int next = _source.nextInt(6) + 1;
         return next;
+    }
+
+    /** (Joseph) Returns the victor when the game ends */
+    public Player victor() {
+        for (int i = 1; i < _players.length; i++) {
+            if (_players[i] != null) {
+                return _players[i];
+            }
+        }
+    }
+
+    /** (Joseph) Checks if the game ended - When all players are bankrupt */
+    public void gameContinues() {
+        int numBankRupt;
+        for (int i = 1; i < _players.length; i++) {
+            if (_players[i].bankrupt()) {
+                numBankRupt += 1;
+            }
+        }
+        if (numBankRupt == _numPlayers - 1) {
+            gameProceed = false;
+        }
     }
 
     /** Initializes the board as a circular doubly linked list, starting
@@ -139,6 +165,15 @@ public class Monopoly {
             int build = Integer.parseInt(info[12]);
             return new BoardNode(new Street(name, group, price, groupNum,
                     rent, mortgage, build));
+        }
+    }
+
+    //Writing Main Method
+    public static void main(String[] args) {
+        //args = [numOfPlayers]
+        Monopoly game = new Monopoly(args[0]);
+        while (gameProceed) {
+            
         }
     }
 
