@@ -68,7 +68,7 @@ public class Street extends Property {
         return _rent[_houses];
     }
 
-    /** Return the cost to build things on this property. */
+    /** Return the cost to build house and hotels on this property. */
     public int getCost() {
         return _buildCost;
     }
