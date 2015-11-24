@@ -6,9 +6,8 @@ public class GoPiece implements BoardPiece {
     private final String _name = "Go";
 
     @Override
-    public void effect(Player[] players, int turn) {
-        Player current = players[turn];
-        // current.gainMoney(200);
+    public void effect(Player current) {
+        current.gainMoney(200);
     }
 
     @Override

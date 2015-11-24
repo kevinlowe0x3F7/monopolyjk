@@ -11,6 +11,7 @@ public class Street extends Property {
      *  {50, 200, 600, 1400, 1700, 2000}. If the property has 1 house,
      *  the cost of rent would be $200. */
     private final int[] _rent;
+    
     /** The cost to build a house or hotel on this property. */
     private final int _buildCost;
 
@@ -23,17 +24,16 @@ public class Street extends Property {
     }
 
     @Override
-    public void effect(Player[] players, int turn) {
+    public void effect(Player current) {
         if (isMortgaged()) {
             return;
         }
-        Player payer = players[turn];
-        Player owner = players[this.getID()];
-        if (payer.getID() == owner.getID()) {
+
+        if (current.getID() == owner().getID()) {
             return;
         } else {
-            // payer.loseMoney(this.getRent());
-            // owner.gainMoney(this.getRent());
+            current.loseMoney(this.getRent());
+            owner().gainMoney(this.getRent());
         }
         return;
     }

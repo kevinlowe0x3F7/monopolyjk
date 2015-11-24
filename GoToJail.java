@@ -7,10 +7,12 @@ public class GoToJail implements BoardPiece {
     private final String _name = "Go to Jail";
 
     @Override
-    public void effect(Player[] players, int turn) {
-        Player jailed = players[turn];
+    public void effect(Player current) {
+        // Player jailed = players[turn];
+        current.inJail(true); //Keep all instance variables private;
+
         // jailed.inJail = true;
-        // sendToJail(jailed);
+        // sendToJail(jailed);   This is a jump
     }
 
     @Override
