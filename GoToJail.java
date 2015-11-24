@@ -12,7 +12,7 @@ public class GoToJail implements BoardPiece {
         current.inJail(true); //Keep all instance variables private;
 
         // jailed.inJail = true;
-        // sendToJail(jailed);
+        // sendToJail(jailed);   This is a jump
     }
 
     @Override

@@ -8,8 +8,7 @@ public class CommunityChestPiece implements BoardPiece {
 
     @Override
     public void effect(Player current) {
-        // Player current = players[turn];
-        // current.drawCommunityChest();
+        current.drawCommunityChest();
     }
 
     @Override

@@ -8,8 +8,9 @@ public interface BoardPiece {
      *  @param players the list of players
      *  @param turn the index of the current player
      */
+
     public void effect(Player player);
-    
+
     /** Returns the name of this piece. */
     public String name();
 }

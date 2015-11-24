@@ -28,8 +28,6 @@ public class Street extends Property {
         if (isMortgaged()) {
             return;
         }
-        //Player payer = players[turn];
-        //Player owner = players[this.getID()];
 
         if (current.getID() == owner().getID()) {
             return;

@@ -7,7 +7,6 @@ public class GoPiece implements BoardPiece {
 
     @Override
     public void effect(Player current) {
-        // Player current = players[turn];
         current.gainMoney(200);
     }
 

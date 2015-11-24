@@ -124,5 +124,5 @@ public abstract class Property implements BoardPiece {
 
     public void setOwner(Player owner) {
         _owner = owner;
-    }
+    } 
 }

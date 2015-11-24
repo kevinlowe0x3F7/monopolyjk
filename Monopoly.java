@@ -11,27 +11,33 @@ import java.util.Random;
 public class Monopoly {
     /** The board for this game, represented as a circular doubly
      *  linked list. */
-    private static BoardNode _board;
+    private BoardNode _board;
 
     /** The deck of Community Chest cards. Commented out until
      *  implementation of CommunityChest objects are complete. */
-    // private CommunityChest[] _chest;
+    private CommunityChest[] _chest;
+
+    /** Index of CommunityChest Card */
+    private int _chestIndex;
 
     /** The deck of Chance cards. Commented out until implementation
      *  of Chance objects are complete. */
-    // private Chance[] _chance;
+    private Chance[] _chance;
+
+    /** Index of Chance Cards */
+    private int _chanceIndex;
 
     /** My random generator. */
-    private static Random _source;
+    private Random _source;
 
     /** The players of this game. */
-    private static Player[] _players;
+    private Player[] _players;
 
     /** The number of players in this game. */
-    private static int _numPlayers;
+    private int _numPlayers;
 
     /** Index to see whose turn it is. */
-    private static int currentIndex;
+    private int currentIndex;
 
 
     /** Starts a new Monopoly game with a set number of players given
@@ -51,13 +57,38 @@ public class Monopoly {
         _source = new Random();
     }
 
+    /** (Joseph) Returns the Community Chest Array of the game */
+    public CommunityChest[] chest() {
+        return _chest;
+    }
+
+    /** (Joseph) Returns the players of the game */
+    public Player[] players() {
+        return _players;
+    }
+
+    /** (Joseph) Return the Chance Array of the game */
+    public Chance[] chance() {
+        return _chance;
+    }
+
+    /** (Joseph) Returns the Chance index */
+    public int chanceIndex() {
+        return _chanceIndex;
+    }
+
+    /** (Joseph) Returns the CommunityChest Index */
+    public int chestIndex() {
+        return _chestIndex;
+    }
+
     /** Returns the board of this game. */
-    public static BoardNode getBoard() {
+    public BoardNode getBoard() {
         return _board;
     }
 
     /** Moves the index to the next player. */
-    private static void nextPlayer() {
+    private void nextPlayer() {
         if (currentIndex == _numPlayers) {
             currentIndex = 1;
         } else {
@@ -66,13 +97,13 @@ public class Monopoly {
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
-    public static int rollDice() {
+    public int rollDice() {
         int next = _source.nextInt(6) + 1;
         return next;
     }
 
     /** (Joseph) Returns the victor when the game ends */
-    public static Player victor() {
+    public Player victor() {
         for (int i = 1; i < _players.length; i++) {
             if (_players[i] != null) {
                 return _players[i];
@@ -82,7 +113,7 @@ public class Monopoly {
     }
 
     /** (Joseph) Checks if the game ended - When all players are bankrupt */
-    public static boolean gameContinues() {
+    public boolean gameContinues() {
         int numBankRupt = 0;
         for (int i = 1; i < _players.length; i++) {
             if (_players[i].bankrupt()) {
@@ -97,7 +128,7 @@ public class Monopoly {
     }
 
     /** (Joseph) Deals with the Board Piece that the player lands on */
-    public static void playerLands(BoardPiece piece, Player current) {
+    public void playerLands(BoardPiece piece, Player current) {
         if (piece instanceof Property) {
             //if instance of property, then cast to Property
             Property property = (Property) piece;
@@ -110,19 +141,124 @@ public class Monopoly {
              piece.effect(current);
         }
     }
+    /** Initlializes the community chest cards */
+    private void initlializeCommunityChest() throws FileNotFoundException, IOException {
+        BufferedReader input = null;
+        _chest = new CommunityChest[17];
+        _chestIndex = 0;
+        try {
+            input = new BufferedReader(new FileReader("communitycardinfo.txt"));
+            String next = input.readLine();
+            int i = 0;
+            while (next != null) {
+                String[] info = next.split(",");
+                switch (info[0]) {
+                    case "traversal":
+                        _chest[i] = new TraversalCard(info[1],info[2],info[3]);
+                        break;
+                    case "money":
+                        int amount = Integer.parseInt(info[2]);
+                        boolean arithmetic = Boolean.parseBoolean(info[3]);
+                        _chest[i] = new MoneyCard(info[1],amount,arithmetic,info[4]);
+                        break;
+                    case "jailFree":
+                        _chest[i] = new JailFreeCard();
+                        break;
+                    case "jump":
+                        _chest[i] = new JumpCard(info[1],info[2],info[3]);
+                        break;
+                    case "distribution":
+                        int amountDistrib = Integer.parseInt(info[1]);
+                        boolean collecting = Boolean.parseBoolean(info[4]);
+                        _chest[i] = new DistributionCard(info[1],amountDistrib,info[3],collecting,this);
+                        break;
+                    default:
+                        int hotelAmount = Integer.parseInt(info[2]);
+                        int houseAmount = Integer.parseInt(info[3]);
+                        _chest[i] = new PropertyMaintenanceCard(info[1],hotelAmount,houseAmount,info[4]);
+                        break;
+                }
+                i++;
+                next = input.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("boardinfo.txt not found");
+        } catch (IOException e) {
+            throw new IOException("Invalid input in boardinfo.txt file");
+        }
+        input.close();
+    }
+    /** Initlializes the chance cards */
+    private void initlializeChance() throws FileNotFoundException, IOException {
+        BufferedReader input = null;
+        _chance = new Chance[16];
+        _chanceIndex = 0;
+        try {
+            input = new BufferedReader(new FileReader("chancecardinfo.txt"));
+            String next = input.readLine();
+            int i = 0;
+            while (next != null) {
+                String[] info = next.split(",");
+                switch (info[0]) {
+                    case "traversal":
+                        _chance[i] = new TraversalCard(info[1],info[2],info[3]);
+                        break;
+                    case "money":
+                        int amount = Integer.parseInt(info[2]);
+                        boolean arithmetic = Boolean.parseBoolean(info[3]);
+                        _chance[i] = new MoneyCard(info[1],amount,arithmetic,info[4]);
+                        break;
+                    case "jailFree":
+                        _chance[i] = new JailFreeCard();
+                        break;
+                    case "jump":
+                        _chance[i] = new JumpCard(info[1],info[2],info[3]);
+                        break;
+                    case "backstep":
+                        int numSpaces = Integer.parseInt(info[2]);
+                        _chance[i] = new BackStepCard(info[1],numSpaces);
+                        break;
+                    case "specialtraversal":
+                        _chance[i] = new SpecialTraversalCard(info[1],info[2],info[3]);
+                        break;
+                    case "distribution":
+                        int amountDistrib = Integer.parseInt(info[1]);
+                        boolean collecting = Boolean.parseBoolean(info[4]);
+                        _chance[i] = new DistributionCard(info[1],amountDistrib,info[3],collecting,this);
+                        break;
+                    default:
+                        int hotelAmount = Integer.parseInt(info[2]);
+                        int houseAmount = Integer.parseInt(info[3]);
+                        _chance[i] = new PropertyMaintenanceCard(info[1],hotelAmount,houseAmount,info[4]);
+                        break;
+                }
+                i++;
+                next = input.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("boardinfo.txt not found");
+        } catch (IOException e) {
+            throw new IOException("Invalid input in boardinfo.txt file");
+        }
+        input.close();
+    }
+    /** (Joseph) Initlializes Chance and Community Chest cards */
+    private void initializeBoardCard() throws FileNotFoundException, IOException {
+        initlializeCommunityChest();
+        initlializeChance();
+    }
 
-
-    /** Initializes players with starting money, locations, etc */
-    private static void initializePlayers() {
+    /** (Joseph) Initializes players with starting money, locations, etc */
+    private void initializePlayers() {
         for (int i = 1; i < _players.length; i++) {
-            Player player = new Player(i, 1500, _board);
+            Player player = new Player(i, 1500, _board, this);
             _players[i] = player;
         }
     }
 
     /** Initializes the board as a circular doubly linked list, starting
      *  from GO. Uses boardinfo.txt file for its resource. */
-    private static void initializeBoard() throws FileNotFoundException, IOException {
+    private void initializeBoard() throws FileNotFoundException, IOException {
         BufferedReader input = null;
         BoardNode start = new BoardNode(new GoPiece());
         BoardNode curr = start;
@@ -169,7 +305,7 @@ public class Monopoly {
     }
 
     /** Initializes a piece of property with the given property INFO. */
-    private static BoardNode initializeProperty(String[] info) {
+    private BoardNode initializeProperty(String[] info) {
         if (info[0].equals("railroad")) {
             return new BoardNode(new Railroad(info[1], info[0],
                     200, 4, 100));
@@ -203,16 +339,16 @@ public class Monopoly {
         }
 
         Monopoly game = new Monopoly(numPlayers);
-        while (gameContinues()) {
-            Player currentPlayer = _players[currentIndex];
-            nextPlayer();
-            int rolledNum = rollDice();
+        while (game.gameContinues()) {
+            Player currentPlayer = game._players[game.currentIndex];
+            game.nextPlayer();
+            int rolledNum = game.rollDice();
             currentPlayer.setLastRoll(rolledNum);
             currentPlayer.movePlayer(rolledNum); //Move the Player a set number of spaces
-            playerLands(currentPlayer.location().piece(), currentPlayer); //Deals with the Board Piece that the player lands on
+            game.playerLands(currentPlayer.location().piece(), currentPlayer); //Deals with the Board Piece that the player lands on
         }
         //When the game ends
-        Player victor = victor();
+        Player victor = game.victor();
         System.out.println("Game Over");
         System.out.println("Player " + victor.getName() + " wins!");
     }

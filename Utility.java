@@ -12,13 +12,11 @@ public class Utility extends Property {
         if (isMortgaged()) {
             return;
         }
-        // Player payer = players[turn];
-        // Player owner = players[this.getID()];
         if (current.getID() == owner().getID()) {
             return;
         } else {
-            // payer.loseMoney(getRent(payer.getLastRoll()));
-            // owner.gainMoney(getRent(payer.getLastRoll()));
+            current.loseMoney(getRent(current.getLastRoll()));
+            owner().gainMoney(getRent(current.getLastRoll()));
         }
     }
 
