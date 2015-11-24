@@ -34,8 +34,8 @@ public class Street extends Property {
         if (current.getID() == owner().getID()) {
             return;
         } else {
-            // payer.loseMoney(this.getRent());
-            // owner.gainMoney(this.getRent());
+            current.loseMoney(this.getRent());
+            owner().gainMoney(this.getRent());
         }
         return;
     }

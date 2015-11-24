@@ -112,8 +112,17 @@ public abstract class Property implements BoardPiece {
         return _owner != null; //Changed
     }
 
+    /** Returns the price of the property */
+    public int price() {
+        return _price;
+    }
+
     /** (Joseph) Returns the Player that owns the property */
     public Player owner() {
         return _owner;
+    }
+
+    public void setOwner(Player owner) {
+        _owner = owner;
     }
 }

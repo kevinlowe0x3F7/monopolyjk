@@ -11,7 +11,7 @@ import java.util.Random;
 public class Monopoly {
     /** The board for this game, represented as a circular doubly
      *  linked list. */
-    private BoardNode _board;
+    private static BoardNode _board;
 
     /** The deck of Community Chest cards. Commented out until
      *  implementation of CommunityChest objects are complete. */
@@ -46,12 +46,13 @@ public class Monopoly {
         }
         _players = new Player[numPlayers + 1];
         _numPlayers = numPlayers;
+        initializePlayers();
         currentIndex = 1;
         _source = new Random();
     }
 
     /** Returns the board of this game. */
-    public BoardNode getBoard() {
+    public static BoardNode getBoard() {
         return _board;
     }
 
@@ -110,9 +111,18 @@ public class Monopoly {
         }
     }
 
+
+    /** Initializes players with starting money, locations, etc */
+    private static void initializePlayers() {
+        for (int i = 1; i < _players.length; i++) {
+            Player player = new Player(i, 1500, _board);
+            _players[i] = player;
+        }
+    }
+
     /** Initializes the board as a circular doubly linked list, starting
      *  from GO. Uses boardinfo.txt file for its resource. */
-    private void initializeBoard() throws FileNotFoundException, IOException {
+    private static void initializeBoard() throws FileNotFoundException, IOException {
         BufferedReader input = null;
         BoardNode start = new BoardNode(new GoPiece());
         BoardNode curr = start;
@@ -155,10 +165,11 @@ public class Monopoly {
         input.close();
         start.setPrev(curr);
         _board = start;
+
     }
 
     /** Initializes a piece of property with the given property INFO. */
-    private BoardNode initializeProperty(String[] info) {
+    private static BoardNode initializeProperty(String[] info) {
         if (info[0].equals("railroad")) {
             return new BoardNode(new Railroad(info[1], info[0],
                     200, 4, 100));
@@ -184,9 +195,7 @@ public class Monopoly {
 
     // (Joseph) Writing Main Method
     public static void main(String[] args) {
-        //args = [numOfPlayers]
         int numPlayers = Integer.parseInt(args[0]);
-        
         // Bounds the number of players allowed
         if (numPlayers < 2 || numPlayers > 8) {
             System.out.println("Invalid Number of Players");
@@ -198,8 +207,13 @@ public class Monopoly {
             Player currentPlayer = _players[currentIndex];
             nextPlayer();
             int rolledNum = rollDice();
+            currentPlayer.setLastRoll(rolledNum);
             currentPlayer.movePlayer(rolledNum); //Move the Player a set number of spaces
             playerLands(currentPlayer.location().piece(), currentPlayer); //Deals with the Board Piece that the player lands on
         }
+        //When the game ends
+        Player victor = victor();
+        System.out.println("Game Over");
+        System.out.println("Player " + victor.getName() + " wins!");
     }
 }
