@@ -24,6 +24,8 @@ public abstract class Property implements BoardPiece {
     /** True if this property is mortgaged, false otherwise. Indicates
      *  that no rent will be paid if the property is mortgaged. */
     private boolean _isMortgaged;
+    /** The player that ownes this property */
+    private Player _owner;
 
     public Property(String name, String group, int price, int set,
             int mortgage) {
@@ -32,13 +34,14 @@ public abstract class Property implements BoardPiece {
         _price = price;
         _fullSet = set;
         _isFull = false;
-        _id = 0;
+        //_id = 0;
+        _owner = null;
         _mortgage = mortgage;
         _isMortgaged = false;
     }
 
     @Override
-    public void effect(Player[] players, int turn) {
+    public void effect(Player current) {
         return;
     }
 
@@ -106,6 +109,11 @@ public abstract class Property implements BoardPiece {
 
     /** Returns true if this property is owned, false otherwise. */
     public boolean isOwned() {
-        return _id != 0;
+        return _owner != null; //Changed
+    }
+
+    /** (Joseph) Returns the Player that owns the property */
+    public Player owner() {
+        return _owner;
     }
 }

@@ -8,13 +8,13 @@ public class Utility extends Property {
     }
 
     @Override
-    public void effect(Player[] players, int turn) {
+    public void effect(Player current) {
         if (isMortgaged()) {
             return;
         }
-        Player payer = players[turn];
-        Player owner = players[this.getID()];
-        if (payer.getID() == owner.getID()) {
+        // Player payer = players[turn];
+        // Player owner = players[this.getID()];
+        if (current.getID() == owner().getID()) {
             return;
         } else {
             // payer.loseMoney(getRent(payer.getLastRoll()));

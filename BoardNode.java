@@ -19,7 +19,7 @@ public class BoardNode {
         this._piece = piece;
         this._prev = null;
         this._next = null;
-        this._ids = new boolean[5];
+        this._ids = new boolean[8];
     }
 
     /** Initializes this node with the given piece PIECE and a
@@ -28,7 +28,7 @@ public class BoardNode {
         this._piece = piece;
         this._prev = prev;
         this._next = next;
-        this._ids = new boolean[5];
+        this._ids = new boolean[8];
         prev._next = this;
         next._prev = this;
     }
@@ -76,8 +76,9 @@ public class BoardNode {
     }
 
     /** Returns true if there is a player on this node, false otherwise. */
+    // (Joseph) changed to accomadate 8 players
     public boolean hasPlayer() {
-        return _ids[1] || _ids[2] || _ids[3] || _ids[4];
+        return _ids[1] || _ids[2] || _ids[3] || _ids[4] || _ids[5] ||_ids[6] ||_ids[7] ||_ids[8];
     }
 }
 

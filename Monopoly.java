@@ -22,19 +22,17 @@ public class Monopoly {
     // private Chance[] _chance;
 
     /** My random generator. */
-    private Random _source;
+    private static Random _source;
 
     /** The players of this game. */
-    private Player[] _players;
+    private static Player[] _players;
 
     /** The number of players in this game. */
-    private final int _numPlayers;
+    private static int _numPlayers;
 
     /** Index to see whose turn it is. */
-    private int currentIndex;
+    private static int currentIndex;
 
-    //** (Joseph) checks if game contiunes */
-    private boolean gameProceed;
 
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
@@ -50,7 +48,6 @@ public class Monopoly {
         _numPlayers = numPlayers;
         currentIndex = 1;
         _source = new Random();
-        gameProceed = true;
     }
 
     /** Returns the board of this game. */
@@ -59,7 +56,7 @@ public class Monopoly {
     }
 
     /** Moves the index to the next player. */
-    private void nextPlayer() {
+    private static void nextPlayer() {
         if (currentIndex == _numPlayers) {
             currentIndex = 1;
         } else {
@@ -68,37 +65,54 @@ public class Monopoly {
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
-    public int rollDice() {
+    public static int rollDice() {
         int next = _source.nextInt(6) + 1;
         return next;
     }
 
     /** (Joseph) Returns the victor when the game ends */
-    public Player victor() {
+    public static Player victor() {
         for (int i = 1; i < _players.length; i++) {
             if (_players[i] != null) {
                 return _players[i];
             }
         }
+        return null;
     }
 
     /** (Joseph) Checks if the game ended - When all players are bankrupt */
-    public void gameContinues() {
-        int numBankRupt;
+    public static boolean gameContinues() {
+        int numBankRupt = 0;
         for (int i = 1; i < _players.length; i++) {
             if (_players[i].bankrupt()) {
                 numBankRupt += 1;
             }
         }
         if (numBankRupt == _numPlayers - 1) {
-            gameProceed = false;
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /** (Joseph) Deals with the Board Piece that the player lands on */
+    public static void playerLands(BoardPiece piece, Player current) {
+        if (piece instanceof Property) {
+            //if instance of property, then cast to Property
+            Property property = (Property) piece;
+            if (property.isOwned()) {
+                property.effect(current);
+            } else {
+                current.buyProperty(property);
+            }
+        } else {
+             piece.effect(current);
         }
     }
 
     /** Initializes the board as a circular doubly linked list, starting
      *  from GO. Uses boardinfo.txt file for its resource. */
-    private void initializeBoard() throws FileNotFoundException,
-            IOException {
+    private void initializeBoard() throws FileNotFoundException, IOException {
         BufferedReader input = null;
         BoardNode start = new BoardNode(new GoPiece());
         BoardNode curr = start;
@@ -168,13 +182,24 @@ public class Monopoly {
         }
     }
 
-    //Writing Main Method
+    // (Joseph) Writing Main Method
     public static void main(String[] args) {
         //args = [numOfPlayers]
-        Monopoly game = new Monopoly(args[0]);
-        while (gameProceed) {
-            
+        int numPlayers = Integer.parseInt(args[0]);
+        
+        // Bounds the number of players allowed
+        if (numPlayers < 2 || numPlayers > 8) {
+            System.out.println("Invalid Number of Players");
+            return;
+        }
+
+        Monopoly game = new Monopoly(numPlayers);
+        while (gameContinues()) {
+            Player currentPlayer = _players[currentIndex];
+            nextPlayer();
+            int rolledNum = rollDice();
+            currentPlayer.movePlayer(rolledNum); //Move the Player a set number of spaces
+            playerLands(currentPlayer.location().piece(), currentPlayer); //Deals with the Board Piece that the player lands on
         }
     }
-
 }

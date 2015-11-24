@@ -20,10 +20,10 @@ public class Railroad extends Property {
     }
 
     @Override
-    public void effect(Player[] players, int turn) {
-        Player payer = players[turn];
-        Player owner = players[this.getID()];
-        if (payer.getID() == owner.getID()) {
+    public void effect(Player current) {
+        // Player payer = players[turn];
+        // Player owner = players[this.getID()];
+        if (current.getID() == owner().getID()) {
             return;
         } else {
             // payer.loseMoney(getRent(owner));
