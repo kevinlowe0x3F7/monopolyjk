@@ -74,8 +74,14 @@ public abstract class Property implements BoardPiece {
     /** Check to see if the player has a full set of property, if yes,
      *  set all isFull values of this group to true. Should be checked
      *  every time property is bought. */
-    public void checkFull(Player player) {
-        return;
+    public static void checkFull(Player player, Property property) {
+        String group = property._group;
+        HashSet<Property> properties = player.properties().get(group);
+        if (properties.size() == property._fullSet) {
+            for (Property p : properties) {
+                p._isFull = true;
+            }
+        }
     }
 
     /** Returns the player ID that owns this property. */
@@ -109,7 +115,7 @@ public abstract class Property implements BoardPiece {
 
     /** Returns true if this property is owned, false otherwise. */
     public boolean isOwned() {
-        return _owner != null; //Changed
+        return _owner != null;
     }
 
     /** Returns the price of the property */

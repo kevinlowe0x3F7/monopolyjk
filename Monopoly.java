@@ -141,8 +141,8 @@ public class Monopoly {
              piece.effect(current);
         }
     }
-    /** Initlializes the community chest cards */
-    private void initlializeCommunityChest() throws FileNotFoundException, IOException {
+    /** Initializes the community chest cards */
+    private void initializeCommunityChest() throws FileNotFoundException, IOException {
         BufferedReader input = null;
         _chest = new CommunityChest[17];
         _chestIndex = 0;
@@ -182,14 +182,14 @@ public class Monopoly {
                 next = input.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("boardinfo.txt not found");
+            throw new FileNotFoundException("communitycardinfo.txt not found");
         } catch (IOException e) {
-            throw new IOException("Invalid input in boardinfo.txt file");
+            throw new IOException("Invalid input in communitycardinfo.txt file");
         }
         input.close();
     }
-    /** Initlializes the chance cards */
-    private void initlializeChance() throws FileNotFoundException, IOException {
+    /** Initializes the chance cards */
+    private void initializeChance() throws FileNotFoundException, IOException {
         BufferedReader input = null;
         _chance = new Chance[16];
         _chanceIndex = 0;
@@ -236,13 +236,13 @@ public class Monopoly {
                 next = input.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("boardinfo.txt not found");
+            throw new FileNotFoundException("chancecardinfo.txt not found");
         } catch (IOException e) {
-            throw new IOException("Invalid input in boardinfo.txt file");
+            throw new IOException("Invalid input in chancecardinfo.txt file");
         }
         input.close();
     }
-    /** (Joseph) Initlializes Chance and Community Chest cards */
+    /** (Joseph) Initializes Chance and Community Chest cards */
     private void initializeBoardCard() throws FileNotFoundException, IOException {
         initlializeCommunityChest();
         initlializeChance();

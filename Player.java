@@ -1,10 +1,11 @@
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
 
 public class Player {
     /** Name of the Player */
     private String _name;
-    /** Properties owned by this Player */
-    private ArrayList<BoardPiece> _properties;
+    /** Properties owned by this Player, mapped from group to property. */
+    private HashMap<String, HashSet<Property>> _properties;
     /** Location of the player */
     private BoardNode _location;
     /** ID of the player */
@@ -23,16 +24,19 @@ public class Player {
     private boolean _jailed;
     /** Number rolled */
     private int _lastRoll;
-    /** Monopoly object that contains the player */
+    /** Monopoly game that contains the player */
     private Monopoly _monopoly;
     
+    // TODO chance drawing, community chest drawing, general move method,
+    // UNIT TEST, hashing for properties
 
-
-    public Player(int id, int money, BoardNode location, Monopoly monopoly) {
+    public Player(int id, int money, BoardNode location, Monopoly monopoly)
+    {
         _id = id;
         _money = money;
         _location = location;
         _monopoly = monopoly;
+        _properties = new HashMap<String, HashSet<Property>>();
     }
 
 
@@ -43,7 +47,7 @@ public class Player {
     }
 
     /** Returns properties owned */
-    public ArrayList<BoardPiece> properties() {
+    public HashMap<String, HashSet<Property>> properties() {
         return _properties;
     }
     
@@ -88,15 +92,15 @@ public class Player {
     }
 //=========================== Setters ================================
     
-    /** Substracts the mnoney lost from the player's money */
+    /** Substracts the money lost from the player's money */
     public void loseMoney(int moneyLost) {
-        _money-= moneyLost;
+        _money -= moneyLost;
         //Deal with mortage and bankrupty
     }  
 
     /** Adds the money gained to the player's money */
     public void gainMoney(int moneyGain) {
-        _money+= moneyGain;
+        _money += moneyGain;
     }
 
     /** Puts the player into jail */
@@ -159,25 +163,38 @@ public class Player {
     }
 
     /** Charges the player for the houses and hotel in possession */
-    public void propertyMaintenace(int houseCost, int hotelCost) {
+    public void propertyMaintenance(int houseCost, int hotelCost) {
         //Code here
     }
 
     /** (Joseph) Buy unowned Property and adds it into the list of properties owned by the Player*/
     public void buyProperty(Property property) {
+        // TODO does this assume that the property can be bought?
+        // may need check whether person has the money to buy
         loseMoney(property.price());
-        _properties.add(property);
+        String group = property.getGroup();
+        if (!_properties.containsKey(group)) {
+            _properties.put(group, new HashSet<Property>());
+        }
+        _properties.get(group).add(property);
         property.setOwner(this);
-        if (property.name().equals("Pennsylvania Railroad") || property.name().equals("Short Line") 
-        || property.name().equals("Reading Railroad") || property.name().equals("PB. & O. Railroad")) {
+        Property.checkFull(this, property);
+        if (property.getGroup().equals("railroad")) {
             _railroads +=1;
         }
     }
 
-
-    /** Buy houses or hotels for properties */
-    public void upgradeProperty(BoardPiece upgrading) {
-
+    /** Buy houses or hotels for properties. HOUSES indicates the number
+     *  of houses that the player wants to buy. */
+    public void upgradeProperty(Property upgrading, int houses) {
+        HashSet<Property> properties = _properties.get(upgrading);
+        if (properties == null) {
+            return;
+        } else if (!properties.contains(upgrading)) {
+            return;
+        } else {
+            //TODO upgrade property
+        }
     }
 
     /** Draws a Chance Card */
