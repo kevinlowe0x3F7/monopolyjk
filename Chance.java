@@ -4,7 +4,6 @@
  */
 
 public interface Chance {
-
 	/** Effect of card on the current player */
 	public void effect(Player player);
 

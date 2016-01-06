@@ -50,6 +50,21 @@ public abstract class Property implements BoardPiece {
         return _name;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!obj instanceof Property) {
+            return false;
+        } else {
+            Property other = (Property) obj;
+            return this._name.equals(other._name);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return _name.hashCode();
+    }
+
     /** Returns the group as a String that this property belongs to. */
     public String getGroup() {
         return _group;

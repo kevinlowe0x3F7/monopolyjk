@@ -28,7 +28,7 @@ public class Player {
     private Monopoly _monopoly;
     
     // TODO chance drawing, community chest drawing, general move method,
-    // UNIT TEST, hashing for properties
+    // UNIT TEST
 
     public Player(int id, int money, BoardNode location, Monopoly monopoly)
     {
@@ -146,6 +146,7 @@ public class Player {
         for (int i = 0; i < numSpaces; i++) {
             _location = _location.next();
         }
+        _monopoly.playerLands(_location.piece(), this);
     }
 
     /** Moves the player backwards for a set number of spaces */
@@ -185,25 +186,42 @@ public class Player {
     }
 
     /** Buy houses or hotels for properties. HOUSES indicates the number
-     *  of houses that the player wants to buy. */
+     *  of houses that the player wants to buy. Returns true if
+     *  successfully upgraded. */
     public void upgradeProperty(Property upgrading, int houses) {
         HashSet<Property> properties = _properties.get(upgrading);
         if (properties == null) {
-            return;
+            return false;
         } else if (!properties.contains(upgrading)) {
-            return;
+            return false;
+        } else if (!upgrading.isFull()) {
+            return false;
+        } else if (!upgrading instanceof Street) {
+            return false;
         } else {
-            //TODO upgrade property
+            Street street = (Street) upgrading;
+            if (street.getHouses() + houses > 5 ||
+                    street.getHouses() + houses < 0) {
+                return false;
+            }
+            street.setHouses(street.getHouses() + houses);
+            return true;
         }
     }
 
     /** Draws a Chance Card */
     public void drawChance() {
+        // TODO switch control of drawing chance to Monopoly so that it
+        // can monitor when to reset the deck and stuff, (Kevin) can take
+        // care of it
         _monopoly.chance()[_monopoly.chanceIndex()].effect(this);
     }
 
     /** Draws a Community Chest Card */
     public void drawCommunityChest() {
+        // TODO switch control of drawing chest to Monopoly so that it
+        // can monitor when to reset the deck and stuff, (Kevin) can take
+        // care of it
         _monopoly.chest()[_monopoly.chestIndex()].effect(this);
     }
 }

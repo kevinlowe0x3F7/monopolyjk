@@ -4,6 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import java.util.Random;
+import java.util.Collections;
+import java.util.Arrays;
+
 /** Class that implements the game (Model) for Monopoly.
  *  @author Kevin Lowe
  *  @version 1.0 11/19/2015
@@ -20,12 +23,18 @@ public class Monopoly {
     /** Index of CommunityChest Card */
     private int _chestIndex;
 
+    /** Number of community chest cards. */
+    public static final int CHEST_CARDS = 17;
+
     /** The deck of Chance cards. Commented out until implementation
      *  of Chance objects are complete. */
     private Chance[] _chance;
 
     /** Index of Chance Cards */
     private int _chanceIndex;
+
+    /** Number of chance cards. */
+    public static final int CHANCE_CARDS = 16;
 
     /** My random generator. */
     private Random _source;
@@ -242,10 +251,13 @@ public class Monopoly {
         }
         input.close();
     }
-    /** (Joseph) Initializes Chance and Community Chest cards */
+    /** (Joseph) Initializes Chance and Community Chest cards.
+     *  (Kevin) Added shuffling. */
     private void initializeBoardCard() throws FileNotFoundException, IOException {
         initlializeCommunityChest();
+        Collections.shuffle(Arrays.asList(_chest));
         initlializeChance();
+        Collections.shuffle(Arrays.asList(_chance));
     }
 
     /** (Joseph) Initializes players with starting money, locations, etc */
