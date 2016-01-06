@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import java.util.Random;
 import java.util.Collections;
 import java.util.Arrays;
 
@@ -36,9 +35,6 @@ public class Monopoly {
     /** Number of chance cards. */
     public static final int CHANCE_CARDS = 16;
 
-    /** My random generator. */
-    private Random _source;
-
     /** The players of this game. */
     private Player[] _players;
 
@@ -63,30 +59,34 @@ public class Monopoly {
         _numPlayers = numPlayers;
         initializePlayers();
         currentIndex = 1;
-        _source = new Random();
     }
 
-    /** (Joseph) Returns the Community Chest Array of the game */
+//======================= Getters=========================
+
+    /** Returns the Community Chest Arra å\]
+    ]\
+
+    y of the game */
     public CommunityChest[] chest() {
         return _chest;
     }
 
-    /** (Joseph) Returns the players of the game */
+    /** Returns the players of the game */
     public Player[] players() {
         return _players;
     }
 
-    /** (Joseph) Return the Chance Array of the game */
+    /** Return the Chance Array of the game */
     public Chance[] chance() {
         return _chance;
     }
 
-    /** (Joseph) Returns the Chance index */
+    /** Returns the Chance index */
     public int chanceIndex() {
         return _chanceIndex;
     }
 
-    /** (Joseph) Returns the CommunityChest Index */
+    /** Returns the CommunityChest Index */
     public int chestIndex() {
         return _chestIndex;
     }
@@ -95,6 +95,8 @@ public class Monopoly {
     public BoardNode getBoard() {
         return _board;
     }
+
+//=========================================================
 
     /** Moves the index to the next player. */
     private void nextPlayer() {
@@ -105,23 +107,17 @@ public class Monopoly {
         }
     }
 
-    /** Rolls a die, returning an integer between 1 and 6. */
-    public int rollDice() {
-        int next = _source.nextInt(6) + 1;
-        return next;
-    }
-
-    /** (Joseph) Returns the victor when the game ends */
+    /** Returns the victor when the game ends */
     public Player victor() {
         for (int i = 1; i < _players.length; i++) {
-            if (_players[i] != null) {
+            if (!_players[i].bankrupt()) {
                 return _players[i];
             }
         }
         return null;
     }
 
-    /** (Joseph) Checks if the game ended - When all players are bankrupt */
+    /** Checks if the game ended - When all players (but one) are bankrupt. */
     public boolean gameContinues() {
         int numBankRupt = 0;
         for (int i = 1; i < _players.length; i++) {
@@ -136,20 +132,6 @@ public class Monopoly {
         }
     }
 
-    /** (Joseph) Deals with the Board Piece that the player lands on */
-    public void playerLands(BoardPiece piece, Player current) {
-        if (piece instanceof Property) {
-            //if instance of property, then cast to Property
-            Property property = (Property) piece;
-            if (property.isOwned()) {
-                property.effect(current);
-            } else {
-                current.buyProperty(property);
-            }
-        } else {
-             piece.effect(current);
-        }
-    }
     /** Initializes the community chest cards */
     private void initializeCommunityChest() throws FileNotFoundException, IOException {
         BufferedReader input = null;
@@ -251,8 +233,7 @@ public class Monopoly {
         }
         input.close();
     }
-    /** (Joseph) Initializes Chance and Community Chest cards.
-     *  (Kevin) Added shuffling. */
+    /** Initializes shuffled Chance and Community Chest cards. */
     private void initializeBoardCard() throws FileNotFoundException, IOException {
         initlializeCommunityChest();
         Collections.shuffle(Arrays.asList(_chest));
@@ -354,14 +335,11 @@ public class Monopoly {
         while (game.gameContinues()) {
             Player currentPlayer = game._players[game.currentIndex];
             game.nextPlayer();
-            int rolledNum = game.rollDice();
-            currentPlayer.setLastRoll(rolledNum);
-            currentPlayer.movePlayer(rolledNum); //Move the Player a set number of spaces
-            game.playerLands(currentPlayer.location().piece(), currentPlayer); //Deals with the Board Piece that the player lands on
+            currentPlayer.turn();
         }
         //When the game ends
         Player victor = game.victor();
         System.out.println("Game Over");
-        System.out.println("Player " + victor.getName() + " wins!");
+        System.out.println("Player " + victor.getName() + " wins!");    
     }
 }

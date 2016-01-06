@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Player {
     /** Name of the Player */
@@ -22,10 +23,13 @@ public class Player {
     private boolean _bankrupt;
     /** Jailed */
     private boolean _jailed;
-    /** Number rolled */
-    private int _lastRoll;
+    /** Numbers rolled */
+    private int[] _rolls;
+    /** My random generator. */
+    private Random _source;
     /** Monopoly game that contains the player */
     private Monopoly _monopoly;
+
     
     // TODO chance drawing, community chest drawing, general move method,
     // UNIT TEST
@@ -37,10 +41,13 @@ public class Player {
         _location = location;
         _monopoly = monopoly;
         _properties = new HashMap<String, HashSet<Property>>();
+        _rolls = new int[2];
+        _source = new Random();
     }
 
 
 //============================ Getters ==================================
+
     /** Returns the name of the player */
     public String getName() {
         return _name;
@@ -86,10 +93,11 @@ public class Player {
         return _bankrupt;
     }    
 
-    /** Returns the last roll the player rolled */
-    public int getLastRoll() {
-        return _lastRoll;
+    /** Returns the rolls of the player */
+    public int[] rolls() {
+        return _rolls;
     }
+
 //=========================== Setters ================================
     
     /** Substracts the money lost from the player's money */
@@ -108,21 +116,27 @@ public class Player {
         _jailed = jailed;
     }
 
-   /** Sets the JailFree as false or true */
+    /** Sets the JailFree as false or true */
     public void jailFree(boolean condition) {
         _jailFree = condition;
     }
 
-    /** Sets the last roll of the player */
-    public void setLastRoll(int lastRoll) {
-        _lastRoll = lastRoll;
+//========================== Actions ==================================
+
+
+    public void turn() {
+        rollDice(0); rollDice(1);
+        movePlayer(_rolls[0] + _rolls[1]);
+        _rolls[0] = 0; _roll[1] = 0;
     }
 
-//========================== Actions ===============================
+    /** Rolls a die, returning an integer between 1 and 6. */
+    public void rollDice(int order) {
+        _rolls[order] = _source.nextInt(6) + 1;
+    }
 
 
-
-    // /** Jumps the player to Jail. Does not collect $200 from passing go */
+    /** Jumps the player to Jail. Does not collect $200 from passing go */
     public void jumpPlayer(String jumpLocation) {
         for (BoardNode curr = _location; !curr.piece().name().equals(jumpLocation); curr = curr.next()) {
             _location = curr.next();
@@ -141,14 +155,25 @@ public class Player {
         _monopoly.playerLands(_location.piece(), this);
     }
 
-    /** Moves the player a set amount of space depending on the dice roll*/
+
+    /** Moves the player a set amount of space depending on the dice roll */
     public void movePlayer(int numSpaces) {
         for (int i = 0; i < numSpaces; i++) {
             _location = _location.next();
         }
-        _monopoly.playerLands(_location.piece(), this);
+        //Action/effect of landed piece
+        if (_location.piece() instanceof Property) {
+            Property property = (Property) _location.piece();
+            if (property.isOwned()) {
+                property.effect(this);
+            } else {
+                buyProperty(property);
+            }
+        } else {
+            _location.piece().effect(current);
+        }
     }
-
+    
     /** Moves the player backwards for a set number of spaces */
     public void backstep(int numSpaces) {
         for (int i = 0; i < numSpaces; i++) {
@@ -188,7 +213,7 @@ public class Player {
     /** Buy houses or hotels for properties. HOUSES indicates the number
      *  of houses that the player wants to buy. Returns true if
      *  successfully upgraded. */
-    public void upgradeProperty(Property upgrading, int houses) {
+    public boolean upgradeProperty(Property upgrading, int houses) {
         HashSet<Property> properties = _properties.get(upgrading);
         if (properties == null) {
             return false;
