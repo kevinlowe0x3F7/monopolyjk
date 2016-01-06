@@ -236,17 +236,11 @@ public class Player {
 
     /** Draws a Chance Card */
     public void drawChance() {
-        // TODO switch control of drawing chance to Monopoly so that it
-        // can monitor when to reset the deck and stuff, (Kevin) can take
-        // care of it
-        _monopoly.chance()[_monopoly.chanceIndex()].effect(this);
+        _monopoly.drawChance().effect(this);
     }
 
     /** Draws a Community Chest Card */
     public void drawCommunityChest() {
-        // TODO switch control of drawing chest to Monopoly so that it
-        // can monitor when to reset the deck and stuff, (Kevin) can take
-        // care of it
-        _monopoly.chest()[_monopoly.chestIndex()].effect(this);
+        _monopoly.drawChest().effect(this);
     }
 }

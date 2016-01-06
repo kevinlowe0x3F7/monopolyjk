@@ -63,10 +63,7 @@ public class Monopoly {
 
 //======================= Getters=========================
 
-    /** Returns the Community Chest Arra å\]
-    ]\
-
-    y of the game */
+    /** Returns the Community Chest Array of the game */
     public CommunityChest[] chest() {
         return _chest;
     }
@@ -96,6 +93,28 @@ public class Monopoly {
         return _board;
     }
 
+    /** Draws the next chance card, resetting the deck if needed. */
+    public Chance drawChance() {
+        Chance next = _chance[_chanceIndex];
+        _chanceIndex++;
+        if (_chanceIndex == _chance.length) {
+            _chanceIndex = 0;
+            Collections.shuffle(Arrays.asList(_chance));
+        }
+        return next;
+    }
+
+    /** Draws the next community chest card, resetting the deck
+     *  if needed. */
+    public CommunityChest drawChest() {
+        CommunityChest next = _chest[_chestIndex];
+        _chestIndex++;
+        if (_chestIndex == _chest.length) {
+            _chestIndex = 0;
+            Collections.shuffle(Arrays.asList(_chest));
+        }
+        return next;
+    }
 //=========================================================
 
     /** Moves the index to the next player. */
