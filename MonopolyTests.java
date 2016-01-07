@@ -64,15 +64,6 @@ public class MonopolyTests {
         }
     }
 
-    @Test
-    public void testRandomSource() {
-        Monopoly m = new Monopoly(2);
-        for (int i = 0; i < 20; i++) {
-            int next = m.rollDice();
-            assertTrue(next >= 1 && next <= 6);
-        }
-    }
-
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(MonopolyTests.class);
         for (Failure failure : result.getFailures()) {

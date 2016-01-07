@@ -23,6 +23,8 @@ public class Player {
     private boolean _bankrupt;
     /** Jailed */
     private boolean _jailed;
+    /** Number of turn in jail */
+    private int _jailedTurns;
     /** Numbers rolled */
     private int[] _rolls;
     /** My random generator. */
@@ -97,6 +99,11 @@ public class Player {
         return _rolls;
     }
 
+    /** Returns the last rolls of the player. */
+    public int getLastRoll() {
+        return _rolls[0] + _rolls[1];
+    }
+
 //=========================== Setters ================================
     
     /** Substracts the money lost from the player's money */
@@ -113,6 +120,7 @@ public class Player {
     /** Puts the player into jail */
     public void inJail(boolean jailed) {
         _jailed = jailed;
+        _jailedTurns = 3
     }
 
     /** Sets the JailFree as false or true */
@@ -124,7 +132,52 @@ public class Player {
 
     /** Takes care of players turn */
     public void turn() {
-        // Check if the player is in Jail
+        // Jailed Turn
+        if (_jailed) {
+            jailedTurn();
+        // Normal Turn
+        } else {
+            boolean playerTurn = true;
+            int numRolls = 0;
+            while (playerTurn) {
+                _rolls[0] = rollDice(); _rolls[1] = rollDice();
+                if (_rolls[0] != _rolls[1]) {
+                    playerTurn = false;
+                } else {
+                    numRolls++;
+                }
+                // If 3 doubles rolled -> Jail
+                if (numRolls == 3) {
+                    inJail(true);
+                    jumpPlayer("Jail");
+                    return;  
+                }
+                movePlayer(_rolls[0] + _rolls[1]);
+            }
+        }
+    }
+
+    private void jailedTurn() {
+        if (_jailedTurns > 0) {
+            // Case 1: Pay $50 fine before //TODO FE
+            // Case 2: Get out of Jail Free //TODO FE
+            // Case 3: Roll Doubles
+            _rolls[0] = rollDice(); _rolls[1] = rollDice();
+            if (_rolls[0] == _rolls[1]) {
+                _jailedTurns = 0;
+                _jailed = false;
+                movePlayer(_rolls[0] + _rolls[1]);
+            // Case 4: Stay in Jail
+            } else {
+                _jailedTurns--;
+                if (_jailedTurns == 0) {
+                    //Force Removal from jail
+                    loseMoney(50);
+                    _jailed = false;
+                    movePlayer(_rolls[0] + _rolls[1]);
+                }
+            }
+        }  
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
@@ -224,20 +277,24 @@ public class Player {
     }
 
 
-    /** (Joseph) Buy unowned Property and adds it into the list of properties owned by the Player*/
+    /**  Buy unowned Property and adds it into the list of properties owned by the Player */
     public void buyProperty(Property property) {
-        // TODO does this assume that the property can be bought?
-        // may need check whether person has the money to buy
-        loseMoney(property.price());
-        String group = property.getGroup();
-        if (!_properties.containsKey(group)) {
-            _properties.put(group, new HashSet<Property>());
-        }
-        _properties.get(group).add(property);
-        property.setOwner(this);
-        Property.checkFull(this, property);
-        if (property.getGroup().equals("railroad")) {
-            _railroads +=1;
+        if (_money >= property.price()) {   
+            loseMoney(property.price());
+            String group = property.getGroup();
+            if (!_properties.containsKey(group)) {
+                _properties.put(group, new HashSet<Property>());
+            }
+            _properties.get(group).add(property);
+            property.setOwner(this);
+            Property.checkFull(this, property);
+            if (property.getGroup().equals("railroad")) {
+                _railroads +=1;
+            }
+        } else {
+            //TODO Remove for FE
+            System.out.println("Player does not have enough money to buy property");
+            return;
         }
     }
 
@@ -265,19 +322,17 @@ public class Player {
         }
     }
 
+    public void mortgageProperty(Property property) {
+        property.mortgage(this);
+    }
+
     /** Draws a Chance Card */
     public void drawChance() {
-        // TODO switch control of drawing chance to Monopoly so that it
-        // can monitor when to reset the deck and stuff, (Kevin) can take
-        // care of it
-        _monopoly.chance()[_monopoly.chanceIndex()].effect(this);
+        _monopoly.drawChance().effect(this);
     }
 
     /** Draws a Community Chest Card */
     public void drawCommunityChest() {
-        // TODO switch control of drawing chest to Monopoly so that it
-        // can monitor when to reset the deck and stuff, (Kevin) can take
-        // care of it
-        _monopoly.chest()[_monopoly.chestIndex()].effect(this);
+        _monopoly.drawChest().effect(this);
     }
 }

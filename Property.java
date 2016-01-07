@@ -1,4 +1,5 @@
 import java.util.HashSet;
+
 /** Property piece on the Monopoly board.
  *  @author Kevin Lowe
  */
@@ -126,7 +127,7 @@ public abstract class Property implements BoardPiece {
             return;
         }
         _isMortgaged = true;
-        // player.increaseMoney(_mortgage);
+        player.increaseMoney(_mortgage);
     }
 
     /** Returns true if this property is owned, false otherwise. */
