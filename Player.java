@@ -23,6 +23,8 @@ public class Player {
     private boolean _bankrupt;
     /** Jailed */
     private boolean _jailed;
+    /** Number of turn in jail */
+    private int _jailedTurns;
     /** Numbers rolled */
     private int[] _rolls;
     /** My random generator. */
@@ -118,6 +120,7 @@ public class Player {
     /** Puts the player into jail */
     public void inJail(boolean jailed) {
         _jailed = jailed;
+        _jailedTurns = 3
     }
 
     /** Sets the JailFree as false or true */
@@ -127,33 +130,54 @@ public class Player {
 
 //========================== Actions ==================================
 
-
+    /** Takes care of players turn */
     public void turn() {
-        //Jailed
+        // Jailed Turn
         if (_jailed) {
-            if (rollDice() == rollDice()) {
-                _jailed = false;
-            } else {
-                return;
+            jailedTurn();
+        // Normal Turn
+        } else {
+            boolean playerTurn = true;
+            int numRolls = 0;
+            while (playerTurn) {
+                _rolls[0] = rollDice(); _rolls[1] = rollDice();
+                if (_rolls[0] != _rolls[1]) {
+                    playerTurn = false;
+                } else {
+                    numRolls++;
+                }
+                // If 3 doubles rolled -> Jail
+                if (numRolls == 3) {
+                    inJail(true);
+                    jumpPlayer("Jail");
+                    return;  
+                }
+                movePlayer(_rolls[0] + _rolls[1]);
             }
         }
-        boolean playerTurn = true;
-        int numRolls = 0;
-        while (playerTurn) {
-            numRolls++;
-            // When the dice is thrown 3 times -> Jail
-            if (numRolls == 3) {
-                _jailed = true;
-                jumpPlayer("Jail");
-                return;
-            }
+    }
+
+    private void jailedTurn() {
+        if (_jailedTurns > 0) {
+            // Case 1: Pay $50 fine before //TODO FE
+            // Case 2: Get out of Jail Free //TODO FE
+            // Case 3: Roll Doubles
             _rolls[0] = rollDice(); _rolls[1] = rollDice();
-            movePlayer(_rolls[0] + _rolls[1]);
-            if (_rolls[0] != _rolls[1]) {
-                playerTurn = false;
+            if (_rolls[0] == _rolls[1]) {
+                _jailedTurns = 0;
+                _jailed = false;
+                movePlayer(_rolls[0] + _rolls[1]);
+            // Case 4: Stay in Jail
+            } else {
+                _jailedTurns--;
+                if (_jailedTurns == 0) {
+                    //Force Removal from jail
+                    loseMoney(50);
+                    _jailed = false;
+                    movePlayer(_rolls[0] + _rolls[1]);
+                }
             }
-            numRolls++;
-        }
+        }  
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
@@ -253,20 +277,24 @@ public class Player {
     }
 
 
-    /** (Joseph) Buy unowned Property and adds it into the list of properties owned by the Player*/
+    /**  Buy unowned Property and adds it into the list of properties owned by the Player */
     public void buyProperty(Property property) {
-        // TODO does this assume that the property can be bought?
-        // may need check whether person has the money to buy
-        loseMoney(property.price());
-        String group = property.getGroup();
-        if (!_properties.containsKey(group)) {
-            _properties.put(group, new HashSet<Property>());
-        }
-        _properties.get(group).add(property);
-        property.setOwner(this);
-        Property.checkFull(this, property);
-        if (property.getGroup().equals("railroad")) {
-            _railroads +=1;
+        if (_money >= property.price()) {   
+            loseMoney(property.price());
+            String group = property.getGroup();
+            if (!_properties.containsKey(group)) {
+                _properties.put(group, new HashSet<Property>());
+            }
+            _properties.get(group).add(property);
+            property.setOwner(this);
+            Property.checkFull(this, property);
+            if (property.getGroup().equals("railroad")) {
+                _railroads +=1;
+            }
+        } else {
+            //TODO Remove for FE
+            System.out.println("Player does not have enough money to buy property");
+            return;
         }
     }
 
@@ -296,6 +324,10 @@ public class Player {
             loseMoney(cost);
             return true;
         }
+    }
+
+    public void mortgageProperty(Property property) {
+        property.mortgage(this);
     }
 
     /** Draws a Chance Card */
