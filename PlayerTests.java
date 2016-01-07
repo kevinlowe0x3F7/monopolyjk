@@ -27,8 +27,8 @@ public class PlayerTests {
         Monopoly m = new Monopoly(2);
         Player one = m.players()[1];
         one.movePlayer(3);
-        assertEquals(1450, one.money());
-        assertEquals("Baltic Avenue", one.location().piece.name());
+        assertEquals(1440, one.money());
+        assertEquals("Baltic Avenue", one.location().piece().name());
         assertTrue(one.properties().containsKey("brown"));
     }
 
@@ -38,7 +38,7 @@ public class PlayerTests {
         Player one = m.players()[1];
         one.movePlayer(4);
         assertEquals(1300, one.money());
-        assertEquals("Income Tax", one.location().piece.name());
+        assertEquals("Income Tax", one.location().piece().name());
     }
 
     public static void main(String[] args) {

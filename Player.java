@@ -132,12 +132,12 @@ public class Player {
         //Jailed
         if (_jailed) {
             if (rollDice() == rollDice()) {
-                jailed = false;
+                _jailed = false;
             } else {
                 return;
             }
         }
-        int playerTurn = true;
+        boolean playerTurn = true;
         int numRolls = 0;
         while (playerTurn) {
             numRolls++;
