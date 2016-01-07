@@ -274,7 +274,7 @@ public class Player {
      *  of houses that the player wants to buy. Returns true if
      *  successfully upgraded. */
     public boolean upgradeProperty(Property upgrading, int houses) {
-        HashSet<Property> properties = _properties.get(upgrading);
+        HashSet<Property> properties = _properties.get(upgrading.getGroup());
         if (properties == null) {
             return false;
         } else if (!properties.contains(upgrading)) {
@@ -285,11 +285,15 @@ public class Player {
             return false;
         } else {
             Street street = (Street) upgrading;
+            int cost = street.getCost() * houses; 
             if (street.getHouses() + houses > 5 ||
                     street.getHouses() + houses < 0) {
                 return false;
+            } else if (cost > _money) {
+                return false;
             }
             street.setHouses(street.getHouses() + houses);
+            loseMoney(cost);
             return true;
         }
     }

@@ -41,6 +41,27 @@ public class PlayerTests {
         assertEquals("Income Tax", one.location().piece().name());
     }
 
+    @Test
+    public void testRentPayment() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        one.movePlayer(3);
+        two.movePlayer(3);
+        assertEquals(1496, two.money());
+        assertEquals("Baltic Avenue", two.location().piece().name());
+        assertEquals(1444, one.money());
+
+        two.backstep(3);
+        Property baltic = (Property) one.location().piece();
+        one.buyProperty((Property) two.location().next().piece());
+        assertEquals(1384, one.money());
+        assertTrue(one.upgradeProperty(baltic, 5));
+        assertEquals(1134, one.money());
+        two.movePlayer(3);
+        assertEquals(1584, one.money());
+    }
+
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(PlayerTests.class);
         int tests = result.getRunCount();
@@ -65,12 +86,13 @@ public class PlayerTests {
             if (nextLine.indexOf("org.junit.") != -1) {
                 continue;
             } else if (nextLine.indexOf("java.lang.") != -1) {
-                continue;
+                if (nextLine.indexOf("Exception") == -1) {
+                    continue;
+                }
             } else if (nextLine.indexOf("sun.reflect.") != -1) {
                 continue;
-            } else {
-                newStack += (nextLine + '\n');
             }
+            newStack += (nextLine + '\n');
         }
         input.close();
         return newStack.substring(0, newStack.lastIndexOf('\n'));
