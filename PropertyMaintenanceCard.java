@@ -29,6 +29,6 @@ public class PropertyMaintenanceCard implements CommunityChest, Chance {
 	/** Handles the effect of charging the player
 	 *  for the cost of each hotel and house */
 	public void effect(Player player) {
-		player.propertyMaintenace(_houseCost, _houseCost);
+		player.propertyMaintenance(_houseCost, _houseCost);
 	}
 }

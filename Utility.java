@@ -15,10 +15,12 @@ public class Utility extends Property {
         if (current.getID() == owner().getID()) {
             return;
         } else {
-            current.loseMoney(getRent(current.getLastRoll()));
-            owner().gainMoney(getRent(current.getLastRoll()));
+            int totalRoll = current.rolls()[0] + current.rolls()[1];
+            current.loseMoney(getRent(totalRoll));
+            owner().gainMoney(getRent(totalRoll));
         }
     }
+
 
     @Override
     public String name() {
@@ -35,5 +37,19 @@ public class Utility extends Property {
             factor = 4;
         }
         return roll * factor;
+    }
+
+    /** Chance Card Effect for Utility -> dice roll by factor of 10 */
+    public void specialEffect(Player current, int firstRoll, int secondRoll) {
+        if (isMortgaged()) {
+            return;
+        }
+        if (current.getID() == owner().getID()) {
+            return;
+        } else {
+            int totalRoll = firstRoll + secondRoll;
+            current.loseMoney(10 * totalRoll);
+            owner().gainMoney(10 * totalRoll);
+        }
     }
 }

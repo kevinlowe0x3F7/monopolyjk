@@ -21,11 +21,24 @@ public class Railroad extends Property {
 
     @Override
     public void effect(Player current) {
+        if (isMortgaged()) {
+            return;
+        }
         if (current.getID() == owner().getID()) {
             return;
         } else {
             current.loseMoney(getRent(owner()));
             owner().gainMoney(getRent(owner()));
+        }
+    }
+
+    /** Chance Card Effect for RailRoad -> rent doubled */
+    public void specialEffect(Player current) {
+        if (current.getID() == owner().getID()) {
+            return;
+        } else {
+            current.loseMoney(2 * getRent(owner()));
+            owner().gainMoney(2 * getRent(owner()));
         }
     }
 

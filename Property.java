@@ -1,3 +1,4 @@
+import java.util.HashSet;
 /** Property piece on the Monopoly board.
  *  @author Kevin Lowe
  */
@@ -52,7 +53,7 @@ public abstract class Property implements BoardPiece {
 
     @Override
     public boolean equals(Object obj) {
-        if (!obj instanceof Property) {
+        if (!(obj instanceof Property)) {
             return false;
         } else {
             Property other = (Property) obj;
@@ -138,7 +139,7 @@ public abstract class Property implements BoardPiece {
         return _price;
     }
 
-    /** (Joseph) Returns the Player that owns the property */
+    /** Returns the Player that owns the property */
     public Player owner() {
         return _owner;
     }
