@@ -122,33 +122,9 @@ public class Player {
 
 //========================== Actions ==================================
 
-
+    /** Takes care of players turn */
     public void turn() {
-        //Jailed
-        if (_jailed) {
-            if (rollDice() == rollDice()) {
-                jailed = false;
-            } else {
-                return;
-            }
-        }
-        int playerTurn = true;
-        int numRolls = 0;
-        while (playerTurn) {
-            numRolls++;
-            // When the dice is thrown 3 times -> Jail
-            if (numRolls == 3) {
-                _jailed = true;
-                jumpPlayer("Jail");
-                return;
-            }
-            _rolls[0] = rollDice(); _rolls[1] = rollDice();
-            movePlayer(_rolls[0] + _rolls[1]);
-            if (_rolls[0] != _rolls[1]) {
-                playerTurn = false;
-            }
-            numRolls++;
-        }
+        // Check if the player is in Jail
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
