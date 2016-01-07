@@ -1,8 +1,8 @@
 traversal,Advance to Go,Go,Advance to Go
 traversal,Advance to Illinois Ave.,Illinois Avenue,If you pass Go, collect $200
 traversal,Advance to St. Charles Place,St. Charles Place,If you pass Go, collect $200
-specialtraversal,Advance token to nearest Utility.,Utility,If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.
-specialtraversal,Advance token to the nearest Railroad.,RailRoad,Pay owner twice the rental to which he/she is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.
+specialtraversal,Advance token to nearest Utility.,utility,If unowned, you may buy it from the Bank. If owned, throw dice and pay owner a total ten times the amount thrown.
+specialtraversal,Advance token to the nearest Railroad.,railroad,Pay owner twice the rental to which he/she is otherwise entitled. If Railroad is unowned, you may buy it from the Bank.
 money,Bank pays you dividend of $50,50,true,Bank pays you dividend of $50
 jailFree
 backstep,Go Back 3 Spaces,3

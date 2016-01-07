@@ -34,8 +34,7 @@ public class Player {
     // TODO chance drawing, community chest drawing, general move method,
     // UNIT TEST
 
-    public Player(int id, int money, BoardNode location, Monopoly monopoly)
-    {
+    public Player(int id, int money, BoardNode location, Monopoly monopoly) {
         _id = id;
         _money = money;
         _location = location;
@@ -130,33 +129,55 @@ public class Player {
 
 
     public void turn() {
-        rollDice(0); rollDice(1);
-        movePlayer(_rolls[0] + _rolls[1]);
+        //Jailed
+        if (_jailed) {
+            if (rollDice() == rollDice()) {
+                jailed = false;
+            } else {
+                return;
+            }
+        }
+        int playerTurn = true;
+        int numRolls = 0;
+        while (playerTurn) {
+            numRolls++;
+            // When the dice is thrown 3 times -> Jail
+            if (numRolls == 3) {
+                _jailed = true;
+                jumpPlayer("Jail");
+                return;
+            }
+            _rolls[0] = rollDice(); _rolls[1] = rollDice();
+            movePlayer(_rolls[0] + _rolls[1]);
+            if (_rolls[0] != _rolls[1]) {
+                playerTurn = false;
+            }
+            numRolls++;
+        }
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
-    public void rollDice(int order) {
-        _rolls[order] = _source.nextInt(6) + 1;
+    public int rollDice() {
+        return (_source.nextInt(6) + 1);
     }
 
 
     /** Jumps the player to Jail. Does not collect $200 from passing go */
     public void jumpPlayer(String jumpLocation) {
-        for (BoardNode curr = _location; !curr.piece().name().equals(jumpLocation); curr = curr.next()) {
-            _location = curr.next();
+        while (!_location.piece().name().equals(jumpLocation)) {
+            _location = _location.next();
         }
     }
 
     /** Traverses the player to a set BoardPiece. If the player passes go collect $200 */
     public void traversePlayer(String traverseLocation) {
-        for (BoardNode curr = _location; !curr.piece().name().equals(traverseLocation); curr = curr.next()) {
-            _location = curr.next();
+        while (!_location.piece().name().equals(traverseLocation)) {
+            _location = _location.next();
             if (_location.piece().name().equals("Go")) {
                 _location.piece().effect(this);
             }
         }
-        //When finished traversing trigger effect on landed card
-        _monopoly.playerLands(_location.piece(), this);
+        _location.piece().effect(this);
     }
 
 
@@ -183,19 +204,54 @@ public class Player {
         for (int i = 0; i < numSpaces; i++) {
             _location = _location.prev();
         }
-        _monopoly.playerLands(_location.piece(), this);
+        _location.piece().effect(this);
     }
 
     /** Handles the special traversals that moves the player
      *  to the nearest railroad/utilies and has a special charge */
     public void specialTraversePlayer(String traverseLocation) {
-        //Code here
+        if (traverseLocation.equals("railroad")) {
+            while (!(_location.piece() instanceof Railroad)) {
+                _location = _location.next();
+            }
+            //Special Effect of the chance card
+            Railroad landedPiece = (Railroad) _location.piece();
+            landedPiece.specialEffect(this);
+        } else {
+            while (!(_location.piece() instanceof Utility)) {
+                _location = _location.next();
+            }
+            //Special Effect of the the chance card
+            Utility landedPiece = (Utility) _location.piece();
+            landedPiece.specialEffect(this, rollDice(), rollDice());
+        }
     }
 
     /** Charges the player for the houses and hotel in possession */
     public void propertyMaintenance(int houseCost, int hotelCost) {
         //Code here
+        int maintenance = 0;
+        for (String group: _properties.keySet()) {
+            for (Property prop: _properties.get(group)) {
+                if (!prop.isFull() || !(prop instanceof Street)) {
+                    return;
+                } else {
+                    Street st = (Street) prop;
+                    int totalHouses = st.getHouses();
+                    // Hotel Case
+                    if (totalHouses > 4) {
+                        maintenance += hotelCost;
+                        totalHouses--;
+                    }
+                    for (int i = totalHouses; i > 0; i--) {
+                        maintenance += houseCost;
+                    }
+                }
+            }
+        }
+        loseMoney(maintenance);
     }
+
 
     /** (Joseph) Buy unowned Property and adds it into the list of properties owned by the Player*/
     public void buyProperty(Property property) {
