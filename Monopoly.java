@@ -254,9 +254,9 @@ public class Monopoly {
     }
     /** Initializes shuffled Chance and Community Chest cards. */
     private void initializeBoardCard() throws FileNotFoundException, IOException {
-        initlializeCommunityChest();
+        initializeCommunityChest();
         Collections.shuffle(Arrays.asList(_chest));
-        initlializeChance();
+        initializeChance();
         Collections.shuffle(Arrays.asList(_chance));
     }
 

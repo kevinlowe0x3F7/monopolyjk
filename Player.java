@@ -98,6 +98,11 @@ public class Player {
         return _rolls;
     }
 
+    /** Returns the last rolls of the player. */
+    public int getLastRoll() {
+        return _rolls[0] + _rolls[1];
+    }
+
 //=========================== Setters ================================
     
     /** Substracts the money lost from the player's money */
@@ -127,7 +132,6 @@ public class Player {
     public void turn() {
         rollDice(0); rollDice(1);
         movePlayer(_rolls[0] + _rolls[1]);
-        _rolls[0] = 0; _roll[1] = 0;
     }
 
     /** Rolls a die, returning an integer between 1 and 6. */
@@ -170,7 +174,7 @@ public class Player {
                 buyProperty(property);
             }
         } else {
-            _location.piece().effect(current);
+            _location.piece().effect(this);
         }
     }
     
@@ -221,7 +225,7 @@ public class Player {
             return false;
         } else if (!upgrading.isFull()) {
             return false;
-        } else if (!upgrading instanceof Street) {
+        } else if (!(upgrading instanceof Street)) {
             return false;
         } else {
             Street street = (Street) upgrading;
