@@ -99,6 +99,11 @@ public class Player {
         return _rolls;
     }
 
+    /** Returns true if this player is jailed, false otherwise. */
+    public boolean isJailed() {
+        return _jailed;
+    }
+
     /** Returns the last rolls of the player. */
     public int getLastRoll() {
         return _rolls[0] + _rolls[1];
@@ -203,16 +208,7 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        if (_location.piece() instanceof Property) {
-            Property property = (Property) _location.piece();
-            if (property.isOwned()) {
-                property.effect(this);
-            } else {
-                buyProperty(property);
-            }
-        } else {
-            _location.piece().effect(this);
-        }
+        resolveLanding();
     }
 
 
@@ -224,16 +220,7 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        if (_location.piece() instanceof Property) {
-            Property property = (Property) _location.piece();
-            if (property.isOwned()) {
-                property.effect(this);
-            } else {
-                buyProperty(property);
-            }
-        } else {
-            _location.piece().effect(this);
-        }
+        resolveLanding();
     }
     
     /** Moves the player backwards for a set number of spaces */
@@ -351,6 +338,21 @@ public class Player {
         }
     }
 
+    /** Resolves effect of landing on a piece. Written to reduce
+     *  code repetition. */
+    public void resolveLanding() {
+        if (_location.piece() instanceof Property) {
+            Property property = (Property) _location.piece();
+            if (property.isOwned()) {
+                property.effect(this);
+            } else {
+                buyProperty(property);
+            }
+        } else {
+            _location.piece().effect(this);
+        }
+    }
+
     public void mortgageProperty(Property property) {
         property.mortgage(this);
     }
@@ -363,5 +365,16 @@ public class Player {
     /** Draws a Community Chest Card */
     public void drawCommunityChest() {
         _monopoly.drawChest().effect(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Player other = (Player) obj;
+        return other._id == this._id && other._money == this._money;
+    }
+
+    @Override
+    public int hashCode() {
+        return _id;
     }
 }

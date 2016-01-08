@@ -92,6 +92,71 @@ public class PlayerTests {
         two.specialTraversePlayer("utility");
         assertTrue(two.money() < 1100);
         assertTrue(two.money() >= 980);
+        assertEquals("Electric Company", two.location().piece().name());
+    }
+
+    @Test
+    public void testJail() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        one.movePlayer(30);
+        assertTrue(one.isJailed());
+        assertEquals("Jail", one.location().piece().name());
+        two.movePlayer(10);
+        assertFalse(two.isJailed());
+        assertEquals("Jail", two.location().piece().name());
+    }
+
+    @Test
+    public void testRandomSource() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        for (int i = 0; i < 50; i++) {
+            int result = one.rollDice();
+            assertTrue(result <= 6);
+            assertTrue(result >= 1);
+        }
+    }
+
+    @Test
+    public void testPropertyMaintenanceChanceCard() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        one.traversePlayer("Park Place");
+        Property park = (Property) one.location().piece();
+        one.traversePlayer("Boardwalk");
+        Property boardwalk = (Property) one.location().piece();
+        assertEquals(750, one.money());
+        assertTrue(((Property) one.location().piece()).isFull());
+        one.gainMoney(3000);
+        assertTrue(one.upgradeProperty(park, 4));
+        assertFalse(one.upgradeProperty(park, 4));
+        assertTrue(one.upgradeProperty(boardwalk, 5));
+        assertEquals(1950, one.money());
+        one.propertyMaintenance(40, 115);
+        assertEquals(1675, one.money());
+    }
+
+    @Test
+    public void testMortgaging() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        one.movePlayer(1);
+        one.movePlayer(2);
+        assertEquals(1380, one.money());
+        one.mortgageProperty((Property) one.location().piece());
+        assertEquals(1410, one.money());
+        two.movePlayer(3);
+        assertEquals(1500, two.money());
+    
+        one.movePlayer(2);
+        assertEquals(1210, one.money());
+        one.mortgageProperty((Property) one.location().piece());
+        assertEquals(1310, one.money());
+        two.movePlayer(2);
+        assertEquals(1500, two.money());
     }
 
     public static void main(String[] args) {

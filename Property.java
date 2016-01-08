@@ -26,7 +26,7 @@ public abstract class Property implements BoardPiece {
     /** True if this property is mortgaged, false otherwise. Indicates
      *  that no rent will be paid if the property is mortgaged. */
     private boolean _isMortgaged;
-    /** The player that ownes this property */
+    /** The player that owns this property */
     private Player _owner;
 
     public Property(String name, String group, int price, int set,
@@ -123,7 +123,7 @@ public abstract class Property implements BoardPiece {
 
     /** Mortgage this property owned by PLAYER. */
     public void mortgage(Player player) {
-        if (player.getID() != _id){
+        if (!_owner.equals(player)) {
             return;
         }
         _isMortgaged = true;
