@@ -127,7 +127,7 @@ public abstract class Property implements BoardPiece {
             return;
         }
         _isMortgaged = true;
-        player.increaseMoney(_mortgage);
+        player.gainMoney(_mortgage);
     }
 
     /** Returns true if this property is owned, false otherwise. */

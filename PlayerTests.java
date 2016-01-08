@@ -54,6 +54,7 @@ public class PlayerTests {
 
         two.backstep(3);
         Property baltic = (Property) one.location().piece();
+        assertFalse(one.upgradeProperty(baltic, 5));
         one.buyProperty((Property) two.location().next().piece());
         assertEquals(1384, one.money());
         assertTrue(one.upgradeProperty(baltic, 5));
@@ -62,6 +63,18 @@ public class PlayerTests {
         assertEquals(1584, one.money());
     }
 
+    @Test
+    public void testSimpleTraversal() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        one.traversePlayer("Boardwalk");
+        assertEquals(1100, one.money());
+        assertEquals("Boardwalk", one.location().piece().name());
+        assertTrue(one.properties().containsKey("blue"));
+        one.traversePlayer("Park Place");
+        assertEquals(950, one.money());
+    }
+        
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(PlayerTests.class);
         int tests = result.getRunCount();

@@ -8,11 +8,8 @@ public class GoToJail implements BoardPiece {
 
     @Override
     public void effect(Player current) {
-        // Player jailed = players[turn];
-        current.inJail(true); //Keep all instance variables private;
-
-        // jailed.inJail = true;
-        // sendToJail(jailed);   This is a jump
+        current.inJail(true);
+        current.jumpPlayer("Jail");
     }
 
     @Override

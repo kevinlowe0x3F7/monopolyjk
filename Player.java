@@ -120,7 +120,7 @@ public class Player {
     /** Puts the player into jail */
     public void inJail(boolean jailed) {
         _jailed = jailed;
-        _jailedTurns = 3
+        _jailedTurns = 3;
     }
 
     /** Sets the JailFree as false or true */
@@ -193,7 +193,9 @@ public class Player {
         }
     }
 
-    /** Traverses the player to a set BoardPiece. If the player passes go collect $200 */
+    /** Traverses the player to a set BoardPiece. If the player
+     *  passes go collect $200. (Kevin) Added clause to check if it
+     *  is a property and whether it is buyable or not. */
     public void traversePlayer(String traverseLocation) {
         while (!_location.piece().name().equals(traverseLocation)) {
             _location = _location.next();
@@ -201,7 +203,16 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        _location.piece().effect(this);
+        if (_location.piece() instanceof Property) {
+            Property property = (Property) _location.piece();
+            if (property.isOwned()) {
+                property.effect(this);
+            } else {
+                buyProperty(property);
+            }
+        } else {
+            _location.piece().effect(this);
+        }
     }
 
 
@@ -209,8 +220,10 @@ public class Player {
     public void movePlayer(int numSpaces) {
         for (int i = 0; i < numSpaces; i++) {
             _location = _location.next();
+            if (_location.piece().name().equals("Go")) {
+                _location.piece().effect(this);
+            }
         }
-        //Action/effect of landed piece
         if (_location.piece() instanceof Property) {
             Property property = (Property) _location.piece();
             if (property.isOwned()) {
@@ -232,43 +245,55 @@ public class Player {
     }
 
     /** Handles the special traversals that moves the player
-     *  to the nearest railroad/utilies and has a special charge */
+     *  to the nearest railroad/utilies and has a special charge.
+     *  If the property is unowned, however, the player may buy it. */
     public void specialTraversePlayer(String traverseLocation) {
         if (traverseLocation.equals("railroad")) {
             while (!(_location.piece() instanceof Railroad)) {
                 _location = _location.next();
             }
-            //Special Effect of the chance card
             Railroad landedPiece = (Railroad) _location.piece();
-            landedPiece.specialEffect(this);
+            // Changed by Kevin to accomodate unowned property
+            if (landedPiece.isOwned()) {
+                landedPiece.specialEffect(this);
+            } else {
+                buyProperty(landedPiece);
+            }
         } else {
             while (!(_location.piece() instanceof Utility)) {
                 _location = _location.next();
             }
-            //Special Effect of the the chance card
             Utility landedPiece = (Utility) _location.piece();
-            landedPiece.specialEffect(this, rollDice(), rollDice());
+            // Changed by Kevin to accomodate unowned property
+            if (landedPiece.isOwned()) {
+                landedPiece.specialEffect(this, rollDice(), rollDice());
+            } else {
+                buyProperty(landedPiece);
+            }
         }
     }
 
-    /** Charges the player for the houses and hotel in possession */
+    /** Charges the player for the houses and hotel in possession.
+     *  (Kevin) fixing code, the player doesn't pay the cost for both
+     *  houses and hotels for a particular hotel, just the hotel. Example,
+     *  if the player has boardwalk and park place, with a hotel on
+     *  boardwalk and four houses on park place. A Community Chest would
+     *  force them to pay 1 hotel * $115 + 4 houses * $40 = $275. */
     public void propertyMaintenance(int houseCost, int hotelCost) {
         //Code here
         int maintenance = 0;
         for (String group: _properties.keySet()) {
             for (Property prop: _properties.get(group)) {
                 if (!prop.isFull() || !(prop instanceof Street)) {
-                    return;
+                    continue;
                 } else {
                     Street st = (Street) prop;
                     int totalHouses = st.getHouses();
                     // Hotel Case
                     if (totalHouses > 4) {
                         maintenance += hotelCost;
-                        totalHouses--;
-                    }
-                    for (int i = totalHouses; i > 0; i--) {
-                        maintenance += houseCost;
+                    } else {
+                        maintenance += (houseCost * totalHouses);
                     }
                 }
             }
