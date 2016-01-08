@@ -75,6 +75,25 @@ public class PlayerTests {
         assertEquals(950, one.money());
     }
         
+    @Test
+    public void testSpecialTraversal() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        one.movePlayer(5);
+        one.movePlayer(7);
+        one.movePlayer(3);
+        one.movePlayer(10);
+        one.movePlayer(10);
+        assertEquals(4, one.railroads()); 
+        two.specialTraversePlayer("railroad");
+        assertEquals(1100, two.money());
+        assertEquals("Reading Railroad", two.location().piece().name());
+        two.specialTraversePlayer("utility");
+        assertTrue(two.money() < 1100);
+        assertTrue(two.money() >= 980);
+    }
+
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(PlayerTests.class);
         int tests = result.getRunCount();
