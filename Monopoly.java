@@ -44,6 +44,11 @@ public class Monopoly {
     /** Index to see whose turn it is. */
     private int currentIndex;
 
+    /** Number of houses available in the game. */
+    private int _houses;
+
+    /** Number of hotels available in the game. */
+    private int _hotels;
 
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
@@ -59,6 +64,8 @@ public class Monopoly {
         _numPlayers = numPlayers;
         initializePlayers();
         currentIndex = 1;
+        _houses = 32;
+        _hotels = 12;
     }
 
 //======================= Getters=========================
@@ -93,13 +100,22 @@ public class Monopoly {
         return _board;
     }
 
+    /** Returns the number of available houses. */
+    public int houses() {
+        return _houses;
+    }
+
+    /** Return the number of available hotels. */
+    public int hotels() {
+        return _hotels;
+    }
+
     /** Draws the next chance card, resetting the deck if needed. */
     public Chance drawChance() {
         Chance next = _chance[_chanceIndex];
         _chanceIndex++;
         if (_chanceIndex == _chance.length) {
             _chanceIndex = 0;
-            Collections.shuffle(Arrays.asList(_chance));
         }
         return next;
     }
@@ -111,11 +127,20 @@ public class Monopoly {
         _chestIndex++;
         if (_chestIndex == _chest.length) {
             _chestIndex = 0;
-            Collections.shuffle(Arrays.asList(_chest));
         }
         return next;
     }
 //=========================================================
+
+    /** Sets the number of available houses equal to NUM. */
+    public void setHouses(int num) {
+        _houses = num;
+    }
+
+    /** Sets the number of available hotels equal to NUM. */
+    public void setHotels(int num) {
+        _hotels = num;
+    }
 
     /** Moves the index to the next player. */
     private void nextPlayer() {

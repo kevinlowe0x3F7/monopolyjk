@@ -238,6 +238,9 @@ public class Player {
         if (traverseLocation.equals("railroad")) {
             while (!(_location.piece() instanceof Railroad)) {
                 _location = _location.next();
+                if (_location.piece().name().equals("Go")) {
+                    _location.piece().effect(this);
+                }
             }
             Railroad landedPiece = (Railroad) _location.piece();
             // Changed by Kevin to accomodate unowned property
@@ -249,6 +252,9 @@ public class Player {
         } else {
             while (!(_location.piece() instanceof Utility)) {
                 _location = _location.next();
+                if (_location.piece().name().equals("Go")) {
+                    _location.piece().effect(this);
+                }
             }
             Utility landedPiece = (Utility) _location.piece();
             // Changed by Kevin to accomodate unowned property
@@ -312,7 +318,15 @@ public class Player {
 
     /** Buy houses or hotels for properties. HOUSES indicates the number
      *  of houses that the player wants to buy. Returns true if
-     *  successfully upgraded. */
+     *  successfully upgraded.
+     *  Several rules are used for upgrading
+     *  1. A player may not upgrade if they do not have a full set.
+     *  2. A player may not upgrade if one of the properties is mortgaged.
+     *  3. A player must build houses evenly (ex. cannot have a hotel
+     *  on Park Place and no houses on Boardwalk)
+     *  4. A player may only upgrade streets (cannot upgrade railroads
+     *  or utilities. */
+    // TODO implement these rules
     public boolean upgradeProperty(Property upgrading, int houses) {
         HashSet<Property> properties = _properties.get(upgrading.getGroup());
         if (properties == null) {
@@ -353,8 +367,16 @@ public class Player {
         }
     }
 
+    /** Mortgage a given PROPERTY, gaining money to the player equal
+     *  to the mortgage value of the property. */
     public void mortgageProperty(Property property) {
         property.mortgage(this);
+    }
+
+    /** Unmortgage a given PROPERTY, requiring the player to pay the
+     *  mortgage value plus a 10% interest rate. */
+    public void unmortgageProperty(Property property) {
+        property.unmortgage(this);
     }
 
     /** Draws a Chance Card */

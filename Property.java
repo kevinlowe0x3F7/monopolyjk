@@ -18,9 +18,6 @@ public abstract class Property implements BoardPiece {
     /** True if this property is part of a full set because all of the
      *  same group is owned by one player. False otherwise. */
     private boolean _isFull;
-    /** The player ID that this property is owned by. If this property
-     *  is not owned by any player, the value is 0. */
-    private int _id;
     /** The value obtained from mortgaging this property. */
     private final int _mortgage;
     /** True if this property is mortgaged, false otherwise. Indicates
@@ -36,7 +33,6 @@ public abstract class Property implements BoardPiece {
         _price = price;
         _fullSet = set;
         _isFull = false;
-        //_id = 0;
         _owner = null;
         _mortgage = mortgage;
         _isMortgaged = false;
@@ -101,16 +97,6 @@ public abstract class Property implements BoardPiece {
         }
     }
 
-    /** Returns the player ID that owns this property. */
-    public int getID() {
-        return _id;
-    }
-
-    /** Sets the player ID of this property with ID. */
-    public void setID(int id) {
-        _id = id;
-    }
-
     /** Returns the value obtained from mortgaging this property. */
     public int getMortgageValue() {
         return _mortgage;
@@ -123,11 +109,20 @@ public abstract class Property implements BoardPiece {
 
     /** Mortgage this property owned by PLAYER. */
     public void mortgage(Player player) {
-        if (!_owner.equals(player)) {
+        if (!_owner.equals(player) || _isMortgaged) {
             return;
         }
         _isMortgaged = true;
         player.gainMoney(_mortgage);
+    }
+
+    /** Unmortgage this property owned by PLAYER. */
+    public void unmortgage(Player player) {
+        if (!_owner.equals(player) || !_isMortgaged) {
+            return;
+        }
+        _isMortgaged = false;
+        player.loseMoney(_mortgage + ((int) (_mortgage * 0.1)));
     }
 
     /** Returns true if this property is owned, false otherwise. */

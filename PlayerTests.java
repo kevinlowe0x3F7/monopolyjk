@@ -148,6 +148,8 @@ public class PlayerTests {
         assertEquals(1380, one.money());
         one.mortgageProperty((Property) one.location().piece());
         assertEquals(1410, one.money());
+        one.mortgageProperty((Property) one.location().piece());
+        assertEquals(1410, one.money());
         two.movePlayer(3);
         assertEquals(1500, two.money());
     
@@ -157,6 +159,16 @@ public class PlayerTests {
         assertEquals(1310, one.money());
         two.movePlayer(2);
         assertEquals(1500, two.money());
+
+        one.traversePlayer("Boardwalk");
+        assertEquals(910, one.money());
+        one.mortgageProperty((Property) one.location().piece());
+        assertEquals(1110, one.money());
+        one.unmortgageProperty((Property) one.location().piece());
+        assertEquals(890, one.money());
+        two.traversePlayer("Boardwalk");
+        assertEquals(940, one.money());
+        assertEquals(1450, two.money());
     }
 
     public static void main(String[] args) {
