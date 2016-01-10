@@ -138,6 +138,40 @@ public class PlayerTests {
     }
 
     @Test
+    public void testSellingHouses() {
+        Monopoly m = new Monopoly(2);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        one.traversePlayer("Park Place");
+        Property park = (Property) one.location().piece();
+        one.traversePlayer("Boardwalk");
+        Property boardwalk = (Property) one.location().piece();
+        assertEquals("Boardwalk", one.location().piece().name());
+        assertEquals(750, one.money());
+        assertTrue(((Property) one.location().piece()).isFull());
+        one.gainMoney(3000);
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertEquals(1950, one.money());
+        assertEquals(4, ((Street) park).getHouses());
+        assertEquals(5, ((Street) boardwalk).getHouses());
+        assertFalse(one.sellHouse(park));
+        assertEquals(4, ((Street) park).getHouses());
+        assertEquals(5, ((Street) boardwalk).getHouses());
+        assertTrue(one.sellHouse(boardwalk));
+        assertEquals(2050, one.money());
+        assertEquals(24, m.houses());
+        assertEquals(12, m.hotels());
+    }
+
+    @Test
     public void testPropertyMaintenanceChanceCard() {
         Monopoly m = new Monopoly(2);
         Player one = m.players()[1];
@@ -157,6 +191,8 @@ public class PlayerTests {
         assertTrue(one.upgradeProperty(park));
         assertTrue(one.upgradeProperty(boardwalk));
         assertTrue(one.upgradeProperty(boardwalk));
+        assertEquals(28, m.houses());
+        assertEquals(11, m.hotels());
         assertEquals(1950, one.money());
         one.propertyMaintenance(40, 115);
         assertEquals(1675, one.money());

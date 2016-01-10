@@ -367,13 +367,19 @@ public class Player {
                 return false;
             }
             loseMoney(cost);
+            if (street.getHouses() == 5) {
+                _monopoly.setHouses(_monopoly.houses() + 4);
+                _monopoly.setHotels(_monopoly.hotels() - 1);
+            } else {
+                _monopoly.setHouses(_monopoly.houses() - 1);
+            }
             return true;
         }
     }
 
     /** Checks a group of properties owned by a player to see if their
      *  houses differ by more than 1, returning true if so. This is to
-     *  determine whether a house can be bought on this property.
+     *  determine whether a house can be bought or sold on this property.
      *  Assumes that the player owning the property has a full set, and
      *  assumes that it is a street. */
     public boolean isUneven(Property upgrading) {
@@ -392,6 +398,47 @@ public class Player {
             }
         }
         return maxHouses - minHouses > 1;
+    }
+
+    /** Sells a house on PROPERTY. Selling must be done evenly so that
+     *  the number of houses on a property for a group does not differ
+     *  by more than 1. */
+    public boolean sellHouse(Property property) {
+        HashSet<Property> properties = _properties.get(
+                property.getGroup());
+        if (properties == null) {
+            return false;
+        } else if (!properties.contains(property)) {
+            return false;
+        } else if (!property.isFull()) {
+            return false;
+        } else if (!(property instanceof Street)) {
+            return false;
+        } else {
+            Street street = (Street) property;
+            int gain = street.getCost() / 2;
+            int houses = street.getHouses();
+            if (houses == 0) {
+                return false;
+            }
+            if (houses > 4 && _monopoly.houses() == 0) {
+                return false;
+            }
+            street.setHouses(houses - 1);
+            houses--;
+            if (isUneven(property)) {
+                street.setHouses(houses + 1);
+                return false;
+            }
+            gainMoney(gain);
+            if (houses == 4) {
+                _monopoly.setHouses(_monopoly.houses() - 4);
+                _monopoly.setHotels(_monopoly.hotels() + 1);
+            } else {
+                _monopoly.setHouses(_monopoly.houses() + 1);
+            }
+            return true;
+        }
     }
 
     /** Resolves effect of landing on a piece. Written to reduce
