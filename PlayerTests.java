@@ -51,16 +51,6 @@ public class PlayerTests {
         assertEquals(1496, two.money());
         assertEquals("Baltic Avenue", two.location().piece().name());
         assertEquals(1444, one.money());
-
-        two.backstep(3);
-        Property baltic = (Property) one.location().piece();
-        assertFalse(one.upgradeProperty(baltic, 5));
-        one.buyProperty((Property) two.location().next().piece());
-        assertEquals(1384, one.money());
-        assertTrue(one.upgradeProperty(baltic, 5));
-        assertEquals(1134, one.money());
-        two.movePlayer(3);
-        assertEquals(1584, one.money());
     }
 
     @Test
@@ -120,6 +110,34 @@ public class PlayerTests {
     }
 
     @Test
+    public void testUpgradingProperties() {
+        Monopoly m = new Monopoly(3);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        Player three = m.players()[3];
+        one.movePlayer(1);
+        Property med = (Property) one.location().piece();
+        assertFalse(one.upgradeProperty(med));
+        one.movePlayer(2);
+        Property baltic = (Property) one.location().piece();
+        one.mortgageProperty(baltic);
+        assertFalse(one.upgradeProperty(baltic));
+        assertEquals(1410, one.money());
+        one.unmortgageProperty(baltic);
+        assertEquals(1377, one.money());
+        assertTrue(one.upgradeProperty(baltic));
+        two.movePlayer(3);
+        assertEquals(1347, one.money());
+        assertEquals(1480, two.money());
+        assertFalse(one.upgradeProperty(baltic));
+        three.movePlayer(3);
+        assertEquals(1367, one.money());
+        assertEquals(1480, three.money());
+        assertTrue(one.upgradeProperty(med));
+        assertTrue(one.upgradeProperty(baltic));
+    }
+
+    @Test
     public void testPropertyMaintenanceChanceCard() {
         Monopoly m = new Monopoly(2);
         Player one = m.players()[1];
@@ -130,9 +148,15 @@ public class PlayerTests {
         assertEquals(750, one.money());
         assertTrue(((Property) one.location().piece()).isFull());
         one.gainMoney(3000);
-        assertTrue(one.upgradeProperty(park, 4));
-        assertFalse(one.upgradeProperty(park, 4));
-        assertTrue(one.upgradeProperty(boardwalk, 5));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(park));
+        assertTrue(one.upgradeProperty(boardwalk));
+        assertTrue(one.upgradeProperty(boardwalk));
         assertEquals(1950, one.money());
         one.propertyMaintenance(40, 115);
         assertEquals(1675, one.money());

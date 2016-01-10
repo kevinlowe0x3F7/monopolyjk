@@ -1,4 +1,6 @@
 import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -316,19 +318,21 @@ public class Player {
         }
     }
 
-    /** Buy houses or hotels for properties. HOUSES indicates the number
-     *  of houses that the player wants to buy. Returns true if
-     *  successfully upgraded.
+    /** Upgrade the number of houses on PROPERTY by one. If the property
+     *  already has four houses, one more will update it to a hotel.
+     *  Returns true if successfully upgraded. False otherwise.
      *  Several rules are used for upgrading
      *  1. A player may not upgrade if they do not have a full set.
      *  2. A player may not upgrade if one of the properties is mortgaged.
      *  3. A player must build houses evenly (ex. cannot have a hotel
-     *  on Park Place and no houses on Boardwalk)
+     *  on Park Place and no houses on Boardwalk), can differ at most 1.
      *  4. A player may only upgrade streets (cannot upgrade railroads
-     *  or utilities. */
-    // TODO implement these rules
-    public boolean upgradeProperty(Property upgrading, int houses) {
-        HashSet<Property> properties = _properties.get(upgrading.getGroup());
+     *  or utilities.
+     *  5. A Monopoly game can have only 32 houses and 12 hotels in total,
+     *  if there are 0 houses left, a player cannot build houses. */
+    public boolean upgradeProperty(Property upgrading) {
+        HashSet<Property> properties = _properties.get(
+                upgrading.getGroup());
         if (properties == null) {
             return false;
         } else if (!properties.contains(upgrading)) {
@@ -338,18 +342,56 @@ public class Player {
         } else if (!(upgrading instanceof Street)) {
             return false;
         } else {
+            for (Property p : properties) {
+                if (p.isMortgaged()) {
+                    return false;
+                }
+            }
             Street street = (Street) upgrading;
-            int cost = street.getCost() * houses; 
-            if (street.getHouses() + houses > 5 ||
-                    street.getHouses() + houses < 0) {
+            int cost = street.getCost(); 
+            if (street.getHouses() + 1 > 5) {
                 return false;
             } else if (cost > _money) {
                 return false;
+            } else {
+                int houses = street.getHouses();
+                if (houses <= 4 && _monopoly.houses() == 0) {
+                    return false;
+                } else if (houses == 5 && _monopoly.hotels() == 0) {
+                    return false;
+                }
             }
-            street.setHouses(street.getHouses() + houses);
+            street.setHouses(street.getHouses() + 1);
+            if (isUneven(upgrading)) {
+                street.setHouses(street.getHouses() - 1);
+                return false;
+            }
             loseMoney(cost);
             return true;
         }
+    }
+
+    /** Checks a group of properties owned by a player to see if their
+     *  houses differ by more than 1, returning true if so. This is to
+     *  determine whether a house can be bought on this property.
+     *  Assumes that the player owning the property has a full set, and
+     *  assumes that it is a street. */
+    public boolean isUneven(Property upgrading) {
+        List<Property> properties = new ArrayList<Property>(
+                _properties.get(upgrading.getGroup()));
+        int minHouses = ((Street) properties.get(0)).getHouses();
+        int maxHouses = ((Street) properties.get(0)).getHouses();
+        for (int i = 1; i < properties.size(); i++) {
+            Street s = (Street) properties.get(i);
+            int houses = s.getHouses();
+            if (houses > maxHouses) {
+                maxHouses = houses;
+            }
+            if (houses < minHouses) {
+                minHouses = houses;
+            }
+        }
+        return maxHouses - minHouses > 1;
     }
 
     /** Resolves effect of landing on a piece. Written to reduce
