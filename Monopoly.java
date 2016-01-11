@@ -55,6 +55,7 @@ public class Monopoly {
     public Monopoly(int numPlayers) {
         try {
             initializeBoard();
+            initializeBoardCard();
         } catch (FileNotFoundException e) {
             System.out.println(e.toString());
         } catch (IOException io) {
@@ -143,12 +144,17 @@ public class Monopoly {
     }
 
     /** Moves the index to the next player. */
-    private void nextPlayer() {
+    public void nextPlayer() {
         if (currentIndex == _numPlayers) {
             currentIndex = 1;
         } else {
             currentIndex += 1;
         }
+    }
+
+    /** Returns the current player. */
+    public Player current() {
+        return _players[currentIndex];
     }
 
     /** Returns the victor when the game ends */
@@ -203,7 +209,7 @@ public class Monopoly {
                         _chest[i] = new JumpCard(info[1],info[2],info[3]);
                         break;
                     case "distribution":
-                        int amountDistrib = Integer.parseInt(info[1]);
+                        int amountDistrib = Integer.parseInt(info[2]);
                         boolean collecting = Boolean.parseBoolean(info[4]);
                         _chest[i] = new DistributionCard(info[1],amountDistrib,info[3],collecting,this);
                         break;
@@ -257,7 +263,7 @@ public class Monopoly {
                         _chance[i] = new SpecialTraversalCard(info[1],info[2],info[3]);
                         break;
                     case "distribution":
-                        int amountDistrib = Integer.parseInt(info[1]);
+                        int amountDistrib = Integer.parseInt(info[2]);
                         boolean collecting = Boolean.parseBoolean(info[4]);
                         _chance[i] = new DistributionCard(info[1],amountDistrib,info[3],collecting,this);
                         break;

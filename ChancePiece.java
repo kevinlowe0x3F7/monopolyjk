@@ -8,8 +8,7 @@ public class ChancePiece implements BoardPiece {
 
     @Override
     public void effect(Player current) {
-        // Player current = players[turn];
-        // current.drawChance();
+        current.drawChance();
     }
 
     @Override
