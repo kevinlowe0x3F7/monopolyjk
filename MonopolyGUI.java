@@ -27,8 +27,24 @@ public class MonopolyGUI {
     /** My Message field which gets placed inside _panel. */
     private JPanel _messages;
 
+    /** Initializes the board panel with constraints C. */
+    public void initializeBoard(GridBagConstraints c) {
+        _board = new BoardPanel(_game);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.LINE_START;
+        _panel.add(_board, c);
+    }
+
     /** Initializes the player panel with constraints C. */
     public void initializePlayers(GridBagConstraints c) {
+        _players = new PlayerPanel(_game);
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.LAST_LINE_START;
+        _panel.add(_players, c);
     }
 
     /** Initializes the message box with constraints C. */
@@ -39,29 +55,31 @@ public class MonopolyGUI {
     public void initializeButtons(GridBagConstraints c) {
     }
 
-    /** Initializes all of the buttons 
     /** Initializes the panels and buttons. */
     public MonopolyGUI(Monopoly game) {
         _game = game;
+        _game.players()[1].movePlayer(1);
+        _game.players()[2].movePlayer(1);
+        _game.players()[3].movePlayer(1);
+        _game.players()[4].movePlayer(1);
+        
 
         _panel = new JPanel(new GridBagLayout());
+        _panel.setBackground(Color.WHITE);
         GridBagConstraints c = new GridBagConstraints();
         
-        _board = new BoardPanel(_game);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        _panel.add(_board, c);
-        initializePlayers(c);
+        initializeBoard(new GridBagConstraints());
+        initializePlayers(new GridBagConstraints());
         initializeMessages(c);
         initializeButtons(c);
 
         _frame = new JFrame("Monopoly");
-        _frame.add(_panel);
+        _frame.setContentPane(_panel);
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        _frame.setSize(900, 700);
+        _frame.setSize(800, 650);
         _frame.setResizable(false);
-        _frame.revalidate();
         _frame.setVisible(true);
+        ((JComponent) _frame.getContentPane()).revalidate();
+        _frame.repaint();
     }
 }

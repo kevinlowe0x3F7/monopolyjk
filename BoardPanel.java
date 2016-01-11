@@ -14,12 +14,6 @@ public class BoardPanel extends JPanel {
     public BoardPanel(Monopoly game) {
         super();
         _game = game;
-    //     setSize(485, 485);
-        /*
-        ImageIcon image = new ImageIcon("board.jpg");
-        JLabel boardPic = new JLabel(image);
-        add(boardPic);
-        */
     }
 
     /** Draws the board itself. */
@@ -31,7 +25,7 @@ public class BoardPanel extends JPanel {
         } catch (IOException e) {
             board = null;
         }
-        g.drawImage(board, 30, 30, 500, 500, null);
+        g.drawImage(board, 30, 30, 425, 425, null);
     }
 
     @Override
@@ -41,16 +35,7 @@ public class BoardPanel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        Dimension d = new Dimension(560, 560);
+        Dimension d = new Dimension(485, 485);
         return d;
     }
-
-    public static void main(String[] args) {
-        Monopoly m = new Monopoly(2);
-        BoardPanel b = new BoardPanel(m);
-        JFrame f = new JFrame("test");
-        f.add(b);
-        f.setVisible(true);
-    }
-
 }
