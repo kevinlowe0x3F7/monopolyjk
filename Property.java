@@ -89,6 +89,9 @@ public abstract class Property implements BoardPiece {
      *  every time property is bought. */
     public static void checkFull(Player player, Property property) {
         String group = property._group;
+        if (property.isFull()) {
+            return;
+        }
         HashSet<Property> properties = player.properties().get(group);
         if (properties.size() == property._fullSet) {
             for (Property p : properties) {

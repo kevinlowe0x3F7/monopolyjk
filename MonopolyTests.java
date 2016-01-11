@@ -6,6 +6,9 @@ import org.junit.runner.notification.Failure;
 
 import java.util.Scanner;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 /** Tests of Monopoly
  *  @author Kevin Lowe
  */
@@ -110,6 +113,37 @@ public class MonopolyTests {
         assertFalse(same);
     }
 
+    @Test
+    public void testTransferringProperty() {
+        Monopoly m = new Monopoly(3);
+        Player one = m.players()[1];
+        Player two = m.players()[2];
+        Player three = m.players()[3];
+        one.movePlayer(3);
+        two.movePlayer(1);
+        assertEquals(1440, one.money());
+        assertEquals(1440, two.money());
+        Property baltic = (Property) one.location().piece();
+        m.transferProperty(one, two, baltic);
+        assertEquals(0, one.properties().get(baltic.getGroup()).size());
+        assertTrue(baltic.isFull());
+        assertEquals(baltic.owner(), two);
+
+        one.movePlayer(2);
+        Property reading = (Property) one.location().piece();
+        one.movePlayer(7);
+        Property electric = (Property) one.location().piece();
+        assertEquals("Electric Company", electric.name());
+        m.transferProperty(one, three);
+        assertEquals(reading.owner(), three);
+        assertEquals(electric.owner(), three);
+        HashMap<String, HashSet<Property>> props1 = one.properties();
+        assertFalse(props1.get(reading.getGroup()).contains(reading));
+        assertFalse(props1.get(electric.getGroup()).contains(electric));
+        two.movePlayer(4);
+        assertEquals(1525, three.money());
+    }
+        
     @Test
     public void testPlayerIndexing() {
         Monopoly two = new Monopoly(2);

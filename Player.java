@@ -32,10 +32,6 @@ public class Player {
     /** Monopoly game that contains the player */
     private Monopoly _monopoly;
 
-    
-    // TODO chance drawing, community chest drawing, general move method,
-    // UNIT TEST
-
     public Player(int id, int money, BoardNode location, Monopoly monopoly) {
         _id = id;
         _money = money;
@@ -109,7 +105,10 @@ public class Player {
     /** Substracts the money lost from the player's money */
     public void loseMoney(int moneyLost) {
         _money -= moneyLost;
-        //Deal with mortage and bankrupty
+        if (_money < 0) {
+            // TODO assume surrender, selling assets for front end
+            _monopoly.surrender(this);
+        }
     }  
 
     /** Adds the money gained to the player's money */

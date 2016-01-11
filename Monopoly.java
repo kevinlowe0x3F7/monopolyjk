@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /** Class that implements the game (Model) for Monopoly.
  *  @author Kevin Lowe
@@ -186,6 +187,49 @@ public class Monopoly {
         } else {
             return true;
         }
+    }
+
+    /** PLAYER surrenders. If another player forced bankrupty, all property
+     *  owned by the surrendering player is transferred over to the other
+     *  player. Otherwise, everything is put up for auction. */
+    public void surrender(Player player) {
+        BoardPiece location = player.location().piece();
+        Player defeater = null;
+        if (location instanceof Property) {
+            Property loc = (Property) location;
+            if (loc.owner() != null && !loc.owner().equals(player)) {
+                defeater = loc.owner();
+            }
+        }
+        if (defeater != null) {
+            transferProperty(player, defeater);
+        } else {
+            // TODO auction everything
+        }
+        _players[player.getID()] = null;
+        // TODO possibly check for winner
+    }
+
+    /** Transfers all property that one player owns to another. Used when
+     *  a player goes bankrupt and surrenders. */
+    public void transferProperty(Player from, Player to) {
+        for (String group : from.properties().keySet()) {
+            for (Property p : from.properties().get(group)) {
+                transferProperty(from, to, p);
+            }
+        }
+    }
+
+    /** Transfer a single property that one player owns to another. */
+    public void transferProperty(Player from, Player to, Property p) {
+        p.setOwner(to);
+        HashSet<Property> fromSet = from.properties().get(p.getGroup());
+        fromSet.remove(p);
+        if (!to.properties().containsKey(p.getGroup())) {
+            to.properties().put(p.getGroup(), new HashSet<Property>());
+        }
+        to.properties().get(p.getGroup()).add(p);
+        Property.checkFull(to, p);
     }
 
     /** Initializes the community chest cards */
