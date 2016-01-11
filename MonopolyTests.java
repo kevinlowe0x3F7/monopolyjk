@@ -132,6 +132,11 @@ public class MonopolyTests {
         three.nextPlayer();
         curr = three.current();
         assertEquals(1, curr.getID());
+
+        assertTrue(three.gameContinues());
+        three.players()[1] = null;
+        assertFalse(three.gameContinues());
+        assertEquals(3, three.victor().getID());
     }
 
     public static void main(String[] args) {

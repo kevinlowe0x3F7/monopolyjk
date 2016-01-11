@@ -25,8 +25,7 @@ public class Monopoly {
     /** Number of community chest cards. */
     public static final int CHEST_CARDS = 17;
 
-    /** The deck of Chance cards. Commented out until implementation
-     *  of Chance objects are complete. */
+    /** The deck of Chance cards. */
     private Chance[] _chance;
 
     /** Index of Chance Cards */
@@ -150,6 +149,13 @@ public class Monopoly {
         } else {
             currentIndex += 1;
         }
+        while (_players[currentIndex] == null) {
+            if (currentIndex == _numPlayers) {
+                currentIndex = 1;
+            } else {
+                currentIndex += 1;
+            }
+        }
     }
 
     /** Returns the current player. */
@@ -160,7 +166,7 @@ public class Monopoly {
     /** Returns the victor when the game ends */
     public Player victor() {
         for (int i = 1; i < _players.length; i++) {
-            if (!_players[i].bankrupt()) {
+            if (_players[i] != null) {
                 return _players[i];
             }
         }
@@ -171,7 +177,7 @@ public class Monopoly {
     public boolean gameContinues() {
         int numBankRupt = 0;
         for (int i = 1; i < _players.length; i++) {
-            if (_players[i].bankrupt()) {
+            if (_players[i] == null) {
                 numBankRupt += 1;
             }
         }

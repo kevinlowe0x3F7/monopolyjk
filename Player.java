@@ -21,8 +21,6 @@ public class Player {
     private int _railroads;
     /** Number of Utilities owned */
     private int _utilities;
-    /** True if the player is bankrupt */
-    private boolean _bankrupt;
     /** Jailed */
     private boolean _jailed;
     /** Number of turn in jail */
@@ -91,11 +89,6 @@ public class Player {
         return _utilities;
     }
     
-    /** Returns if the player is bankrupt */
-    public boolean bankrupt() {
-        return _bankrupt;
-    }    
-
     /** Returns the rolls of the player */
     public int[] rolls() {
         return _rolls;
