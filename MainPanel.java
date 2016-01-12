@@ -20,6 +20,9 @@ public class MainPanel extends JPanel {
     /** The status String of the game, updated every time something
      *  happens. Limited to 10 lines. */
     private String _status;
+    /** Character limit for the status line. Any single status line that
+     *  goes over this limit will need ot be drawn on another line. */
+    private static final int CHAR_LIMIT = 32;
 
     /** Initializes all the parts. */
     public MainPanel(Monopoly game, MonopolyGUI gui) {
@@ -27,8 +30,7 @@ public class MainPanel extends JPanel {
         _gui = gui;
         setLayout(null);
         setBounds(0, 0, 800, 650);
-        setBackground(new Color(0, 102, 0));
-        _status = "Welcome to Monopoly!" + '\n';
+        _status = "This is a complete line sort of\n";
     }
 
     @Override
@@ -78,8 +80,8 @@ public class MainPanel extends JPanel {
         int startX = 15;
         Player[] players = _game.players();
         for (int i = 1; i < players.length; i++) {
-            g.setColor(Color.BLACK); //TODO modify color based on player
-            int yCoord = 510;
+            g.setColor(Monopoly.COLORS[i]);
+            int yCoord = 520;
             Font font = new Font("Arial Black", Font.PLAIN, 18);
             g.setFont(font);
             g.drawString("Player " + i, startX, yCoord);
@@ -160,9 +162,21 @@ public class MainPanel extends JPanel {
     public void addStatusField(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.drawRoundRect(480, 230, 315, 245, 20, 20);
-        Font font = new Font("Arial Black", Font.PLAIN, 16);
+        Font font = new Font("Arial Black", Font.PLAIN, 14);
         g.setFont(font);
-        g.drawString(_status, 490, 250);
+        int x = 490;
+        int y = 250;
+        for (int i = 0; i < 12; i++) {
+            g.drawString(_status, x, y);
+            y += 20;
+        }
+        // g.drawString(_status, 490, 250); // TODO draw multiple lines for status
         //TODO implement status update methods
     }
+
+    /** Add the given line to the status method. */
+    public void addLine(String line) {
+    }
+
+
 }
