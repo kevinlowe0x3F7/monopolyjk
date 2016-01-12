@@ -1,0 +1,50 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
+/** The GUI for monopoly (Controller).
+ *  @author Kevin Lowe
+ */
+public class MonopolyGUI implements ActionListener {
+    /** The Monopoly game where I get the information from. */
+    private Monopoly _game;
+
+    /** My frame. */
+    private JFrame _frame;
+
+    /** My main panel that is in _frame. */
+    private MainPanel _panel;
+
+    /** Initializes the panels and buttons. */
+    public MonopolyGUI(Monopoly game) {
+        _game = game;
+        _panel = new MainPanel(_game, this);
+        
+        _frame = new JFrame("Monopoly");
+        _frame.setContentPane(_panel);
+        _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        _frame.setSize(800, 650);
+        _frame.setResizable(false);
+        _frame.setVisible(true);
+        ((JComponent) _frame.getContentPane()).revalidate();
+        _frame.repaint();
+    }
+
+    /** Takes care of actions. */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(e.getActionCommand());
+        String command = e.getActionCommand();
+        if (command.equals("New Game")) {
+            _game = new Monopoly(_game.getNumPlayers());
+            _panel.repaint();
+        } else if (command.equals("Quit")) {
+            System.exit(0);
+        }
+    }
+}
