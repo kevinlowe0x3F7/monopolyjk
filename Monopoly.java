@@ -122,6 +122,10 @@ public class Monopoly {
         return _hotels;
     }
 
+    /** Returns the current index of players */
+    public int currentIndex() {
+        return currentIndex;
+    }
     /** Draws the next chance card, resetting the deck if needed. */
     public Chance drawChance() {
         Chance next = _chance[_chanceIndex];
@@ -142,7 +146,7 @@ public class Monopoly {
         }
         return next;
     }
-//=========================================================
+//============================================================
 
     /** Sets the number of available houses equal to NUM. */
     public void setHouses(int num) {
@@ -242,6 +246,9 @@ public class Monopoly {
         to.properties().get(p.getGroup()).add(p);
         Property.checkFull(to, p);
     }
+
+
+//==================== initialization =======================
 
     /** Initializes the community chest cards */
     private void initializeCommunityChest() throws FileNotFoundException, IOException {
@@ -352,7 +359,7 @@ public class Monopoly {
         Collections.shuffle(Arrays.asList(_chance));
     }
 
-    /** (Joseph) Initializes players with starting money, locations, etc */
+    /** Initializes players with starting money, locations, etc */
     private void initializePlayers() {
         for (int i = 1; i < _players.length; i++) {
             Player player = new Player(i, 1500, _board, this);
