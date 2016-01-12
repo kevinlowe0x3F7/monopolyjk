@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import java.awt.Color;
 /** Class that implements the game (Model) for Monopoly.
  *  @author Kevin Lowe
  *  @version 1.0 11/19/2015
@@ -50,6 +51,11 @@ public class Monopoly {
     /** Number of hotels available in the game. */
     private int _hotels;
 
+    /** The color for each of the players, stays constant for any
+     *  Monopoly game. */
+    public static final Color[] COLORS = {null, Color.BLUE, Color.RED,
+        new Color(0, 102, 0), Color.YELLOW};
+
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
     public Monopoly(int numPlayers) {
@@ -79,6 +85,11 @@ public class Monopoly {
     /** Returns the players of the game */
     public Player[] players() {
         return _players;
+    }
+
+    /** Returns the number of players in the game. */
+    public int getNumPlayers() {
+        return _numPlayers;
     }
 
     /** Return the Chance Array of the game */

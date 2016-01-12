@@ -39,5 +39,12 @@ public class MonopolyGUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
+        String command = e.getActionCommand();
+        if (command.equals("New Game")) {
+            _game = new Monopoly(_game.getNumPlayers());
+            _panel.repaint();
+        } else if (command.equals("Quit")) {
+            System.exit(0);
+        }
     }
 }
