@@ -43,9 +43,6 @@ public class PlayerPanel extends JPanel {
             info.setLineWrap(true);
             info.setEditable(false);
             Font font = new Font("Arial Black", Font.PLAIN, 13);
-            if (_game.current().getID() == i) {
-                font = new Font("Arial Black", Font.ITALIC, 13);
-            }
             if (i == 1) {
                 c.insets = new Insets(0, 0, 0, 10);
             } else if (i == players.length - 1) {
