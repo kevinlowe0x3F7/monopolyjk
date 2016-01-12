@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.io.InputStream;
 import java.io.IOException;
 
+import java.util.LinkedList;
 /** Class to implement the main panel of the GUI, containing all parts
  *  of the GUI:board, player stats, buttons, message box (View).
  *  @author Kevin Lowe
@@ -23,19 +24,28 @@ public class MainPanel extends JPanel {
     /** Character limit for the status line. Any single status line that
      *  goes over this limit will need ot be drawn on another line. */
     private static final int CHAR_LIMIT = 32;
+    /** Line limit for the status box. */
+    private static final int LINE_LIMIT = 12;
+    /** True if there are max lines on the status. */
+    private boolean _maxLines;
+    private int _paintCount;
 
     /** Initializes all the parts. */
     public MainPanel(Monopoly game, MonopolyGUI gui) {
         _game = game;
         _gui = gui;
         setLayout(null);
+        setOpaque(true);
         setBounds(0, 0, 800, 650);
-        _status = "This is a complete line sort of\n";
+        _status = "Welcome to Monopoly!\n";
+        _paintCount = 0;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        System.out.println("Paint count: " + _paintCount);
+        _paintCount++;
+        // super.paintComponent(g);
         drawBackground((Graphics2D) g);
         drawBoard((Graphics2D) g);
         drawPropertyandPlayerMarkers((Graphics2D) g);
@@ -166,17 +176,76 @@ public class MainPanel extends JPanel {
         g.setFont(font);
         int x = 490;
         int y = 250;
-        for (int i = 0; i < 12; i++) {
-            g.drawString(_status, x, y);
+        for (String line : splitStatus()) {
+            g.drawString(line, x, y);
             y += 20;
         }
-        // g.drawString(_status, 490, 250); // TODO draw multiple lines for status
-        //TODO implement status update methods
     }
 
     /** Add the given line to the status method. */
     public void addLine(String line) {
+        int lines = 1;
+        String firstLine = "";
+        String secondLine = "";
+        if (line.length() > CHAR_LIMIT) {
+            int lastSpace = line.lastIndexOf(' ', CHAR_LIMIT);
+            firstLine = line.substring(0, lastSpace);
+            secondLine = line.substring(lastSpace + 1);
+            lines = 2;
+        }
+        if (lines == 1) {
+            _status += (line + '\n');
+        } else {
+            _status += (firstLine + '\n');
+            _status += (secondLine + '\n');
+        }
+        if (_maxLines) {
+            deleteLine();
+            if (lines == 2) {
+                deleteLine();
+            }
+        }
+        if (getLines() >= LINE_LIMIT) {
+            _maxLines = true;
+        }
     }
 
+    /** Returns the number of lines in the status String. */
+    public int getLines() {
+        int count = 0;
+        for (int i = 0; i < _status.length(); i++) {
+            if (_status.charAt(i) == '\n') {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /** Delete the first line of the status, indicated by the first
+     *  new line character. */
+    public void deleteLine() {
+        int newLine = _status.indexOf('\n');
+        if (newLine == -1 || newLine == _status.length() - 1) {
+            return;
+        } else {
+            _status = _status.substring(newLine + 1);
+        }
+    }
 
+    /** Split status into several Strings based on new line characters. */
+    public LinkedList<String> splitStatus() {
+        LinkedList<String> result = new LinkedList<String>();
+        for (int i = 0; i < _status.length(); i++) {
+            String line = "";
+            char next = _status.charAt(i);
+            if (next == '\n') {
+                result.add(line);
+                line = "";
+            } else {
+                line += next;
+            }
+        }
+        return result;
+    }
+    
 }

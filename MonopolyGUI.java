@@ -26,25 +26,29 @@ public class MonopolyGUI implements ActionListener {
         _panel = new MainPanel(_game, this);
         
         _frame = new JFrame("Monopoly");
+        _frame.setLayout(null);
         _frame.setContentPane(_panel);
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         _frame.setSize(800, 650);
         _frame.setResizable(false);
         _frame.setVisible(true);
-        ((JComponent) _frame.getContentPane()).revalidate();
-        _frame.repaint();
+        // ((JComponent) _frame.getContentPane()).revalidate();
+        // _frame.repaint();
     }
 
     /** Takes care of actions. */
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
         String command = e.getActionCommand();
+        _panel.addLine(command);
+        _panel.repaint();
+        /*
         if (command.equals("New Game")) {
             _game = new Monopoly(_game.getNumPlayers());
             _panel.repaint();
         } else if (command.equals("Quit")) {
             System.exit(0);
         }
+        */
     }
 }
