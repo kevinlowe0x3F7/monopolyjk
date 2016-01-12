@@ -27,7 +27,6 @@ public class MainPanel extends JPanel {
         _gui = gui;
         setLayout(null);
         setBounds(0, 0, 800, 650);
-        setBackground(new Color(0, 102, 0));
         _status = "Welcome to Monopoly!" + '\n';
     }
 
