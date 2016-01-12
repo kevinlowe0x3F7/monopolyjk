@@ -16,7 +16,7 @@ public class PlayerPanel extends JPanel {
     public PlayerPanel(Monopoly game) {
         super(new GridBagLayout());
         _game = game;
-        setBackground(Color.WHITE);
+        setBackground(new Color(0, 102, 0));
     }
 
     @Override
@@ -41,6 +41,7 @@ public class PlayerPanel extends JPanel {
         for (int i = 1; i < players.length; i++) {
             JTextArea info = new JTextArea(3, 75);
             info.setLineWrap(true);
+            info.setEditable(false);
             Font font = new Font("Arial Black", Font.PLAIN, 13);
             if (_game.current().getID() == i) {
                 font = new Font("Arial Black", Font.ITALIC, 13);

@@ -14,6 +14,7 @@ public class BoardPanel extends JPanel {
     public BoardPanel(Monopoly game) {
         super();
         _game = game;
+        setBackground(new Color(0, 102, 0));
     }
 
     /** Draws the board itself. */
@@ -35,7 +36,7 @@ public class BoardPanel extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        Dimension d = new Dimension(485, 485);
+        Dimension d = new Dimension(465, 465);
         return d;
     }
 }
