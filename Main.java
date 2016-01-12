@@ -9,8 +9,8 @@ public class Main {
             return;
         }
         int players = Integer.parseInt(args[0]);
-        if (players < 2 || players > 8) {
-            System.out.println("Invalid number of players, 2-8"
+        if (players < 2 || players > 4) {
+            System.out.println("Invalid number of players, 2-4"
                 + " players allowed.");
             return;
         }

@@ -58,11 +58,6 @@ public class MonopolyGUI {
     /** Initializes the panels and buttons. */
     public MonopolyGUI(Monopoly game) {
         _game = game;
-        _game.players()[1].movePlayer(1);
-        _game.players()[2].movePlayer(1);
-        _game.players()[3].movePlayer(1);
-        _game.players()[4].movePlayer(1);
-        
 
         _panel = new JPanel(new GridBagLayout());
         _panel.setBackground(Color.WHITE);
