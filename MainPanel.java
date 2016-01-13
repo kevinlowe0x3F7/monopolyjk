@@ -28,6 +28,7 @@ public class MainPanel extends JPanel {
     private static final int LINE_LIMIT = 12;
     /** True if there are max lines on the status. */
     private boolean _maxLines;
+    /** Number of repaints that have occured. */
     private int _paintCount;
 
     /** Initializes all the parts. */
@@ -35,6 +36,22 @@ public class MainPanel extends JPanel {
         _game = game;
         _gui = gui;
         setLayout(null);
+        BoardPanel board = new BoardPanel(_game);
+        board.setBounds(0, 20, 465, 465);
+        add(board);
+
+        ButtonPanel buttons = new ButtonPanel(_game, _gui);
+        buttons.setBounds(465, 20, 300, 250);
+        add(buttons);
+
+        PlayerPanel players = new PlayerPanel(_game);
+        players.setBounds(0, 485, 800, 130);
+        add(players);
+
+        TopButtonPanel topButtons = new TopButtonPanel(_gui);
+        topButtons.setBounds(0, 0, 800, 35);
+        add(topButtons);
+
         setOpaque(true);
         setBounds(0, 0, 800, 650);
         _status = "Welcome to Monopoly!\n";
@@ -45,7 +62,7 @@ public class MainPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         System.out.println("Paint count: " + _paintCount);
         _paintCount++;
-        // super.paintComponent(g);
+        /*
         drawBackground((Graphics2D) g);
         drawBoard((Graphics2D) g);
         drawPropertyandPlayerMarkers((Graphics2D) g);
@@ -53,6 +70,7 @@ public class MainPanel extends JPanel {
         addButtons1();
         addButtons2();
         addStatusField((Graphics2D) g);
+        */
     }
     
     /** Renders the wood.jpg background image and displays it. */

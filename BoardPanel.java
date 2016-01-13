@@ -15,6 +15,8 @@ public class BoardPanel extends JPanel {
         super();
         _game = game;
         setBackground(new Color(0, 102, 0));
+        this.setOpaque(false);
+        this.setLayout(null);
     }
 
     /** Draws the board itself. */
