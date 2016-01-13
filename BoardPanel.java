@@ -28,7 +28,7 @@ public class BoardPanel extends JPanel {
         } catch (IOException e) {
             board = null;
         }
-        g.drawImage(board, 30, 30, 425, 425, null);
+        g.drawImage(board, 30, 40, 425, 425, null);
     }
 
     @Override

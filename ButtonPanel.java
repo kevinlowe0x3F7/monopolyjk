@@ -21,24 +21,26 @@ public class ButtonPanel extends JPanel {
     public void initButtons() {
         // TODO switch buttons based on roll or end turn
         // switch buttons if surrendering
+        int width = 140;
+        int height = 70;
         JButton roll = new JButton("Roll Dice");
-        roll.setLocation(20, 50);
-        roll.setSize(130, 70);
+        roll.setLocation(20, 40);
+        roll.setSize(width, height);
         roll.addActionListener(_gui);
         add(roll);
         JButton mortgage = new JButton("Mortgage");
-        mortgage.setLocation(160, 50);
-        mortgage.setSize(130, 70);
+        mortgage.setLocation(170, 40);
+        mortgage.setSize(width, height);
         mortgage.addActionListener(_gui);
         add(mortgage);
         JButton houses = new JButton("Buy/Sell Houses");
-        houses.setLocation(20, 140);
-        houses.setSize(130, 70);
+        houses.setLocation(20, 120);
+        houses.setSize(width, height);
         houses.addActionListener(_gui);
         add(houses);
         JButton trade = new JButton("Trade");
-        trade.setLocation(160, 140);
-        trade.setSize(130, 70);
+        trade.setLocation(170, 120);
+        trade.setSize(width, height);
         trade.addActionListener(_gui);
         add(trade);
     }

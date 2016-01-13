@@ -24,6 +24,8 @@ public class MonopolyGUI implements ActionListener {
     public MonopolyGUI(Monopoly game) {
         _game = game;
         _panel = new MainPanel(_game, this);
+        _panel.setBounds(0, 0, 800, 650);
+        _panel.setBackground(new Color(255, 228, 181));
         
         _frame = new JFrame("Monopoly");
         _frame.add(_panel);
@@ -37,11 +39,12 @@ public class MonopolyGUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        System.out.println(command);
+        _panel.addLine(command);
+
         if (command.equals("New Game")) {
             _game = new Monopoly(_game.getNumPlayers());
             _panel.repaint();
-        } else if (command.equals("Quit") || command.equals("Roll Dice")) {
+        } else if (command.equals("Quit")) {
             System.exit(0);
         }
     }
