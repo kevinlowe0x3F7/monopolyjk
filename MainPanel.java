@@ -19,17 +19,17 @@ public class MainPanel extends JPanel {
     private MonopolyGUI _gui;
 
     /** My background panel. */
-    BackgroundPanel _background;
+    public BackgroundPanel _background;
     /** My board panel. */
-    BoardPanel _board;
+    public BoardPanel _board;
     /** My right-side buttons panel. */
-    ButtonPanel _buttons;
+    public ButtonPanel _buttons;
     /** My player panel. */
-    PlayerPanel _players;
+    public PlayerPanel _players;
     /** My top buttons panel. */
-    TopButtonPanel _topButtons;
+    public TopButtonPanel _topButtons;
     /** My status panel. */
-    StatusPanel _status;
+    public StatusPanel _status;
 
     /** Number of repaints that have occured. */
     private int _paintCount;
@@ -40,6 +40,7 @@ public class MainPanel extends JPanel {
         _gui = gui;
         setLayout(null);
 
+        // TODO figure out background
         /*
         _background = new BackgroundPanel();
         _background.setBounds(0, 0, 800, 650);
@@ -69,18 +70,5 @@ public class MainPanel extends JPanel {
         setOpaque(true);
         setBounds(0, 0, 800, 650);
         _paintCount = 0;
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        System.out.println("Paint count: " + _paintCount);
-        _paintCount++;
-        _board.repaint();
-        _players.repaint();
-        _status.repaint();
-    }
-
-    public void addLine(String line) {
-        _status.addLine(line);
     }
 }
