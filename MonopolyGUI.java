@@ -23,6 +23,20 @@ public class MonopolyGUI implements ActionListener {
     /** Initializes the panels and buttons. */
     public MonopolyGUI(Monopoly game) {
         _game = game;
+        Player one = _game.players()[1];
+        one.movePlayer(1);
+        one.movePlayer(2);
+        Property med = (Property) one.location().piece();
+        one.movePlayer(8);
+        Property charles = (Property) one.location().piece();
+        one.movePlayer(10);
+        Property kentucky = (Property) one.location().piece();
+        one.movePlayer(10);
+        Property pacific = (Property) one.location().piece();
+        one.mortgageProperty(kentucky);
+        one.mortgageProperty(med);
+        one.mortgageProperty(pacific);
+        one.mortgageProperty(charles);
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
         

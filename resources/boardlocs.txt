@@ -1,0 +1,40 @@
+Go,396,407,bottom
+Mediterranean Avenue,362,407,bottom
+Community Chest Bottom,329,407,bottom
+Baltic Avenue,294,407,bottom
+Income Tax,260,407,bottom
+Reading Railroad,226,407,bottom
+Oriental Avenue,191,407,bottom
+Chance Bottom,157,407,bottom
+Vermont Avenue,123,407,bottom
+Connecticut Avenue,88,407,bottom
+Jail,31,407,bottom
+St. Charles Place,31,373,left
+Electric Company,31,339,left
+States Avenue,31,305,left
+Virginia Avenue,31,271,left
+Pennsylvania Railroad,31,237,left
+St. James Place,31,201,left
+Community Chest Left,31,167,left
+Tennessee Avenue,31,132,left
+New York Avenue,31,97,left
+Free Parking,31,40,top
+Kentucky Avenue,87,40,top
+Chance Top,122,40,top
+Indiana Avenue,157,40,top
+Illinois Avenue,192,40,top
+B. & O. Railroad,226,40,top
+Atlantic Avenue,259,40,top
+Ventnor Avenue,293,40,top
+Water Works,327,40,top
+Marvin Gardens,362,40,top
+Go To Jail,398,40,top
+Pacific Avenue,397,97,right
+North Carolina Avenue,397,131,right
+Community Chest Right,397,165,right
+Pennsylvania Avenue,397,201,right
+Short Line,397,236,right
+Chance Right,397,270,right
+Park Place,397,305,right
+Luxury Tax,397,339,right
+Boardwalk,397,373,right

@@ -38,7 +38,7 @@ public class PlayerPanel extends JPanel {
         int startX = 15;
         Player[] players = _game.players();
         for (int i = 1; i < players.length; i++) {
-            int yCoord = 40;
+            int yCoord = 25;
             g.setColor(Monopoly.COLORS[i]);
             Font font = new Font("Arial Black", Font.PLAIN, 18);
             g.setFont(font);
@@ -65,7 +65,7 @@ public class PlayerPanel extends JPanel {
             }
             if (_game.current().getID() == i) {
                 g.setColor(Color.BLACK);
-                g.fillRect(startX, 110, 120, 15);
+                g.fillRect(startX, 95, 120, 15);
             }
             // TODO draw marker for current player
             startX += 200;

@@ -47,7 +47,7 @@ public class MainPanel extends JPanel {
         }
 
         _board = new BoardPanel(_game);
-        _board.setBounds(0, 20, 465, 465);
+        _board.setBounds(0, 20, 485, 500);
         add(_board);
 
         _buttons = new ButtonPanel(_gui);
@@ -55,7 +55,7 @@ public class MainPanel extends JPanel {
         add(_buttons);
 
         _players = new PlayerPanel(_game);
-        _players.setBounds(0, 485, 800, 130);
+        _players.setBounds(0, 510, 800, 150);
         add(_players);
 
         _topButtons = new TopButtonPanel(_gui);
