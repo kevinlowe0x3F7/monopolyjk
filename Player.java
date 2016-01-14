@@ -201,16 +201,6 @@ public class Player {
             if (_location.piece().name().equals("Go")) {
                 _location.piece().effect(this);
             }
-            if (_monopoly.gui() != null) {
-                _monopoly.gui().panel().repaint(50);
-                /*
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    System.out.println("Error with traversing.");
-                }
-                */
-            }
         }
         resolveLanding();
     }
