@@ -38,7 +38,7 @@ public class MainPanel extends JPanel {
         _board.setBounds(0, 20, 465, 465);
         add(_board);
 
-        _buttons = new ButtonPanel(_game, _gui);
+        _buttons = new ButtonPanel(_gui);
         _buttons.setBounds(465, 20, 350, 250);
         add(_buttons);
 

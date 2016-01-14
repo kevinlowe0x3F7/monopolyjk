@@ -14,13 +14,12 @@ public class BoardPanel extends JPanel {
     public BoardPanel(Monopoly game) {
         super();
         _game = game;
-        setBackground(new Color(0, 102, 0));
         this.setOpaque(false);
         this.setLayout(null);
     }
 
     /** Draws the board itself. */
-    private void drawBoard(Graphics2D g) {
+    private void drawBoard(Graphics g) {
         InputStream in = getClass().getResourceAsStream("board.jpg");
         Image board;
         try {
@@ -31,9 +30,19 @@ public class BoardPanel extends JPanel {
         g.drawImage(board, 30, 40, 425, 425, null);
     }
 
+    /** Draw property markers, indicating who owns which property. */
+    private void drawPropertyMarkers(Graphics g) {
+    }
+
+    /** Draw player markers, indicating each players' location. */
+    private void drawPlayerMarkers(Graphics g) {
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
-        drawBoard((Graphics2D) g);
+        System.out.println("board and markers repainted");
+        drawBoard(g);
+        drawPropertyMarkers(
     }
 
     @Override

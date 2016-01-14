@@ -5,14 +5,19 @@ import java.awt.*;
  *  @author Kevin Lowe
  */
 public class ButtonPanel extends JPanel {
-    /** Monopoly game that I get information from. */
-    private Monopoly _game;
     /** GUI that listens to actions. */
     private MonopolyGUI _gui;
+    /** Roll Dice/End Turn button. */
+    private JButton _roll;
+    /** Mortgage button. */
+    private JButton _mortgage;
+    /** Houses button. */
+    private JButton _houses;
+    /** Trade button. */
+    private JButton _trade;
     
-    public ButtonPanel(Monopoly game, MonopolyGUI gui) {
+    public ButtonPanel(MonopolyGUI gui) {
         super();
-        _game = game;
         _gui = gui;
         initButtons();
         this.setOpaque(false);
@@ -21,30 +26,48 @@ public class ButtonPanel extends JPanel {
 
     /** Set up buttons are proper locations. */
     public void initButtons() {
-        // TODO switch buttons based on roll or end turn
-        // switch buttons if surrendering
         int width = 140;
         int height = 70;
-        JButton roll = new JButton("Roll Dice");
-        roll.setLocation(20, 40);
-        roll.setSize(width, height);
-        roll.addActionListener(_gui);
-        add(roll);
-        JButton mortgage = new JButton("Mortgage");
-        mortgage.setLocation(170, 40);
-        mortgage.setSize(width, height);
-        mortgage.addActionListener(_gui);
-        add(mortgage);
-        JButton houses = new JButton("Buy/Sell Houses");
-        houses.setLocation(20, 120);
-        houses.setSize(width, height);
-        houses.addActionListener(_gui);
-        add(houses);
-        JButton trade = new JButton("Trade");
-        trade.setLocation(170, 120);
-        trade.setSize(width, height);
-        trade.addActionListener(_gui);
-        add(trade);
+        _roll = new JButton("Roll Dice");
+        _roll.setLocation(20, 40);
+        _roll.setSize(width, height);
+        _roll.addActionListener(_gui);
+        add(_roll);
+        _mortgage = new JButton("Mortgage");
+        _mortgage.setLocation(170, 40);
+        _mortgage.setSize(width, height);
+        _mortgage.addActionListener(_gui);
+        add(_mortgage);
+        _houses = new JButton("Buy/Sell Houses");
+        _houses.setLocation(20, 120);
+        _houses.setSize(width, height);
+        _houses.addActionListener(_gui);
+        add(_houses);
+        _trade = new JButton("Trade");
+        _trade.setLocation(170, 120);
+        _trade.setSize(width, height);
+        _trade.addActionListener(_gui);
+        add(_trade);
+    }
+
+    /** Returns the Roll Dice/End Turn button. */
+    public JButton roll() {
+        return _roll;
+    }
+
+    /** Returns the mortgage button. */
+    public JButton mortgage() {
+        return _mortgage;
+    }
+
+    /** Returns the houses button. */
+    public JButton houses() {
+        return _houses;
+    }
+
+    /** Returns the trade button. */
+    public JButton trade() {
+        return _trade;
     }
 
     @Override
