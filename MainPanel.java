@@ -28,11 +28,23 @@ public class MainPanel extends JPanel {
     /** My status panel. */
     private StatusPanel _status;
 
+    /** Background image. */
+    private Image _background;
+
     /** Initializes all the parts. */
     public MainPanel(Monopoly game, MonopolyGUI gui) {
         _game = game;
         _gui = gui;
         setLayout(null);
+
+        InputStream in = getClass().getResourceAsStream(
+                "resources/wood.jpg");
+        try {
+            _background = ImageIO.read(in);
+        } catch (IOException e) {
+            System.out.println("error loading background image");
+            System.exit(1);
+        }
 
         _board = new BoardPanel(_game);
         _board.setBounds(0, 20, 465, 465);
@@ -57,6 +69,12 @@ public class MainPanel extends JPanel {
         setBackground(new Color(255, 217, 156));
         setOpaque(true);
         setBounds(0, 0, 800, 650);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        System.out.println("draw background");
+        g.drawImage(_background, 0, 0, 800, 650, null);
     }
 
     /** Returns the board panel. */

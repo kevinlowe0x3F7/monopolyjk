@@ -2,14 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 
 /** Class for the board panel which contains the image and any markers to
- *  help indicate where players are and who owns which property. */
+ *  help indicate where players are and who owns which property.
+ *  @author Kevin Lowe
+ */
 public class BoardPanel extends JPanel {
     /** The Monopoly game where I get the information from. */
     private Monopoly _game;
+    /** True if the board has been painted. */
+    private boolean _painted;
 
     public BoardPanel(Monopoly game) {
         super();
@@ -18,9 +23,21 @@ public class BoardPanel extends JPanel {
         this.setLayout(null);
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        System.out.println("board and markers repainted");
+        if (!_painted) {
+            drawBoard((Graphics2D) g);
+            _painted = true;
+        }
+        drawPropertyMarkers((Graphics2D) g);
+        drawPlayerMarkers((Graphics2D) g);
+    }
+
     /** Draws the board itself. */
-    private void drawBoard(Graphics g) {
-        InputStream in = getClass().getResourceAsStream("board.jpg");
+    private void drawBoard(Graphics2D g) {
+        InputStream in = getClass().getResourceAsStream(
+                "resources/board.jpg");
         Image board;
         try {
             board = ImageIO.read(in);
@@ -31,23 +48,10 @@ public class BoardPanel extends JPanel {
     }
 
     /** Draw property markers, indicating who owns which property. */
-    private void drawPropertyMarkers(Graphics g) {
+    private void drawPropertyMarkers(Graphics2D g) {
     }
 
     /** Draw player markers, indicating each players' location. */
-    private void drawPlayerMarkers(Graphics g) {
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        System.out.println("board and markers repainted");
-        drawBoard(g);
-        drawPropertyMarkers(
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        Dimension d = new Dimension(465, 465);
-        return d;
+    private void drawPlayerMarkers(Graphics2D g) {
     }
 }

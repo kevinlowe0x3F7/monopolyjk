@@ -249,7 +249,8 @@ public class Monopoly {
         _chest = new CommunityChest[17];
         _chestIndex = 0;
         try {
-            input = new BufferedReader(new FileReader("communitycardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/communitycardinfo.txt"));
             String next = input.readLine();
             int i = 0;
             while (next != null) {
@@ -296,7 +297,8 @@ public class Monopoly {
         _chance = new Chance[16];
         _chanceIndex = 0;
         try {
-            input = new BufferedReader(new FileReader("chancecardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/chancecardinfo.txt"));
             String next = input.readLine();
             int i = 0;
             while (next != null) {
@@ -367,7 +369,8 @@ public class Monopoly {
         BoardNode start = new BoardNode(new GoPiece());
         BoardNode curr = start;
         try {
-            input = new BufferedReader(new FileReader("boardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/boardinfo.txt"));
             String next = input.readLine();
             while (next != null) {
                 String[] info = next.split(",");
