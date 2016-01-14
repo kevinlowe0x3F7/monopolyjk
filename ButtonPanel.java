@@ -5,7 +5,9 @@ import java.awt.*;
  *  @author Kevin Lowe
  */
 public class ButtonPanel extends JPanel {
+    /** Monopoly game that I get information from. */
     private Monopoly _game;
+    /** GUI that listens to actions. */
     private MonopolyGUI _gui;
     
     public ButtonPanel(Monopoly game, MonopolyGUI gui) {

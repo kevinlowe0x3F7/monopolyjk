@@ -23,6 +23,7 @@ public class MonopolyGUI implements ActionListener {
     /** Initializes the panels and buttons. */
     public MonopolyGUI(Monopoly game) {
         _game = game;
+        _game.players()[1].movePlayer(32);
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
         
@@ -39,14 +40,16 @@ public class MonopolyGUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        _panel._status.addLine(command);
-        _panel._status.repaint();
+        _panel.status().addLine(command);
+        _panel.status().repaint();
 
         if (command.equals("New Game")) {
             _game = new Monopoly(_game.getNumPlayers());
-            _panel.repaint();
         } else if (command.equals("Quit")) {
             System.exit(0);
+        } else if (command.equals("Roll Dice")) {
+            _game.nextPlayer();
+            _panel.players().repaint();
         }
     }
 }

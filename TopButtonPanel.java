@@ -1,7 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 
+/** Panel for the top buttons of the GUI.
+ *  @author Kevin Lowe
+ */
 public class TopButtonPanel extends JPanel {
+    /** The GUI that listens to actions. */
     private MonopolyGUI _gui;
 
     public TopButtonPanel(MonopolyGUI gui) {

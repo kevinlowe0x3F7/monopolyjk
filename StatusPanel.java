@@ -25,6 +25,7 @@ public class StatusPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        System.out.println("status repainted");
         paintStatus((Graphics2D) g);
     }
 

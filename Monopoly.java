@@ -54,7 +54,7 @@ public class Monopoly {
     /** The color for each of the players, stays constant for any
      *  Monopoly game. */
     public static final Color[] COLORS = {null, Color.BLUE, Color.RED,
-        new Color(0, 102, 0), Color.YELLOW};
+        new Color(0, 102, 0), new Color(85, 26, 139)};
 
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
