@@ -17,8 +17,8 @@ import java.util.HashMap;
 public class BoardPanel extends JPanel {
     /** The Monopoly game where I get the information from. */
     private Monopoly _game;
-    /** True if the board has been painted. */
-    private boolean _painted;
+    /** Board image. */
+    private Image _board;
     /** Long length of a short piece on the board.jpg image (ex: property,
      *  chance, community chest). Can be either the width of the height
      *  depending on where the piece is on the board. Also the size of the
@@ -28,6 +28,8 @@ public class BoardPanel extends JPanel {
     private static final int SHORT = 34;
     /** Arc length for the property markers. */
     private static final int ARC = 1;
+    /** Radius of the player marker circle. */
+    private static final int RADIUS = 10;
     /** HashMap containing all of the property locations based on the
      *  X and Y coordinates from boardlocs.txt. */
     private HashMap<String, Location> _locations;
@@ -38,30 +40,27 @@ public class BoardPanel extends JPanel {
         this.setOpaque(false);
         this.setLayout(null);
         setPropertyLocations();
+        InputStream in = getClass().getResourceAsStream(
+                "resources/board.jpg");
+        try {
+            _board = ImageIO.read(in);
+        } catch (IOException e) {
+            System.out.println("error loading board image.");
+            System.exit(1);
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         System.out.println("board and markers repainted");
-        if (!_painted) {
-            drawBoard((Graphics2D) g);
-            _painted = true;
-        }
+        drawBoard((Graphics2D) g);
         drawPropertyMarkers((Graphics2D) g);
         drawPlayerMarkers((Graphics2D) g);
     }
 
     /** Draws the board itself. */
     private void drawBoard(Graphics2D g) {
-        InputStream in = getClass().getResourceAsStream(
-                "resources/board.jpg");
-        Image board;
-        try {
-            board = ImageIO.read(in);
-        } catch (IOException e) {
-            board = null;
-        }
-        g.drawImage(board, 30, 40, 425, 425, null);
+        g.drawImage(_board, 30, 40, 425, 425, null);
     }
 
     /** Draw property markers, indicating who owns which property. */
@@ -142,8 +141,36 @@ public class BoardPanel extends JPanel {
 
     /** Draw player markers, indicating each players' location. */
     private void drawPlayerMarkers(Graphics2D g) {
+        Player[] players = _game.players();
+        for (int i = 1; i < players.length; i++) {
+            Player next = players[i];
+            if (next == null) {
+                continue;
+            }
+            Location loc = _locations.get(next.location().piece().name());
+            g.setColor(Monopoly.COLORS[i]);
+            drawPlayerMarker(g, loc.x, loc.y, loc.side);
+        }
+        Player current = _game.current();
+        Location loc = _locations.get(current.location().piece().name());
+        g.setColor(Monopoly.COLORS[current.getID()]);
+        drawPlayerMarker(g, loc.x, loc.y, loc.side);
     }
     
+    /** Draw the actual player marker circle based on a x and y coordinate
+     *  and an orientation. */
+    private void drawPlayerMarker(Graphics2D g, int x, int y, String s) {
+            if (s.equals("top") || s.equals("bottom")) {
+                x += (SHORT / 2 - RADIUS);
+                y += (LONG / 2 - RADIUS);
+                g.fillOval(x, y, RADIUS * 2, RADIUS * 2);
+            } else {
+                x += (LONG / 2 - RADIUS);
+                y += (SHORT / 2 - RADIUS);
+                g.fillOval(x, y, RADIUS * 2, RADIUS * 2);
+            }
+    }
+
     /** Initializes the locations variable. */
     private void setPropertyLocations() {
         _locations = new HashMap<String, Location>();

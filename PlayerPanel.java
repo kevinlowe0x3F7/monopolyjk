@@ -67,7 +67,6 @@ public class PlayerPanel extends JPanel {
                 g.setColor(Color.BLACK);
                 g.fillRect(startX, 95, 120, 15);
             }
-            // TODO draw marker for current player
             startX += 200;
         }
 

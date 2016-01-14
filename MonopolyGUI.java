@@ -23,20 +23,16 @@ public class MonopolyGUI implements ActionListener {
     /** Initializes the panels and buttons. */
     public MonopolyGUI(Monopoly game) {
         _game = game;
+        /*
         Player one = _game.players()[1];
+        Player two = _game.players()[2];
+        Player three = _game.players()[3];
+        Player four = _game.players()[4];
         one.movePlayer(1);
-        one.movePlayer(2);
-        Property med = (Property) one.location().piece();
-        one.movePlayer(8);
-        Property charles = (Property) one.location().piece();
-        one.movePlayer(10);
-        Property kentucky = (Property) one.location().piece();
-        one.movePlayer(10);
-        Property pacific = (Property) one.location().piece();
-        one.mortgageProperty(kentucky);
-        one.mortgageProperty(med);
-        one.mortgageProperty(pacific);
-        one.mortgageProperty(charles);
+        two.movePlayer(11);
+        three.movePlayer(21);
+        four.movePlayer(31);
+        */
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
         
@@ -63,6 +59,7 @@ public class MonopolyGUI implements ActionListener {
         } else if (command.equals("Roll Dice")) {
             _game.nextPlayer();
             _panel.players().repaint();
+            _panel.board().repaint();
         } else if (command.equals("Trade")) {
             _panel.buttons().roll().setText("End Turn");
         }
