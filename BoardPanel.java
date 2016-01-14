@@ -15,6 +15,8 @@ public class BoardPanel extends JPanel {
         super();
         _game = game;
         setBackground(new Color(0, 102, 0));
+        this.setOpaque(false);
+        this.setLayout(null);
     }
 
     /** Draws the board itself. */
@@ -26,7 +28,7 @@ public class BoardPanel extends JPanel {
         } catch (IOException e) {
             board = null;
         }
-        g.drawImage(board, 30, 30, 425, 425, null);
+        g.drawImage(board, 30, 40, 425, 425, null);
     }
 
     @Override

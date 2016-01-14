@@ -25,15 +25,15 @@ public class MonopolyGUI implements ActionListener {
     public MonopolyGUI(Monopoly game) {
         _game = game;
         _panel = new MainPanel(_game, this);
+        _panel.setBounds(0, 0, 800, 650);
         
         _frame = new JFrame("Monopoly");
-        _frame.setContentPane(_panel);
+        _frame.setLayout(null);
+        _frame.add(_panel);
         _frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         _frame.setSize(800, 650);
         _frame.setResizable(false);
         _frame.setVisible(true);
-        ((JComponent) _frame.getContentPane()).revalidate();
-        _frame.repaint();
     }
 
     /** Takes care of actions. */

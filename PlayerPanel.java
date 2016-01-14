@@ -14,86 +14,57 @@ public class PlayerPanel extends JPanel {
     private Monopoly _game;
 
     public PlayerPanel(Monopoly game) {
-        super(new GridBagLayout());
+        super();
         _game = game;
-        setBackground(new Color(0, 102, 0));
+        this.setOpaque(false);
+        this.setLayout(null);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        displayStats();
+        displayStats((Graphics2D) g);
     }
 
     @Override
     public Dimension getPreferredSize() {
-        Dimension d = new Dimension(400, 100);
+        Dimension d = new Dimension(800, 130);
         return d;
     }
 
-    /** Displays all of the stats for each of the players in the
-     *  Monopoly game. */
-    public void displayStats() {
+    /** Displays the player stats, indicating ID, money amount,
+     *  and location. */
+    public void displayStats(Graphics2D g) {
+        int startX = 15;
         Player[] players = _game.players();
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
         for (int i = 1; i < players.length; i++) {
-            JTextArea info = new JTextArea(3, 75);
-            info.setLineWrap(true);
-            info.setEditable(false);
-            Font font = new Font("Arial Black", Font.PLAIN, 13);
-            if (i == 1) {
-                c.insets = new Insets(0, 0, 0, 10);
-            } else if (i == players.length - 1) {
-                c.insets = new Insets(0, 10, 0, 0);
+            g.setColor(Monopoly.COLORS[i]);
+            int yCoord = 40;
+            Font font = new Font("Arial Black", Font.PLAIN, 18);
+            g.setFont(font);
+            g.drawString("Player " + i, startX, yCoord);
+            yCoord += 25;
+            if (players[i] == null) {
+                g.setColor(Color.BLACK);
+                g.drawString("Bankrupt", startX, yCoord);
             } else {
-                c.insets = new Insets(0, 10, 0, 10);
-            }
-            info.setFont(font);
-            String player = "Player " + i + '\n';
-            int length = player.length();
-            info.append("Player " + i + '\n');
-            Player next = players[i];
-            if (next == null) {
-                info.append("Bankrupt" + '\n');
-            } else {
-                String moneyLoc = "$" + next.money() + '\n' +
-                    next.location().piece().name();
-                length += moneyLoc.length();
-                info.append(moneyLoc);
-                if (_game.current().getID() == i) {
-                    Highlighter highlighter = info.getHighlighter();
-                    HighlightPainter painter =
-                        new DefaultHighlighter.DefaultHighlightPainter(
-                                Color.RED);
-                    try {
-                        highlighter.addHighlight(0, length, painter);
-                    } catch (BadLocationException b) {
-                    }
+                Player next = players[i];
+                g.drawString("$" + next.money(), startX, yCoord);
+                yCoord += 25;
+                String location = next.location().piece().name();
+                int lastIndex = location.lastIndexOf(' ');
+                if (lastIndex != -1) {
+                    String location1 = location.substring(lastIndex + 1);
+                    location = location.substring(0, lastIndex);
+                    g.drawString(location, startX, yCoord);
+                    yCoord += 15;
+                    g.drawString(location1, startX, yCoord);
+                } else {
+                    g.drawString(location, startX, yCoord);
                 }
             }
-            add(info, c);
-            c.gridx += 1;
+            // TODO draw marker for current player
+            startX += 200;
         }
-        /*
-        JTextField info1 = new JTextField("Italics indicate current player.");
-        info1.setHorizontalAlignment(JTextField.CENTER);
-        c.gridx = 0;
-        c.gridy = 1;
-        c.gridwidth = players.length - 1;
-        add(info1, c);
-        */
-    }
 
-    public static void main(String[] args) {
-        Monopoly m = new Monopoly(4);
-        PlayerPanel p = new PlayerPanel(m);
-        JFrame f = new JFrame("Test");
-        f.add(p);
-        f.setSize(1000, 1000);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setVisible(true);
-        System.out.println("exit visible");
     }
 }
