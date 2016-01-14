@@ -51,6 +51,9 @@ public class Monopoly {
     /** Number of hotels available in the game. */
     private int _hotels;
 
+    /** A GUI, if the game contains one, otherwise it is null. */
+    private MonopolyGUI _gui;
+
     /** The color for each of the players, stays constant for any
      *  Monopoly game. */
     public static final Color[] COLORS = {null, Color.BLUE, Color.RED,
@@ -73,6 +76,12 @@ public class Monopoly {
         currentIndex = 1;
         _houses = 32;
         _hotels = 12;
+    }
+
+    /** Starts a new Monopoly game along with a GUI. */
+    public Monopoly(int numPlayers, MonopolyGUI gui) {
+        this(numPlayers);
+        _gui = gui;
     }
 
 //======================= Getters=========================
@@ -120,6 +129,11 @@ public class Monopoly {
     /** Return the number of available hotels. */
     public int hotels() {
         return _hotels;
+    }
+
+    /** Returns the GUI, if I have one. */
+    public MonopolyGUI gui() {
+        return _gui;
     }
 
     /** Draws the next chance card, resetting the deck if needed. */

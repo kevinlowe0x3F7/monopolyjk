@@ -21,9 +21,8 @@ public class MonopolyGUI implements ActionListener {
     private MainPanel _panel;
 
     /** Initializes the panels and buttons. */
-    public MonopolyGUI(Monopoly game) {
-        _game = game;
-        /*
+    public MonopolyGUI(int players) {
+        _game = new Monopoly(players, this);
         Player one = _game.players()[1];
         Player two = _game.players()[2];
         Player three = _game.players()[3];
@@ -32,7 +31,6 @@ public class MonopolyGUI implements ActionListener {
         two.movePlayer(11);
         three.movePlayer(21);
         four.movePlayer(31);
-        */
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
         
@@ -43,6 +41,11 @@ public class MonopolyGUI implements ActionListener {
         _frame.setSize(800, 650);
         _frame.setResizable(false);
         _frame.setVisible(true);
+    }
+
+    /** Returns my panel. */
+    public MainPanel panel() {
+        return _panel;
     }
 
     /** Takes care of actions. */
@@ -57,6 +60,7 @@ public class MonopolyGUI implements ActionListener {
         } else if (command.equals("Quit")) {
             System.exit(0);
         } else if (command.equals("Roll Dice")) {
+            _game.players()[1].traversePlayer("Go");
             _game.nextPlayer();
             _panel.players().repaint();
             _panel.board().repaint();
