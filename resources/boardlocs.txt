@@ -28,7 +28,7 @@ Atlantic Avenue,259,40,top
 Ventnor Avenue,293,40,top
 Water Works,327,40,top
 Marvin Gardens,362,40,top
-Go To Jail,398,40,top
+Go to Jail,398,40,top
 Pacific Avenue,397,97,right
 North Carolina Avenue,397,131,right
 Community Chest Right,397,165,right

@@ -148,11 +148,17 @@ public class BoardPanel extends JPanel {
                 continue;
             }
             Location loc = _locations.get(next.location().piece().name());
+            if (loc == null) {
+                loc = _locations.get(getCardLoc(next));
+            }
             g.setColor(Monopoly.COLORS[i]);
             drawPlayerMarker(g, loc.x, loc.y, loc.side);
         }
         Player current = _game.current();
         Location loc = _locations.get(current.location().piece().name());
+        if (loc == null) {
+            loc = _locations.get(getCardLoc(current));
+        }
         g.setColor(Monopoly.COLORS[current.getID()]);
         drawPlayerMarker(g, loc.x, loc.y, loc.side);
     }
@@ -169,6 +175,27 @@ public class BoardPanel extends JPanel {
                 y += (SHORT / 2 - RADIUS);
                 g.fillOval(x, y, RADIUS * 2, RADIUS * 2);
             }
+    }
+
+    /** Gets the correct community chest or chance based on the player's
+     *  location, determined by the next location. */
+    private String getCardLoc(Player player) {
+        switch (player.location().next().piece().name()) {
+            case "Baltic Avenue":
+                return "Community Chest Bottom";
+            case "Vermont Avenue":
+                return "Chance Bottom";
+            case "Tennessee Avenue":
+                return "Community Chest Left";
+            case "Indiana Avenue":
+                return "Chance Top";
+            case "Pennsylvania Avenue":
+                return "Community Chest Right";
+            case "Park Place":
+                return "Chance Right";
+            default:
+                return null;
+        }
     }
 
     /** Initializes the locations variable. */
