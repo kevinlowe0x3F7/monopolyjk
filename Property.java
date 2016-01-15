@@ -78,6 +78,9 @@ public abstract class Property implements BoardPiece {
         return _price;
     }
 
+    /** Returns the rent of the property */
+    abstract public int getRent(Player owner, Player current);
+
     /** Returns true if this property is part of a full set, false
      *  otherwise. */
     public boolean isFull() {

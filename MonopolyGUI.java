@@ -52,7 +52,7 @@ public class MonopolyGUI implements ActionListener {
 
             case "About":
                 //Pop up window and credits
-                about();
+                aboutPopUp();
                 break;
 
             case "Roll Dice":
@@ -62,7 +62,7 @@ public class MonopolyGUI implements ActionListener {
 
             case "Mortgage":
                 // Pop up Window
-                mortgage();
+                mortgagePopUp();
                 break;
 
             case "Buy/Sell Houses":
@@ -72,13 +72,10 @@ public class MonopolyGUI implements ActionListener {
 
             case "Trade":
                 // Pop up window for trading
-                trade()
+                tradePopUp();
                 break;
 
             case "End Turn":
-                _game.nextPlayer();
-                _frame.repaint();
-                _panel.addLine("Player " + _game.currentIndex() + " turn.");
                 break;
         }
         _panel.repaint();
@@ -91,22 +88,24 @@ public class MonopolyGUI implements ActionListener {
             jailedPopUp(current);
         }
         current.turn();
-        //Buy Property
-        buyPropertyPopUp();
+        String landedatrib = current.resolveLanding();
+        if (landedatrib.equals("Buying/Auctioning Property")) {
+            buyPropertyPopUp();
+        }
+        //_panel.status().addLine(landedatrib);
     } 
 
     /** Handles the pop up for when the player is in Jail */
     private void jailedPopUp(Player current) {
         if (current.jailFree()) {
             Object[] possibleChoices = {"Pay $50", "Roll Dice", "Use Get out of Jail Free Card"}; 
-         } else {
-            Object[] possibleChoices = {"Pay $50", "Roll Dice"}; 
          }
+        Object[] possibleChoices = {"Pay $50", "Roll Dice"}; 
 
         String question = "You have " + current.jailedTurns() + " turns in Jail\n" 
             + "Choose one of the following\n";
 
-        Object selectedValue = JOptionPane.showOptionDialog(null, question, "In Jail",
+        int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
             JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices, null);
 
         // Pay $50
@@ -131,6 +130,7 @@ public class MonopolyGUI implements ActionListener {
     /** Handles the pop up for Buying Property */
     private void buyPropertyPopUp() {
         //TODO
+
     }
 
     private void auctioningPopUp() {

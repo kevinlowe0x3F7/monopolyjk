@@ -15,9 +15,9 @@ public class Utility extends Property {
         if (current.getID() == owner().getID()) {
             return;
         } else {
-            int totalRoll = current.rolls()[0] + current.rolls()[1];
-            current.loseMoney(getRent(totalRoll));
-            owner().gainMoney(getRent(totalRoll));
+            int rent = getRent(owner(), current);
+            current.loseMoney(rent);
+            owner().gainMoney(rent);
         }
     }
 
@@ -29,7 +29,8 @@ public class Utility extends Property {
 
     /** Returns the value of rent based on the dice roll and the factor
      *  of whether the set is full or not. */
-    public int getRent(int roll) {
+    public int getRent(Player owner, Player current) {
+        int roll = current.rolls()[0] + current.rolls()[1];
         int factor;
         if (isFull()) {
             factor = 10;

@@ -32,8 +32,9 @@ public class Street extends Property {
         if (current.getID() == owner().getID()) {
             return;
         } else {
-            current.loseMoney(this.getRent());
-            owner().gainMoney(this.getRent());
+            int rent = getRent(owner(), current);
+            current.loseMoney(rent);
+            owner().gainMoney(rent);
         }
         return;
     }
@@ -59,7 +60,7 @@ public class Street extends Property {
 
     /** Returns the value for rent based on the number of houses that this
      *  property has. Also factors in whether it is part of a full set. */
-    public int getRent() {
+    public int getRent(Player owner, Player current) {
         if (_houses == 0) {
             if (isFull()) {
                 return _rent[_houses] * 2;

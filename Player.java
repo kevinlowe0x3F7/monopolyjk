@@ -215,7 +215,6 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        //resolveLanding();
     }
 
 
@@ -227,7 +226,6 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        //resolveLanding();
     }
     
     /** Moves the player backwards for a set number of spaces */
@@ -453,14 +451,14 @@ public class Player {
             Property property = (Property) _location.piece();
             if (property.isOwned()) {
                 property.effect(this);
-                return "Player " + _id " pays Player " + property.owner().getID(); + " rent";
+                return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
+                    + " rent to Player " + property.owner().getID();
             } else {
-                buyProperty(property);
                 return "Buying/Auctioning Property";
             }
         } else {
             _location.piece().effect(this);
-            return "Landed on " + location.piece().name();
+            return "Landed on " + _location.piece().name();
         }
     }
 
