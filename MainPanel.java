@@ -4,13 +4,12 @@ import javax.imageio.ImageIO;
 import java.io.InputStream;
 import java.io.IOException;
 
-import java.util.LinkedList;
 /** Class to implement the main panel of the GUI, containing all parts
  *  of the GUI:board, player stats, buttons, message box (View).
  *  @author Kevin Lowe
  *
  *  Credits: Board: http://bradfrost.com/blog/post/monopoly-photoshop-template/
- *  Wood: http://www.pixeden.com/graphic-web-backgrounds/wood-pattern-background
+ *  Wood: http://thaidigitalpublishing.com/wp-content/uploads/2012/01/6-Wood-Pattern-Background-Thumb01.jpg
  */
 public class MainPanel extends JPanel {
     /** The Monopoly game that I get information from. */
@@ -18,21 +17,19 @@ public class MainPanel extends JPanel {
     /** The GUI that this display is in. */
     private MonopolyGUI _gui;
 
-    /** My background panel. */
-    public BackgroundPanel _background;
     /** My board panel. */
-    public BoardPanel _board;
+    private BoardPanel _board;
     /** My right-side buttons panel. */
-    public ButtonPanel _buttons;
+    private ButtonPanel _buttons;
     /** My player panel. */
-    public PlayerPanel _players;
+    private PlayerPanel _players;
     /** My top buttons panel. */
-    public TopButtonPanel _topButtons;
+    private TopButtonPanel _topButtons;
     /** My status panel. */
-    public StatusPanel _status;
+    private StatusPanel _status;
 
-    /** Number of repaints that have occured. */
-    private int _paintCount;
+    /** Background image. */
+    private Image _background;
 
     /** Initializes all the parts. */
     public MainPanel(Monopoly game, MonopolyGUI gui) {
@@ -40,23 +37,25 @@ public class MainPanel extends JPanel {
         _gui = gui;
         setLayout(null);
 
-        // TODO figure out background
-        /*
-        _background = new BackgroundPanel();
-        _background.setBounds(0, 0, 800, 650);
-        add(_background);
-        */
+        InputStream in = getClass().getResourceAsStream(
+                "resources/wood.jpg");
+        try {
+            _background = ImageIO.read(in);
+        } catch (IOException e) {
+            System.out.println("error loading background image");
+            System.exit(1);
+        }
 
         _board = new BoardPanel(_game);
-        _board.setBounds(0, 20, 465, 465);
+        _board.setBounds(0, 20, 485, 500);
         add(_board);
 
-        _buttons = new ButtonPanel(_game, _gui);
+        _buttons = new ButtonPanel(_gui);
         _buttons.setBounds(465, 20, 350, 250);
         add(_buttons);
 
         _players = new PlayerPanel(_game);
-        _players.setBounds(0, 485, 800, 130);
+        _players.setBounds(0, 510, 800, 150);
         add(_players);
 
         _topButtons = new TopButtonPanel(_gui);
@@ -67,8 +66,39 @@ public class MainPanel extends JPanel {
         _status.setBounds(485, 230, 350, 250);
         add(_status);
 
+        setBackground(new Color(255, 217, 156));
         setOpaque(true);
         setBounds(0, 0, 800, 650);
-        _paintCount = 0;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        System.out.println("draw background");
+        g.drawImage(_background, 0, 0, 800, 650, null);
+    }
+
+    /** Returns the board panel. */
+    public BoardPanel board() {
+        return _board;
+    }
+
+    /** Returns the right-side buttons panel. */
+    public ButtonPanel buttons() {
+        return _buttons;
+    }
+
+    /** Returns the player panel. */
+    public PlayerPanel players() {
+        return _players;
+    }
+
+    /** Returns the top buttons panel. */
+    public TopButtonPanel topButtons() {
+        return _topButtons;
+    }
+
+    /** Return the status panel. */
+    public StatusPanel status() {
+        return _status;
     }
 }

@@ -22,6 +22,7 @@ public class PlayerPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        System.out.println("players repainted");
         displayStats((Graphics2D) g);
     }
 
@@ -37,19 +38,19 @@ public class PlayerPanel extends JPanel {
         int startX = 15;
         Player[] players = _game.players();
         for (int i = 1; i < players.length; i++) {
+            int yCoord = 25;
             g.setColor(Monopoly.COLORS[i]);
-            int yCoord = 40;
             Font font = new Font("Arial Black", Font.PLAIN, 18);
             g.setFont(font);
             g.drawString("Player " + i, startX, yCoord);
-            yCoord += 25;
+            yCoord += 22;
             if (players[i] == null) {
                 g.setColor(Color.BLACK);
                 g.drawString("Bankrupt", startX, yCoord);
             } else {
                 Player next = players[i];
                 g.drawString("$" + next.money(), startX, yCoord);
-                yCoord += 25;
+                yCoord += 22;
                 String location = next.location().piece().name();
                 int lastIndex = location.lastIndexOf(' ');
                 if (lastIndex != -1) {
@@ -62,7 +63,10 @@ public class PlayerPanel extends JPanel {
                     g.drawString(location, startX, yCoord);
                 }
             }
-            // TODO draw marker for current player
+            if (_game.current().getID() == i) {
+                g.setColor(Color.BLACK);
+                g.fillRect(startX, 95, 120, 15);
+            }
             startX += 200;
         }
 

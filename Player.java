@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import javax.swing.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class Player {
     /** Name of the Player */
     private String _name;
@@ -102,11 +106,17 @@ public class Player {
         return _rolls[0] + _rolls[1];
     }
 
+
     /** Return number of number of turns in Jail */
     public int jailedTurns() {
         return _jailedTurns;
     }
 
+
+    /** Return the game this player is a part of. */
+    public Monopoly game() {
+        return _monopoly;
+    }
 
 //=========================== Setters ================================
     
@@ -138,6 +148,11 @@ public class Player {
     /** Sets the JailFree as false or true */
     public void jailFree(boolean condition) {
         _jailFree = condition;
+    }
+
+    /** Set the location of the player to loc. */
+    public void setLocation(BoardNode loc) {
+        _location = loc;
     }
 
 //========================== Actions ==================================
@@ -210,9 +225,23 @@ public class Player {
      *  is a property and whether it is buyable or not. */
     public void traversePlayer(String traverseLocation) {
         while (!_location.piece().name().equals(traverseLocation)) {
-            _location = _location.next();
-            if (_location.piece().name().equals("Go")) {
-                _location.piece().effect(this);
+            if (_monopoly.gui() != null) {
+                int delay = 250;
+                ActionListener mover = new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("performing action.");
+                        _location = _location.next();
+                        _monopoly.gui().panel().board().repaint();
+                    }
+                };
+                Timer timer = new Timer(delay, mover);
+                timer.setRepeats(false);
+                timer.start();
+            } else {
+                _location = _location.next();
+                if (_location.piece().name().equals("Go")) {
+                    _location.piece().effect(this);
+                }
             }
         }
     }

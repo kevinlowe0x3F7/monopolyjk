@@ -9,8 +9,8 @@ import java.io.IOException;
  */
 public class BackgroundPanel extends JPanel {
     public BackgroundPanel() {
-        this.setOpaque(false);
-        this.setLayout(null);
+        this.setOpaque(true);
+        this.setLayout(new BorderLayout());
     }
 
     @Override

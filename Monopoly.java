@@ -51,10 +51,13 @@ public class Monopoly {
     /** Number of hotels available in the game. */
     private int _hotels;
 
+    /** A GUI, if the game contains one, otherwise it is null. */
+    private MonopolyGUI _gui;
+
     /** The color for each of the players, stays constant for any
      *  Monopoly game. */
     public static final Color[] COLORS = {null, Color.BLUE, Color.RED,
-        new Color(0, 102, 0), Color.YELLOW};
+        new Color(0, 102, 0), new Color(85, 26, 139)};
 
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
@@ -73,6 +76,12 @@ public class Monopoly {
         currentIndex = 1;
         _houses = 32;
         _hotels = 12;
+    }
+
+    /** Starts a new Monopoly game along with a GUI. */
+    public Monopoly(int numPlayers, MonopolyGUI gui) {
+        this(numPlayers);
+        _gui = gui;
     }
 
 //======================= Getters=========================
@@ -122,10 +131,16 @@ public class Monopoly {
         return _hotels;
     }
 
+
     /** Returns the current index of players */
     public int currentIndex() {
         return currentIndex;
     }
+
+    /** Returns the GUI, if I have one. */
+    public MonopolyGUI gui() {
+        return _gui;
+
     /** Draws the next chance card, resetting the deck if needed. */
     public Chance drawChance() {
         Chance next = _chance[_chanceIndex];
@@ -256,7 +271,8 @@ public class Monopoly {
         _chest = new CommunityChest[17];
         _chestIndex = 0;
         try {
-            input = new BufferedReader(new FileReader("communitycardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/communitycardinfo.txt"));
             String next = input.readLine();
             int i = 0;
             while (next != null) {
@@ -303,7 +319,8 @@ public class Monopoly {
         _chance = new Chance[16];
         _chanceIndex = 0;
         try {
-            input = new BufferedReader(new FileReader("chancecardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/chancecardinfo.txt"));
             String next = input.readLine();
             int i = 0;
             while (next != null) {
@@ -374,7 +391,8 @@ public class Monopoly {
         BoardNode start = new BoardNode(new GoPiece());
         BoardNode curr = start;
         try {
-            input = new BufferedReader(new FileReader("boardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/boardinfo.txt"));
             String next = input.readLine();
             while (next != null) {
                 String[] info = next.split(",");
