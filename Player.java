@@ -210,39 +210,81 @@ public class Player {
      *  passes go collect $200. (Kevin) Added clause to check if it
      *  is a property and whether it is buyable or not. */
     public void traversePlayer(String traverseLocation) {
-        while (!_location.piece().name().equals(traverseLocation)) {
-            if (_monopoly.gui() != null) {
-                int delay = 250;
-                ActionListener mover = new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("performing action.");
-                        _location = _location.next();
-                        _monopoly.gui().panel().board().repaint();
+        String loc = traverseLocation;
+        if (_monopoly.gui() != null) {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    while (!_location.piece().name().equals(loc)) {
+                        setLocation(_location.next());
+                        if (_location.piece().name().equals("Go")) {
+                            _location.piece().effect(Player.this);
+                        }
+                        publish();
+                        Thread.sleep(250);
                     }
-                };
-                Timer timer = new Timer(delay, mover);
-                timer.setRepeats(false);
-                timer.start();
-            } else {
+                    Player.this.resolveLanding();
+                    return null;
+                }
+
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().board().repaint();
+                }
+
+                protected void done() {
+                    _monopoly.gui().panel().players().repaint();
+                    _monopoly.gui().panel().board().repaint();
+                }
+            };
+            mover.execute();
+        } else {
+            while (!_location.piece().name().equals(traverseLocation)) {
                 _location = _location.next();
                 if (_location.piece().name().equals("Go")) {
                     _location.piece().effect(this);
                 }
             }
+            resolveLanding();
         }
-        resolveLanding();
     }
-
 
     /** Moves the player a set amount of space depending on the dice roll */
     public void movePlayer(int numSpaces) {
-        for (int i = 0; i < numSpaces; i++) {
-            _location = _location.next();
-            if (_location.piece().name().equals("Go")) {
-                _location.piece().effect(this);
+        if (_monopoly.gui() != null) {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    for (int i = 0; i < numSpaces; i++) {
+                        setLocation(_location.next());
+                        if (_location.piece().name().equals("Go")) {
+                            _location.piece().effect(Player.this);
+                        }
+                        publish();
+                        Thread.sleep(250);
+                    }
+                    Player.this.resolveLanding();
+                    return null;
+                }
+
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().board().repaint();
+                }
+
+                protected void done() {
+                    _monopoly.gui().panel().players().repaint();
+                    _monopoly.gui().panel().board().repaint();
+                }
+            };
+            mover.execute();
+        } else {
+            for (int i = 0; i < numSpaces; i++) {
+                _location = _location.next();
+                if (_location.piece().name().equals("Go")) {
+                    _location.piece().effect(this);
+                }
             }
+            resolveLanding();
         }
-        resolveLanding();
     }
     
     /** Moves the player backwards for a set number of spaces */
@@ -257,33 +299,83 @@ public class Player {
      *  to the nearest railroad/utilies and has a special charge.
      *  If the property is unowned, however, the player may buy it. */
     public void specialTraversePlayer(String traverseLocation) {
-        if (traverseLocation.equals("railroad")) {
-            while (!(_location.piece() instanceof Railroad)) {
-                _location = _location.next();
-                if (_location.piece().name().equals("Go")) {
-                    _location.piece().effect(this);
+        String loc = traverseLocation;
+        if (_monopoly.gui() != null) {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    if (traverseLocation.equals("railroad")) {
+                        while (!(_location.piece() instanceof Railroad)) {
+                            _location = _location.next();
+                            if (_location.piece().name().equals("Go")) {
+                                _location.piece().effect(Player.this);
+                            }
+                            publish();
+                            Thread.sleep(250);
+                        }
+                        Railroad landedPiece = (Railroad) _location.piece();
+                        if (landedPiece.isOwned()) {
+                            landedPiece.specialEffect(Player.this);
+                        } else {
+                            buyProperty(landedPiece);
+                        }
+                    } else {
+                        while (!(_location.piece() instanceof Utility)) {
+                            _location = _location.next();
+                            if (_location.piece().name().equals("Go")) {
+                                _location.piece().effect(Player.this);
+                            }
+                            publish();
+                            Thread.sleep(250);
+                        }
+                        Utility landedPiece = (Utility) _location.piece();
+                        if (landedPiece.isOwned()) {
+                            landedPiece.specialEffect(Player.this,
+                                    rollDice(), rollDice());
+                        } else {
+                            buyProperty(landedPiece);
+                        }
+                    }
+                    return null;
                 }
-            }
-            Railroad landedPiece = (Railroad) _location.piece();
-            // Changed by Kevin to accomodate unowned property
-            if (landedPiece.isOwned()) {
-                landedPiece.specialEffect(this);
-            } else {
-                buyProperty(landedPiece);
-            }
+                
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().board().repaint();
+                }
+
+                protected void done() {
+                    _monopoly.gui().panel().players().repaint();
+                    _monopoly.gui().panel().board().repaint();
+                }
+            };
+            mover.execute();
         } else {
-            while (!(_location.piece() instanceof Utility)) {
-                _location = _location.next();
-                if (_location.piece().name().equals("Go")) {
-                    _location.piece().effect(this);
+            if (traverseLocation.equals("railroad")) {
+                while (!(_location.piece() instanceof Railroad)) {
+                    _location = _location.next();
+                    if (_location.piece().name().equals("Go")) {
+                        _location.piece().effect(this);
+                    }
                 }
-            }
-            Utility landedPiece = (Utility) _location.piece();
-            // Changed by Kevin to accomodate unowned property
-            if (landedPiece.isOwned()) {
-                landedPiece.specialEffect(this, rollDice(), rollDice());
+                Railroad landedPiece = (Railroad) _location.piece();
+                if (landedPiece.isOwned()) {
+                    landedPiece.specialEffect(this);
+                } else {
+                    buyProperty(landedPiece);
+                }
             } else {
-                buyProperty(landedPiece);
+                while (!(_location.piece() instanceof Utility)) {
+                    _location = _location.next();
+                    if (_location.piece().name().equals("Go")) {
+                        _location.piece().effect(this);
+                    }
+                }
+                Utility landedPiece = (Utility) _location.piece();
+                if (landedPiece.isOwned()) {
+                    landedPiece.specialEffect(this, rollDice(), rollDice());
+                } else {
+                    buyProperty(landedPiece);
+                }
             }
         }
     }
