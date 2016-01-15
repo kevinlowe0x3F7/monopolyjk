@@ -92,6 +92,7 @@ public class MonopolyGUI implements ActionListener {
         }
         current.turn();
         //Buy Property
+        buyPropertyPopUp();
     } 
 
     /** Handles the pop up for when the player is in Jail */
@@ -128,7 +129,7 @@ public class MonopolyGUI implements ActionListener {
 
 
     /** Handles the pop up for Buying Property */
-    private void buyPropertyPopUp () {
+    private void buyPropertyPopUp() {
         //TODO
     }
 

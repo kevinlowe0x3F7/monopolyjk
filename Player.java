@@ -172,8 +172,8 @@ public class Player {
 
     private void jailedTurn() {
         if (_jailedTurns > 0) {
-            // Case 1: Pay $50 fine before //TODO FE
-            // Case 2: Get out of Jail Free //TODO FE
+            // Case 1: Pay $50 fine before  //FE
+            // Case 2: Get out of Jail Free //FE
             // Case 3: Roll Doubles
             _rolls[0] = rollDice(); _rolls[1] = rollDice();
             if (_rolls[0] == _rolls[1]) {
@@ -215,7 +215,7 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        resolveLanding();
+        //resolveLanding();
     }
 
 
@@ -227,7 +227,7 @@ public class Player {
                 _location.piece().effect(this);
             }
         }
-        resolveLanding();
+        //resolveLanding();
     }
     
     /** Moves the player backwards for a set number of spaces */
@@ -448,16 +448,19 @@ public class Player {
 
     /** Resolves effect of landing on a piece. Written to reduce
      *  code repetition. */
-    public void resolveLanding() {
+    public String resolveLanding() {
         if (_location.piece() instanceof Property) {
             Property property = (Property) _location.piece();
             if (property.isOwned()) {
                 property.effect(this);
+                return "Player " + _id " pays Player " + property.owner().getID(); + " rent";
             } else {
                 buyProperty(property);
+                return "Buying/Auctioning Property";
             }
         } else {
             _location.piece().effect(this);
+            return "Landed on " + location.piece().name();
         }
     }
 
