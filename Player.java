@@ -106,6 +106,13 @@ public class Player {
         return _rolls[0] + _rolls[1];
     }
 
+
+    /** Return number of number of turns in Jail */
+    public int jailedTurns() {
+        return _jailedTurns;
+    }
+
+
     /** Return the game this player is a part of. */
     public Monopoly game() {
         return _monopoly;
@@ -129,8 +136,13 @@ public class Player {
 
     /** Puts the player into jail */
     public void inJail(boolean jailed) {
-        _jailed = jailed;
-        _jailedTurns = 3;
+        if (jailed) {
+            _jailed = true;
+            _jailedTurns = 3;        
+        } else {
+            _jailed = false;
+            _jailedTurns = 0;
+        }
     }
 
     /** Sets the JailFree as false or true */
@@ -156,6 +168,14 @@ public class Player {
             int numRolls = 0;
             while (playerTurn) {
                 _rolls[0] = rollDice(); _rolls[1] = rollDice();
+                if (_monopoly.gui() != null) {
+                    String line = "Player " + _id + " rolled a ";
+                    _monopoly.gui().panel().status().addLine(line +
+                            _rolls[0]);
+                    _monopoly.gui().panel().status().addLine(line +
+                            _rolls[1]);
+                    _monopoly.gui().panel().status().repaint();
+                }
                 if (_rolls[0] != _rolls[1]) {
                     playerTurn = false;
                 } else {
@@ -174,19 +194,23 @@ public class Player {
 
     private void jailedTurn() {
         if (_jailedTurns > 0) {
-            // Case 1: Pay $50 fine before //TODO FE
-            // Case 2: Get out of Jail Free //TODO FE
+            // Case 1: Pay $50 fine before  //FE
+            // Case 2: Get out of Jail Free //FE
             // Case 3: Roll Doubles
             _rolls[0] = rollDice(); _rolls[1] = rollDice();
+            if (_monopoly.gui() != null) {
+                String line = "Player " + _id + " rolled a ";
+                _monopoly.gui().panel().status().addLine(line + _rolls[0]);
+                _monopoly.gui().panel().status().addLine(line + _rolls[1]);
+            }
             if (_rolls[0] == _rolls[1]) {
-                _jailedTurns = 0;
-                _jailed = false;
+                inJail(false);
                 movePlayer(_rolls[0] + _rolls[1]);
             // Case 4: Stay in Jail
             } else {
                 _jailedTurns--;
                 if (_jailedTurns == 0) {
-                    //Force Removal from jail
+                    // Case 5: Force Removal from jail
                     loseMoney(50);
                     _jailed = false;
                     movePlayer(_rolls[0] + _rolls[1]);
@@ -207,7 +231,7 @@ public class Player {
             @Override
             protected Integer doInBackground() throws Exception {
                 int roll = rollDice();
-                String line = "Player " + getID() + " rolls a " + roll;
+                String line = "Player " + getID() + " rolled a " + roll;
                 _monopoly.gui().panel().status().addLine(line);
                 publish();
                 Thread.sleep(250);
@@ -586,16 +610,19 @@ public class Player {
 
     /** Resolves effect of landing on a piece. Written to reduce
      *  code repetition. */
-    public void resolveLanding() {
+    public String resolveLanding() {
         if (_location.piece() instanceof Property) {
             Property property = (Property) _location.piece();
             if (property.isOwned()) {
                 property.effect(this);
+                return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
+                    + " rent to Player " + property.owner().getID();
             } else {
-                buyProperty(property);
+                return "Buying/Auctioning Property";
             }
         } else {
             _location.piece().effect(this);
+            return "Landed on " + _location.piece().name();
         }
     }
 
