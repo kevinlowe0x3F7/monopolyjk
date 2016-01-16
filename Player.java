@@ -7,6 +7,8 @@ import java.util.Random;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.lang.InterruptedException;
+import java.util.concurrent.ExecutionException;
 
 public class Player {
     /** Name of the Player */
@@ -196,6 +198,35 @@ public class Player {
     /** Rolls a die, returning an integer between 1 and 6. */
     public int rollDice() {
         return (_source.nextInt(6) + 1);
+    }
+
+    /** Rolls a die and updates the status GUI regarding the roll value
+     *  and also includes a dice image. Assumes _gui != null. */
+    public int rollDiceGUI() {
+        SwingWorker<Integer, Void> roller = new SwingWorker<Integer, Void>() {
+            @Override
+            protected Integer doInBackground() throws Exception {
+                int roll = rollDice();
+                String line = "Player " + getID() + " rolls a " + roll;
+                _monopoly.gui().panel().status().addLine(line);
+                publish();
+                Thread.sleep(250);
+                return roll;
+            }
+
+            protected void process(List<Void> chunks) {
+                _monopoly.gui().panel().board().repaint();
+                _monopoly.gui().panel().status().repaint();
+            }
+        };
+        roller.execute();
+        try {
+            return roller.get();
+        } catch (InterruptedException e) {
+            return 0;
+        } catch (ExecutionException e) {
+            return 0;
+        }
     }
 
 

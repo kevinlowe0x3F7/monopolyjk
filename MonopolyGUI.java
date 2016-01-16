@@ -52,11 +52,11 @@ public class MonopolyGUI implements ActionListener {
         } else if (command.equals("Quit")) {
             System.exit(0);
         } else if (command.equals("Roll Dice")) {
-            _game.players()[1].movePlayer(9);
+            _game.current().rollDiceGUI();
         } else if (command.equals("Trade")) {
             _panel.buttons().roll().setText("End Turn");
         } else if (command.equals("About")) {
-            _game.players()[1].specialTraversePlayer("railroad");
+            _game.nextPlayer();
         }
     }
 }
