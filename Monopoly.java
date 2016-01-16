@@ -140,6 +140,7 @@ public class Monopoly {
     /** Returns the GUI, if I have one. */
     public MonopolyGUI gui() {
         return _gui;
+    }
 
     /** Draws the next chance card, resetting the deck if needed. */
     public Chance drawChance() {

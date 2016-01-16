@@ -79,8 +79,7 @@ public class MonopolyGUI implements ActionListener {
                 break;
 
             case "Buy/Sell Houses":
-                // Pop up Window for Buy/Sell Houses
-
+                // Pop up Window for Buy/Sell Houses 
                 break;
 
             case "Trade":
@@ -91,7 +90,6 @@ public class MonopolyGUI implements ActionListener {
             case "End Turn":
                 break;
         }
-        _panel.repaint();
     }
 
     /** Handles the GUI dice roll */
@@ -100,12 +98,16 @@ public class MonopolyGUI implements ActionListener {
         if (current.isJailed()) {
             jailedPopUp(current);
         }
+
         current.turn();
+        _panel.board().repaint();
+
         String landedatrib = current.resolveLanding();
         if (landedatrib.equals("Buying/Auctioning Property")) {
             buyPropertyPopUp();
         }
-        //_panel.status().addLine(landedatrib);
+        
+        _panel.status().addLine(landedatrib);
     } 
 
     /** Handles the pop up for when the player is in Jail */
@@ -142,7 +144,7 @@ public class MonopolyGUI implements ActionListener {
 
     /** Handles the pop up for Buying Property */
     private void buyPropertyPopUp() {
-        //TODO
+        //TODO Create the Frame 
 
     }
 
