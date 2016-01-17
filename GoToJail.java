@@ -10,6 +10,11 @@ public class GoToJail implements BoardPiece {
     public void effect(Player current) {
         current.inJail(true);
         current.jumpPlayer("Jail");
+        String line = "Player " + current.getID() + "has been sent" +
+            " to jail.";
+        if (current.game().gui() != null) {
+            current.game().gui().panel().status().addLine(line);
+        }
     }
 
     @Override

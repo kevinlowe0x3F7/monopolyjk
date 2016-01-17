@@ -10,6 +10,11 @@ public class JailFreeCard implements CommunityChest, Chance {
 	/** Handles the effect of the card */
 	public void effect(Player player) {
 		player.jailFree(true);
+		String line = "Player " + player.getID() + " has earned a " +
+		    "Get Out of Jail Free card.";
+		if (player.game().gui() != null) {
+		    player.game().gui().panel().status().addLine(line);
+        }
 	}
 
 	/** Returns the name of the card */

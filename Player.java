@@ -269,7 +269,6 @@ public class Player {
                         publish();
                         Thread.sleep(250);
                     }
-                    Player.this.resolveLanding();
                     return null;
                 }
 
@@ -278,8 +277,15 @@ public class Player {
                 }
 
                 protected void done() {
+                    String landed = resolveLanding();
+                    if (landed.equals("Buying/Auctioning Property")) {
+                        // buyPropertyPopUp();
+                        buyProperty((Property) _location.piece());
+                    }
+                    _monopoly.gui().panel().status().addLine(landed);
                     _monopoly.gui().panel().players().repaint();
                     _monopoly.gui().panel().board().repaint();
+                    _monopoly.gui().panel().status().repaint();
                 }
             };
             mover.execute();
@@ -308,7 +314,6 @@ public class Player {
                         publish();
                         Thread.sleep(250);
                     }
-                    Player.this.resolveLanding();
                     return null;
                 }
 
@@ -319,10 +324,13 @@ public class Player {
                 protected void done() {
                     String landed = resolveLanding();
                     if (landed.equals("Buying/Auctioning Property")) {
+                        // TODO modify once popup is done
                         // buyPropertyPopUp();
                         buyProperty((Property) _location.piece());
                     }
-                    _monopoly.gui().panel().status().addLine(landed);
+                    if (landed.length() != 0) {
+                        _monopoly.gui().panel().status().addLine(landed);
+                    }
                     _monopoly.gui().panel().players().repaint();
                     _monopoly.gui().panel().board().repaint();
                     _monopoly.gui().panel().status().repaint();
@@ -612,6 +620,9 @@ public class Player {
         if (_location.piece() instanceof Property) {
             Property property = (Property) _location.piece();
             if (property.isOwned()) {
+                if (property.owner().equals(this)) {
+                    return "";
+                }
                 property.effect(this);
                 return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
                     + " to Player " + property.owner().getID();

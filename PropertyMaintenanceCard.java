@@ -30,5 +30,9 @@ public class PropertyMaintenanceCard implements CommunityChest, Chance {
 	 *  for the cost of each hotel and house */
 	public void effect(Player player) {
 		player.propertyMaintenance(_houseCost, _houseCost);
+		if (player.game().gui() != null) {
+		    player.game().gui().panel().status().addLine(_name);
+		    player.game().gui().panel().status().addLine(_message);
+        }
 	}
 }

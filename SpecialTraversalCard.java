@@ -23,6 +23,10 @@ public class SpecialTraversalCard implements Chance {
 	/** Handles the effect of the card traversal */
 	public void effect(Player player) {
 		player.specialTraversePlayer(_destination);
+		if (player.game().gui() != null) {
+		    player.game().gui().panel().status().addLine(_name);
+		    player.game().gui().panel().status().addLine(_message);
+        }
 	}
 
 	/** Returns the name of the card */

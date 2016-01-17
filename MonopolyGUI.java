@@ -88,12 +88,12 @@ public class MonopolyGUI implements ActionListener {
             protected Void doInBackground() throws Exception {
                 Player current = _game.current();
                 int[] rolls = current.rolls();
-                rolls[0] = current.rollDice();
+                rolls[0] = 3; // TODO change back to current.rollDice();
                 String line = "Player " + current.getID() + " rolled a ";
                 _panel.status().addLine(line + rolls[0]);
                 publish();
                 Thread.sleep(500);
-                rolls[1] = current.rollDice();
+                rolls[1] = 4; // TODO change back to current.rollDice();
                 _panel.status().addLine(line + rolls[1]);
                 publish();
 

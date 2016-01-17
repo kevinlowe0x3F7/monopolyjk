@@ -17,6 +17,9 @@ public class BackStepCard implements Chance {
 	
 	/** Handles the effect of the player backstepping */
 	public void effect(Player player) {
+	    if (player.game().gui() != null) {
+	        player.game().gui().panel().status().addLine(_name);
+        }
 		player.backstep(_numSpaces);
 	}
 
