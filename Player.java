@@ -157,6 +157,40 @@ public class Player {
 
 //========================== Actions ==================================
 
+    /** Takes care of a single two dice roll for a player's turn,
+     *  assuming a GUI is involved. */
+    public void turnGUI() {
+        if (_jailed) {
+            jailedTurn();
+        } else {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    _rolls[0] = rollDice();
+                    String line = "Player " + _id + " rolled a ";
+                    _monopoly.gui().panel().status().addLine(line +
+                            _rolls[0]);
+                    publish();
+                    Thread.sleep(500);
+                    _rolls[1] = rollDice();
+                    _monopoly.gui().panel().status().addLine(line +
+                            _rolls[1]);
+                    publish();
+                    return null;
+                }
+
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().status().repaint();
+                }
+
+                protected void done() {
+                    Player.this.movePlayer(getLastRoll());
+                }
+            };
+            mover.execute();
+        }
+    }
+
     /** Takes care of players turn */
     public void turn() {
         // Jailed Turn
@@ -168,14 +202,6 @@ public class Player {
             int numRolls = 0;
             while (playerTurn) {
                 _rolls[0] = rollDice(); _rolls[1] = rollDice();
-                if (_monopoly.gui() != null) {
-                    String line = "Player " + _id + " rolled a ";
-                    _monopoly.gui().panel().status().addLine(line +
-                            _rolls[0]);
-                    _monopoly.gui().panel().status().addLine(line +
-                            _rolls[1]);
-                    _monopoly.gui().panel().status().repaint();
-                }
                 if (_rolls[0] != _rolls[1]) {
                     playerTurn = false;
                 } else {
@@ -198,11 +224,6 @@ public class Player {
             // Case 2: Get out of Jail Free //FE
             // Case 3: Roll Doubles
             _rolls[0] = rollDice(); _rolls[1] = rollDice();
-            if (_monopoly.gui() != null) {
-                String line = "Player " + _id + " rolled a ";
-                _monopoly.gui().panel().status().addLine(line + _rolls[0]);
-                _monopoly.gui().panel().status().addLine(line + _rolls[1]);
-            }
             if (_rolls[0] == _rolls[1]) {
                 inJail(false);
                 movePlayer(_rolls[0] + _rolls[1]);
@@ -223,36 +244,6 @@ public class Player {
     public int rollDice() {
         return (_source.nextInt(6) + 1);
     }
-
-    /** Rolls a die and updates the status GUI regarding the roll value
-     *  and also includes a dice image. Assumes _gui != null. */
-    public int rollDiceGUI() {
-        SwingWorker<Integer, Void> roller = new SwingWorker<Integer, Void>() {
-            @Override
-            protected Integer doInBackground() throws Exception {
-                int roll = rollDice();
-                String line = "Player " + getID() + " rolled a " + roll;
-                _monopoly.gui().panel().status().addLine(line);
-                publish();
-                Thread.sleep(250);
-                return roll;
-            }
-
-            protected void process(List<Void> chunks) {
-                _monopoly.gui().panel().board().repaint();
-                _monopoly.gui().panel().status().repaint();
-            }
-        };
-        roller.execute();
-        try {
-            return roller.get();
-        } catch (InterruptedException e) {
-            return 0;
-        } catch (ExecutionException e) {
-            return 0;
-        }
-    }
-
 
     /** Jumps the player to Jail. Does not collect $200 from passing go */
     public void jumpPlayer(String jumpLocation) {
@@ -326,8 +317,15 @@ public class Player {
                 }
 
                 protected void done() {
+                    String landed = resolveLanding();
+                    if (landed.equals("Buying/Auctioning Property")) {
+                        // buyPropertyPopUp();
+                        buyProperty((Property) _location.piece());
+                    }
+                    _monopoly.gui().panel().status().addLine(landed);
                     _monopoly.gui().panel().players().repaint();
                     _monopoly.gui().panel().board().repaint();
+                    _monopoly.gui().panel().status().repaint();
                 }
             };
             mover.execute();
@@ -616,7 +614,7 @@ public class Player {
             if (property.isOwned()) {
                 property.effect(this);
                 return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
-                    + " rent to Player " + property.owner().getID();
+                    + " to Player " + property.owner().getID();
             } else {
                 return "Buying/Auctioning Property";
             }

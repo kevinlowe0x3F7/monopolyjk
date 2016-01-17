@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.List;
 
 /** The GUI for monopoly (Controller).
  *  @author Kevin Lowe
@@ -83,20 +83,41 @@ public class MonopolyGUI implements ActionListener {
 
     /** Handles the GUI dice roll */
     private void rollDice() {
-        Player current = _game.current();
-        if (current.isJailed()) {
-            jailedPopUp(current);
-        }
+        SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                Player current = _game.current();
+                int[] rolls = current.rolls();
+                rolls[0] = current.rollDice();
+                String line = "Player " + current.getID() + " rolled a ";
+                _panel.status().addLine(line + rolls[0]);
+                publish();
+                Thread.sleep(500);
+                rolls[1] = current.rollDice();
+                _panel.status().addLine(line + rolls[1]);
+                publish();
 
-        current.turn();
-        _panel.board().repaint();
+                current.movePlayer(current.getLastRoll());
 
-        String landedatrib = current.resolveLanding();
-        if (landedatrib.equals("Buying/Auctioning Property")) {
-            buyPropertyPopUp();
-        }
-        
-        _panel.status().addLine(landedatrib);
+                return null;
+            }
+
+            protected void process(List<Void> chunks) {
+                _panel.status().repaint();
+                _panel.board().repaint();
+            }
+
+            protected void done() {
+                _panel.status().repaint();
+                _panel.board().repaint();
+                Player current = _game.current();
+                int[] rolls = current.rolls();
+                if (rolls[0] != rolls[1]) {
+                    _panel.buttons().roll().setText("End Turn");
+                }
+            }
+        };
+        mover.execute();
     } 
 
     /** Handles the pop up for when the player is in Jail */
@@ -171,6 +192,8 @@ public class MonopolyGUI implements ActionListener {
         _panel.status().addLine("Player " + after.getID() + "'s turn.");
         _panel.status().repaint();
         _panel.players().repaint();
+        _panel.board().repaint();
+        _panel.buttons().roll().setText("Roll Dice");
     }
 }
 
