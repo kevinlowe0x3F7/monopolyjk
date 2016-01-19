@@ -305,7 +305,8 @@ public class Player {
                         // buyPropertyPopUp();
                         buyProperty((Property) _location.piece());
                     }
-                    if (landed.length() != 0) {
+                    if (landed.length() != 0 && (!landed.equals(
+                                    "Buying/Auctioning Property"))) {
                         _monopoly.gui().panel().status().addLine(landed);
                     }
                     _monopoly.gui().panel().players().repaint();
@@ -604,7 +605,7 @@ public class Player {
                 return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
                     + " to Player " + property.owner().getID();
             } else {
-                return "";
+                return "Buying/Auctioning Property";
             }
         } else {
             _location.piece().effect(this);

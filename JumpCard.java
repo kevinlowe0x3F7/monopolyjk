@@ -29,6 +29,8 @@ public class JumpCard implements CommunityChest, Chance {
 		if (player.game().gui() != null) {
 		    player.game().gui().panel().status().addLine(_name);
 		    player.game().gui().panel().status().addLine(_message);
+		    player.game().nextPlayer();
+		    player.game().gui().panel().buttons().roll().setText("Roll Dice");
         }
 	}
 }

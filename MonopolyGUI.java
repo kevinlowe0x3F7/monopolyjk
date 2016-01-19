@@ -87,7 +87,7 @@ public class MonopolyGUI implements ActionListener {
     /** Handles the GUI dice roll for a normal player's turn. */
     private void rollDice() {
         SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
-            private boolean wasSenttoJail = false;
+            private boolean wasSentToJail = false;
             @Override
             protected Void doInBackground() throws Exception {
                 Player current = _game.current();
@@ -109,6 +109,7 @@ public class MonopolyGUI implements ActionListener {
                         current.inJail(true);
                         current.jumpPlayer("Jail");
                         _game.nextPlayer();
+                        wasSentToJail = true;
                         String line2 = "Player " + _game.current().getID()
                             + "'s turn";
                         _panel.status().addLine(line1);
@@ -120,7 +121,10 @@ public class MonopolyGUI implements ActionListener {
                     current.movePlayer(current.getLastRoll());
                     current.setDoubles(0);
                 }
-
+                if ((current.location().piece().name().equals(
+                    "Jail") && (current.isJailed()))) {
+                    wasSentToJail = true;
+                    }
                 return null;
             }
 
@@ -133,7 +137,7 @@ public class MonopolyGUI implements ActionListener {
                 _panel.status().repaint();
                 _panel.board().repaint();
                 _panel.players().repaint();
-                if (!wasSenttoJail) {
+                if (!wasSentToJail) {
                     Player current = _game.current();
                     int[] rolls = current.rolls();
                     if (rolls[0] != rolls[1]) {
@@ -199,8 +203,8 @@ public class MonopolyGUI implements ActionListener {
                 _panel.board().repaint();
                 _panel.players().repaint();
             }
-    };
-    mover.execute();
+        };
+        mover.execute();
     }
 
     /** Handles the pop up for when the player is in Jail */
