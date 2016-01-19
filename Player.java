@@ -259,7 +259,10 @@ public class Player {
                         // buyPropertyPopUp();
                         buyProperty((Property) _location.piece());
                     }
-                    _monopoly.gui().panel().status().addLine(landed);
+                    if (landed.length() != 0 && (!landed.equals(
+                                    "Buying/Auctioning Property"))) {
+                        _monopoly.gui().panel().status().addLine(landed);
+                    }
                     _monopoly.gui().panel().players().repaint();
                     _monopoly.gui().panel().board().repaint();
                     _monopoly.gui().panel().status().repaint();

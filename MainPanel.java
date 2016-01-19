@@ -100,4 +100,9 @@ public class MainPanel extends JPanel {
     public StatusPanel status() {
         return _status;
     }
+
+    /** Sets a new _game variable. */
+    public void setGame(Monopoly newGame) {
+        _game = newGame;
+    }
 }

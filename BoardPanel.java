@@ -219,4 +219,9 @@ public class BoardPanel extends JPanel {
             System.out.println("Error:Invalid input in boardlocs.txt file");
         }
     }
+
+    /** Sets a new _game variable. */
+    public void setGame(Monopoly newGame) {
+        _game = newGame;
+    }
 }

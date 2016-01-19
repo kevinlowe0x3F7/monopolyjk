@@ -46,9 +46,13 @@ public class MonopolyGUI implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "New Game":
-                _game = new Monopoly(_game.getNumPlayers());
+                _game = new Monopoly(_game.getNumPlayers(), this);
+                resetGames(_game);
                 _panel.status().addLine("New Game Started");
                 _panel.status().repaint();
+                _panel.board().repaint();
+                _panel.players().repaint();
+                _panel.buttons().roll().setText("Roll Dice");
                 break;
             case "Quit":
                 System.exit(0);
@@ -84,6 +88,14 @@ public class MonopolyGUI implements ActionListener {
         }
     }
 
+    /** Reset all _game variables for the different panels with
+     *  the new game. */
+    public void resetGames(Monopoly newGame) {
+        _panel.setGame(newGame);
+        _panel.players().setGame(newGame);
+        _panel.board().setGame(newGame);
+    }
+
     /** Handles the GUI dice roll for a normal player's turn. */
     private void rollDice() {
         SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
@@ -92,12 +104,12 @@ public class MonopolyGUI implements ActionListener {
             protected Void doInBackground() throws Exception {
                 Player current = _game.current();
                 int[] rolls = current.rolls();
-                rolls[0] = current.rollDice();
+                rolls[0] = 5; //current.rollDice();
                 String line = "Player " + current.getID() + " rolled a ";
                 _panel.status().addLine(line + rolls[0]);
                 publish();
                 Thread.sleep(500);
-                rolls[1] = current.rollDice();
+                rolls[1] = 0;// current.rollDice();
                 _panel.status().addLine(line + rolls[1]);
                 publish();
 

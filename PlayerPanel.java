@@ -70,4 +70,9 @@ public class PlayerPanel extends JPanel {
         }
 
     }
+
+    /** Sets a new _game variable. */
+    public void setGame(Monopoly newGame) {
+        _game = newGame;
+    }
 }
