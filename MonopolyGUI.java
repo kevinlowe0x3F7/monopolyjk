@@ -44,7 +44,6 @@ public class MonopolyGUI implements ActionListener {
     /** Takes care of actions. */
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(e.getActionCommand());
         switch (e.getActionCommand()) {
             case "New Game":
                 _game = new Monopoly(_game.getNumPlayers());
@@ -60,7 +59,11 @@ public class MonopolyGUI implements ActionListener {
                 break;
             case "Roll Dice":
                 // The graphics of rolling the dice
-                rollDice();
+                if (_game.current().isJailed()) {
+                    rollDiceJail();
+                } else {
+                    rollDice();
+                }
                 break;
             case "Mortgage":
                 // Pop up Window
@@ -81,23 +84,42 @@ public class MonopolyGUI implements ActionListener {
         }
     }
 
-    /** Handles the GUI dice roll */
+    /** Handles the GUI dice roll for a normal player's turn. */
     private void rollDice() {
         SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+            private boolean wasSenttoJail = false;
             @Override
             protected Void doInBackground() throws Exception {
                 Player current = _game.current();
                 int[] rolls = current.rolls();
-                rolls[0] = 3; // TODO change back to current.rollDice();
+                rolls[0] = current.rollDice();
                 String line = "Player " + current.getID() + " rolled a ";
                 _panel.status().addLine(line + rolls[0]);
                 publish();
                 Thread.sleep(500);
-                rolls[1] = 4; // TODO change back to current.rollDice();
+                rolls[1] = current.rollDice();
                 _panel.status().addLine(line + rolls[1]);
                 publish();
 
-                current.movePlayer(current.getLastRoll());
+                if (rolls[0] == rolls[1]) {
+                    current.setDoubles(current.doubleTurns() + 1);
+                    if (current.doubleTurns() == 3) {
+                        String line1 = "3 doubles, Player " +
+                            current.getID() + " has been sent to jail";
+                        current.inJail(true);
+                        current.jumpPlayer("Jail");
+                        _game.nextPlayer();
+                        String line2 = "Player " + _game.current().getID()
+                            + "'s turn";
+                        _panel.status().addLine(line1);
+                        _panel.status().addLine(line2);
+                    } else {
+                        current.movePlayer(current.getLastRoll());
+                    }
+                } else {
+                    current.movePlayer(current.getLastRoll());
+                    current.setDoubles(0);
+                }
 
                 return null;
             }
@@ -110,18 +132,79 @@ public class MonopolyGUI implements ActionListener {
             protected void done() {
                 _panel.status().repaint();
                 _panel.board().repaint();
-                Player current = _game.current();
-                int[] rolls = current.rolls();
-                if (rolls[0] != rolls[1]) {
-                    _panel.buttons().roll().setText("End Turn");
+                _panel.players().repaint();
+                if (!wasSenttoJail) {
+                    Player current = _game.current();
+                    int[] rolls = current.rolls();
+                    if (rolls[0] != rolls[1]) {
+                        _panel.buttons().roll().setText("End Turn");
+                    }
                 }
             }
         };
         mover.execute();
     } 
 
+    /** Handles the GUI dice roll for when the player is in jail. */
+    private void rollDiceJail() {
+        SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                Player current = _game.current();
+                String answer = jailedPopUp(current);
+                if (answer.equals("Pay $50")) {
+                    current.loseMoney(50);
+                    publish();
+                    current.inJail(false);
+                    current.setDoubles(0);
+                    rollDice();
+                } else if (answer.equals("Roll Dice")) {
+                    int[] rolls = current.rolls();
+                    rolls[0] = current.rollDice();
+                    String line = "Player " + current.getID() +
+                        " rolled a ";
+                    _panel.status().addLine(line + rolls[0]);
+                    publish();
+                    Thread.sleep(500);
+                    rolls[1] = current.rollDice();
+                    _panel.status().addLine(line + rolls[1]);
+                    publish();
+
+                    if (rolls[0] == rolls[1]) {
+                        String line1 = "Doubles! Player " +
+                            current.getID() + " is free.";
+                        _panel.status().addLine(line1);
+                        current.movePlayer(current.getLastRoll());
+                        _panel.buttons().roll().setText("End Turn");
+                    } else {
+                        current.setTurns(current.jailedTurns() - 1);
+                        if (current.jailedTurns() == 0) {
+                            current.loseMoney(50);
+                            publish();
+                            current.inJail(false);
+                            current.movePlayer(current.getLastRoll());
+                        }
+                        _panel.buttons().roll().setText("End Turn");
+                    }
+                } else {
+                   current.jailFree(false);
+                   current.inJail(false);
+                   rollDice();
+                }
+                return null;
+            }
+
+            protected void process(List<Void> chunks) {
+                _panel.status().repaint();
+                _panel.board().repaint();
+                _panel.players().repaint();
+            }
+    };
+    mover.execute();
+    }
+
     /** Handles the pop up for when the player is in Jail */
-    private void jailedPopUp(Player current) {
+    private String jailedPopUp(Player current) {
         if (current.jailFree()) {
             Object[] possibleChoices = {"Pay $50", "Roll Dice", "Use Get out of Jail Free Card"}; 
          }
@@ -135,19 +218,13 @@ public class MonopolyGUI implements ActionListener {
 
         // Pay $50
         if (selectedValue == 0) {
-            current.loseMoney(50);
-            current.inJail(false);
+            return "Pay $50";
         // Roll Dice
         } else if (selectedValue == 1) {
-            return;
+            return "Roll Dice";
         // Use Jail Free Card
         } else {
-            if (current.jailFree()) {
-                current.jailFree(false);
-                current.inJail(false);
-            } else {
-                System.out.println("Player does not have a Jail Free Card");      
-            }
+            return "Jail Free";
         }
     }
 
@@ -196,8 +273,3 @@ public class MonopolyGUI implements ActionListener {
         _panel.buttons().roll().setText("Roll Dice");
     }
 }
-
-
-
-
-

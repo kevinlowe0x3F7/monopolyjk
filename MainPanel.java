@@ -73,7 +73,6 @@ public class MainPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("draw background");
         g.drawImage(_background, 0, 0, 800, 650, null);
     }
 

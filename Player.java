@@ -31,6 +31,8 @@ public class Player {
     private boolean _jailed;
     /** Number of turn in jail */
     private int _jailedTurns;
+    /** Number of consecutive double rolls. */
+    private int _doubleTurns;
     /** Numbers rolled */
     private int[] _rolls;
     /** My random generator. */
@@ -106,12 +108,16 @@ public class Player {
         return _rolls[0] + _rolls[1];
     }
 
-
-    /** Return number of number of turns in Jail */
+    /** Return number of turns in Jail */
     public int jailedTurns() {
         return _jailedTurns;
     }
 
+    /** Returns the number of consecutive turns the player
+     *  rolled doubles. */
+    public int doubleTurns() {
+        return _doubleTurns;
+    }
 
     /** Return the game this player is a part of. */
     public Monopoly game() {
@@ -155,41 +161,17 @@ public class Player {
         _location = loc;
     }
 
-//========================== Actions ==================================
-
-    /** Takes care of a single two dice roll for a player's turn,
-     *  assuming a GUI is involved. */
-    public void turnGUI() {
-        if (_jailed) {
-            jailedTurn();
-        } else {
-            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
-                @Override
-                protected Void doInBackground() throws Exception {
-                    _rolls[0] = rollDice();
-                    String line = "Player " + _id + " rolled a ";
-                    _monopoly.gui().panel().status().addLine(line +
-                            _rolls[0]);
-                    publish();
-                    Thread.sleep(500);
-                    _rolls[1] = rollDice();
-                    _monopoly.gui().panel().status().addLine(line +
-                            _rolls[1]);
-                    publish();
-                    return null;
-                }
-
-                protected void process(List<Void> chunks) {
-                    _monopoly.gui().panel().status().repaint();
-                }
-
-                protected void done() {
-                    Player.this.movePlayer(getLastRoll());
-                }
-            };
-            mover.execute();
-        }
+    /** Set the number of turns in jail. */
+    public void setTurns(int turns) {
+        _jailedTurns = turns;
     }
+
+    /** Set the number of double rolls. */
+    public void setDoubles(int turns) {
+        _doubleTurns = turns;
+    }
+
+//========================== Actions ==================================
 
     /** Takes care of players turn */
     public void turn() {
@@ -220,18 +202,13 @@ public class Player {
 
     private void jailedTurn() {
         if (_jailedTurns > 0) {
-            // Case 1: Pay $50 fine before  //FE
-            // Case 2: Get out of Jail Free //FE
-            // Case 3: Roll Doubles
             _rolls[0] = rollDice(); _rolls[1] = rollDice();
             if (_rolls[0] == _rolls[1]) {
                 inJail(false);
                 movePlayer(_rolls[0] + _rolls[1]);
-            // Case 4: Stay in Jail
             } else {
                 _jailedTurns--;
                 if (_jailedTurns == 0) {
-                    // Case 5: Force Removal from jail
                     loseMoney(50);
                     _jailed = false;
                     movePlayer(_rolls[0] + _rolls[1]);
@@ -627,7 +604,7 @@ public class Player {
                 return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
                     + " to Player " + property.owner().getID();
             } else {
-                return "Buying/Auctioning Property";
+                return "";
             }
         } else {
             _location.piece().effect(this);

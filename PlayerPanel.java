@@ -22,7 +22,6 @@ public class PlayerPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("players repainted");
         displayStats((Graphics2D) g);
     }
 
