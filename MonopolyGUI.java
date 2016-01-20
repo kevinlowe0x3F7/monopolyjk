@@ -49,7 +49,7 @@ public class MonopolyGUI implements ActionListener {
         return _panel;
     }
 
-    /** Takes care of actions. */
+    /** Takes care of all button actions. */
     @Override
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
@@ -65,7 +65,8 @@ public class MonopolyGUI implements ActionListener {
 
             case "About":
                 //Pop up window and credits
-                aboutPopUp();
+                //aboutPopUp();
+                buyPropertyPopUp("Mediterranean Avenue");
                 break;
 
             case "Roll Dice":
@@ -87,6 +88,14 @@ public class MonopolyGUI implements ActionListener {
                 tradePopUp();
                 break;
 
+            case "Buy":
+                _game.current().buyProperty(_game.current().location().piece());
+                break;
+
+            case "Don't Buy":
+                //Exit the Jframe
+                break;
+
             case "End Turn":
                 break;
         }
@@ -104,9 +113,9 @@ public class MonopolyGUI implements ActionListener {
 
         String landedatrib = current.resolveLanding();
         if (landedatrib.equals("Buying/Auctioning Property")) {
-            buyPropertyPopUp();
+            //buyPropertyPopUp(current.location().piece().name());
         }
-        
+
         _panel.status().addLine(landedatrib);
     } 
 
@@ -143,9 +152,17 @@ public class MonopolyGUI implements ActionListener {
 
 
     /** Handles the pop up for Buying Property */
-    private void buyPropertyPopUp() {
+    private void buyPropertyPopUp(String property) {
         //TODO Create the Frame 
-
+        JFrame buyFrame = new JFrame("Buying Property");
+        BuyPropertyPanel buyPanel = new BuyPropertyPanel(property);
+        buyPanel.setBounds(0, 0, 400, 325);
+        buyFrame.add(buyPanel);
+        buyFrame.setLayout(null);
+        buyFrame.setSize(400, 325);
+        buyFrame.setResizable(false);
+        buyFrame.setLocation(188, 200);
+        buyFrame.setVisible(true);
     }
 
     private void auctioningPopUp() {
