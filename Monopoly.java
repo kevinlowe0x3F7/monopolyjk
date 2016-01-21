@@ -235,7 +235,8 @@ public class Monopoly {
         if (defeater != null) {
             transferProperty(player, defeater);
         } else {
-            // TODO auction everything
+            // TODO make everything that the player owned as unowned since
+            // we are not doing auctioning
         }
         _players[player.getID()] = null;
         // TODO possibly check for winner
@@ -262,7 +263,6 @@ public class Monopoly {
         to.properties().get(p.getGroup()).add(p);
         Property.checkFull(to, p);
     }
-
 
 //==================== initialization =======================
 

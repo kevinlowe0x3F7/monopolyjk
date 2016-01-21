@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 
+import java.util.ArrayList;
+
 /** Class to implement the status section of the GUI.
  *  @author Kevin Lowe
  */
@@ -25,7 +27,6 @@ public class StatusPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("status repainted");
         paintStatus((Graphics2D) g);
     }
 
@@ -45,24 +46,18 @@ public class StatusPanel extends JPanel {
 
     /** Add the given line to the status method. */
     public void addLine(String line) {
-        int lines = 1;
-        String firstLine = "";
-        String secondLine = "";
-        if (line.length() > CHAR_LIMIT) {
+        ArrayList<String> lines = new ArrayList<String>();
+        while (line.length() > CHAR_LIMIT) {
             int lastSpace = line.lastIndexOf(' ', CHAR_LIMIT);
-            firstLine = line.substring(0, lastSpace);
-            secondLine = line.substring(lastSpace + 1);
-            lines = 2;
+            lines.add(line.substring(0, lastSpace));
+            line = line.substring(lastSpace + 1);
         }
-        if (lines == 1) {
-            _status += (line + '\n');
-        } else {
-            _status += (firstLine + '\n');
-            _status += (secondLine + '\n');
+        lines.add(line);
+        for (int i = 0; i < lines.size(); i++) {
+            _status += (lines.get(i) + '\n');
         }
         if (_maxLines) {
-            deleteLine();
-            if (lines == 2) {
+            for (int i = 0; i < lines.size(); i++) {
                 deleteLine();
             }
         }

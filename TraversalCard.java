@@ -21,6 +21,12 @@ public class TraversalCard implements Chance, CommunityChest {
 	/** Handles the effect of the card traversal */
 	public void effect(Player player) {
 		player.traversePlayer(_destination);
+		if (player.game().gui() != null) {
+		    player.game().gui().panel().status().addLine(_name);
+		    if (!_name.equals(_message)) {
+                player.game().gui().panel().status().addLine(_message);
+            }
+        }
 	}
 
 	/** Returns the name of the card */

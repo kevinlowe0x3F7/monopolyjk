@@ -22,7 +22,6 @@ public class PlayerPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("players repainted");
         displayStats((Graphics2D) g);
     }
 
@@ -70,5 +69,10 @@ public class PlayerPanel extends JPanel {
             startX += 200;
         }
 
+    }
+
+    /** Sets a new _game variable. */
+    public void setGame(Monopoly newGame) {
+        _game = newGame;
     }
 }

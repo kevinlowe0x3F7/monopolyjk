@@ -32,6 +32,12 @@ public class MoneyCard implements CommunityChest, Chance {
 		} else {
 			player.loseMoney(_amount);
 		}
+		if (player.game().gui() != null) {
+		    player.game().gui().panel().status().addLine(_name);
+		    if (!_name.equals(_message)) {
+                player.game().gui().panel().status().addLine(_message);
+            }
+        }
 	}
 }
 

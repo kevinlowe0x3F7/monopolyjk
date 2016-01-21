@@ -52,7 +52,6 @@ public class BoardPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        System.out.println("board and markers repainted");
         drawBoard((Graphics2D) g);
         drawPropertyMarkers((Graphics2D) g);
         drawPlayerMarkers((Graphics2D) g);
@@ -219,5 +218,10 @@ public class BoardPanel extends JPanel {
         } catch (IOException e) {
             System.out.println("Error:Invalid input in boardlocs.txt file");
         }
+    }
+
+    /** Sets a new _game variable. */
+    public void setGame(Monopoly newGame) {
+        _game = newGame;
     }
 }

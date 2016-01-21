@@ -26,5 +26,11 @@ public class JumpCard implements CommunityChest, Chance {
 	public void effect(Player player) {
 		player.jumpPlayer(_destination);
 		player.inJail(true);
+		if (player.game().gui() != null) {
+		    player.game().gui().panel().status().addLine(_name);
+		    player.game().gui().panel().status().addLine(_message);
+		    player.game().nextPlayer();
+		    player.game().gui().panel().buttons().roll().setText("Roll Dice");
+        }
 	}
 }

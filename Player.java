@@ -7,6 +7,8 @@ import java.util.Random;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.lang.InterruptedException;
+import java.util.concurrent.ExecutionException;
 
 public class Player {
     /** Name of the Player */
@@ -29,10 +31,10 @@ public class Player {
     private boolean _jailed;
     /** Number of turn in jail */
     private int _jailedTurns;
+    /** Number of consecutive double rolls. */
+    private int _doubleTurns;
     /** Numbers rolled */
     private int[] _rolls;
-    /** Players has rolled */
-    private boolean _rolled;
     /** My random generator. */
     private Random _source;
     /** Monopoly game that contains the player */
@@ -106,12 +108,16 @@ public class Player {
         return _rolls[0] + _rolls[1];
     }
 
-
-    /** Return number of number of turns in Jail */
+    /** Return number of turns in Jail */
     public int jailedTurns() {
         return _jailedTurns;
     }
 
+    /** Returns the number of consecutive turns the player
+     *  rolled doubles. */
+    public int doubleTurns() {
+        return _doubleTurns;
+    }
 
     /** Return the game this player is a part of. */
     public Monopoly game() {
@@ -155,11 +161,20 @@ public class Player {
         _location = loc;
     }
 
+    /** Set the number of turns in jail. */
+    public void setTurns(int turns) {
+        _jailedTurns = turns;
+    }
+
+    /** Set the number of double rolls. */
+    public void setDoubles(int turns) {
+        _doubleTurns = turns;
+    }
+
 //========================== Actions ==================================
 
     /** Takes care of players turn */
     public void turn() {
-        _rolled = true;
         // Jailed Turn
         if (_jailed) {
             jailedTurn();
@@ -187,18 +202,13 @@ public class Player {
 
     private void jailedTurn() {
         if (_jailedTurns > 0) {
-            // Case 1: Pay $50 fine before  //FE
-            // Case 2: Get out of Jail Free //FE
-            // Case 3: Roll Doubles
             _rolls[0] = rollDice(); _rolls[1] = rollDice();
             if (_rolls[0] == _rolls[1]) {
                 inJail(false);
                 movePlayer(_rolls[0] + _rolls[1]);
-            // Case 4: Stay in Jail
             } else {
                 _jailedTurns--;
                 if (_jailedTurns == 0) {
-                    // Case 5: Force Removal from jail
                     loseMoney(50);
                     _jailed = false;
                     movePlayer(_rolls[0] + _rolls[1]);
@@ -212,7 +222,6 @@ public class Player {
         return (_source.nextInt(6) + 1);
     }
 
-
     /** Jumps the player to Jail. Does not collect $200 from passing go */
     public void jumpPlayer(String jumpLocation) {
         while (!_location.piece().name().equals(jumpLocation)) {
@@ -224,35 +233,96 @@ public class Player {
      *  passes go collect $200. (Kevin) Added clause to check if it
      *  is a property and whether it is buyable or not. */
     public void traversePlayer(String traverseLocation) {
-        while (!_location.piece().name().equals(traverseLocation)) {
-            if (_monopoly.gui() != null) {
-                int delay = 250;
-                ActionListener mover = new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        System.out.println("performing action.");
-                        _location = _location.next();
-                        _monopoly.gui().panel().board().repaint();
+        String loc = traverseLocation;
+        if (_monopoly.gui() != null) {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    while (!_location.piece().name().equals(loc)) {
+                        setLocation(_location.next());
+                        if (_location.piece().name().equals("Go")) {
+                            _location.piece().effect(Player.this);
+                        }
+                        publish();
+                        Thread.sleep(250);
                     }
-                };
-                Timer timer = new Timer(delay, mover);
-                timer.setRepeats(false);
-                timer.start();
-            } else {
+                    return null;
+                }
+
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().board().repaint();
+                }
+
+                protected void done() {
+                    String landed = resolveLanding();
+                    if (landed.equals("Buying/Auctioning Property")) {
+                        //buyPropertyPopUp();
+                        buyProperty((Property) _location.piece());
+                    }
+                    if (landed.length() != 0 && (!landed.equals(
+                                    "Buying/Auctioning Property"))) {
+                        _monopoly.gui().panel().status().addLine(landed);
+                    }
+                    _monopoly.gui().panel().players().repaint();
+                    _monopoly.gui().panel().board().repaint();
+                    _monopoly.gui().panel().status().repaint();
+                }
+            };
+            mover.execute();
+        } else {
+            while (!_location.piece().name().equals(traverseLocation)) {
                 _location = _location.next();
                 if (_location.piece().name().equals("Go")) {
                     _location.piece().effect(this);
                 }
             }
+            resolveLanding();
         }
     }
 
-
     /** Moves the player a set amount of space depending on the dice roll */
     public void movePlayer(int numSpaces) {
-        for (int i = 0; i < numSpaces; i++) {
-            _location = _location.next();
-            if (_location.piece().name().equals("Go")) {
-                _location.piece().effect(this);
+        if (_monopoly.gui() != null) {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    for (int i = 0; i < numSpaces; i++) {
+                        setLocation(_location.next());
+                        if (_location.piece().name().equals("Go")) {
+                            _location.piece().effect(Player.this);
+                        }
+                        publish();
+                        Thread.sleep(250);
+                    }
+                    return null;
+                }
+
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().board().repaint();
+                }
+
+                protected void done() {
+                    String landed = resolveLanding();
+                    if (landed.equals("Buying/Auctioning Property")) {
+                        // TODO modify once popup is done
+                        _monopoly.gui().buyPropertyPopUp(_location.piece().name());
+                    }
+                    if (landed.length() != 0 && (!landed.equals(
+                                    "Buying/Auctioning Property"))) {
+                        _monopoly.gui().panel().status().addLine(landed);
+                    }
+                    _monopoly.gui().panel().players().repaint();
+                    _monopoly.gui().panel().board().repaint();
+                    _monopoly.gui().panel().status().repaint();
+                }
+            };
+            mover.execute();
+        } else {
+            for (int i = 0; i < numSpaces; i++) {
+                _location = _location.next();
+                if (_location.piece().name().equals("Go")) {
+                    _location.piece().effect(this);
+                }
             }
         }
     }
@@ -269,33 +339,83 @@ public class Player {
      *  to the nearest railroad/utilies and has a special charge.
      *  If the property is unowned, however, the player may buy it. */
     public void specialTraversePlayer(String traverseLocation) {
-        if (traverseLocation.equals("railroad")) {
-            while (!(_location.piece() instanceof Railroad)) {
-                _location = _location.next();
-                if (_location.piece().name().equals("Go")) {
-                    _location.piece().effect(this);
+        String loc = traverseLocation;
+        if (_monopoly.gui() != null) {
+            SwingWorker<Void, Void> mover = new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    if (traverseLocation.equals("railroad")) {
+                        while (!(_location.piece() instanceof Railroad)) {
+                            _location = _location.next();
+                            if (_location.piece().name().equals("Go")) {
+                                _location.piece().effect(Player.this);
+                            }
+                            publish();
+                            Thread.sleep(250);
+                        }
+                        Railroad landedPiece = (Railroad) _location.piece();
+                        if (landedPiece.isOwned()) {
+                            landedPiece.specialEffect(Player.this);
+                        } else {
+                            buyProperty(landedPiece);
+                        }
+                    } else {
+                        while (!(_location.piece() instanceof Utility)) {
+                            _location = _location.next();
+                            if (_location.piece().name().equals("Go")) {
+                                _location.piece().effect(Player.this);
+                            }
+                            publish();
+                            Thread.sleep(250);
+                        }
+                        Utility landedPiece = (Utility) _location.piece();
+                        if (landedPiece.isOwned()) {
+                            landedPiece.specialEffect(Player.this,
+                                    rollDice(), rollDice());
+                        } else {
+                            buyProperty(landedPiece);
+                        }
+                    }
+                    return null;
                 }
-            }
-            Railroad landedPiece = (Railroad) _location.piece();
-            // Changed by Kevin to accomodate unowned property
-            if (landedPiece.isOwned()) {
-                landedPiece.specialEffect(this);
-            } else {
-                buyProperty(landedPiece);
-            }
+                
+                protected void process(List<Void> chunks) {
+                    _monopoly.gui().panel().board().repaint();
+                }
+
+                protected void done() {
+                    _monopoly.gui().panel().players().repaint();
+                    _monopoly.gui().panel().board().repaint();
+                }
+            };
+            mover.execute();
         } else {
-            while (!(_location.piece() instanceof Utility)) {
-                _location = _location.next();
-                if (_location.piece().name().equals("Go")) {
-                    _location.piece().effect(this);
+            if (traverseLocation.equals("railroad")) {
+                while (!(_location.piece() instanceof Railroad)) {
+                    _location = _location.next();
+                    if (_location.piece().name().equals("Go")) {
+                        _location.piece().effect(this);
+                    }
                 }
-            }
-            Utility landedPiece = (Utility) _location.piece();
-            // Changed by Kevin to accomodate unowned property
-            if (landedPiece.isOwned()) {
-                landedPiece.specialEffect(this, rollDice(), rollDice());
+                Railroad landedPiece = (Railroad) _location.piece();
+                if (landedPiece.isOwned()) {
+                    landedPiece.specialEffect(this);
+                } else {
+                    buyProperty(landedPiece);
+                }
             } else {
-                buyProperty(landedPiece);
+                while (!(_location.piece() instanceof Utility)) {
+                    _location = _location.next();
+                    if (_location.piece().name().equals("Go")) {
+                        _location.piece().effect(this);
+                    }
+                }
+                Utility landedPiece = (Utility) _location.piece();
+                if (landedPiece.isOwned()) {
+                    landedPiece.specialEffect(this, rollDice(), rollDice());
+                } else {
+                    buyProperty(landedPiece);
+                }
             }
         }
     }
@@ -479,9 +599,12 @@ public class Player {
         if (_location.piece() instanceof Property) {
             Property property = (Property) _location.piece();
             if (property.isOwned()) {
+                if (property.owner().equals(this)) {
+                    return "";
+                }
                 property.effect(this);
                 return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
-                    + " rent to Player " + property.owner().getID();
+                    + " to Player " + property.owner().getID();
             } else {
                 return "Buying/Auctioning Property";
             }
