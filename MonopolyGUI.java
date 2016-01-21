@@ -62,7 +62,7 @@ public class MonopolyGUI implements ActionListener {
                 aboutPopUp();
                 break;
             case "Roll Dice":
-                // The graphics of rolling the dice
+                _panel.buttons().roll().setEnabled(false);
                 if (_game.current().isJailed()) {
                     rollDiceJail();
                 } else {
@@ -156,6 +156,7 @@ public class MonopolyGUI implements ActionListener {
                         _panel.buttons().roll().setText("End Turn");
                     }
                 }
+                _panel.buttons().roll().setEnabled(true);
             }
         };
         mover.execute();
@@ -191,7 +192,6 @@ public class MonopolyGUI implements ActionListener {
                             current.getID() + " is free.";
                         _panel.status().addLine(line1);
                         current.movePlayer(current.getLastRoll());
-                        _panel.buttons().roll().setText("End Turn");
                     } else {
                         current.setTurns(current.jailedTurns() - 1);
                         if (current.jailedTurns() == 0) {
@@ -200,8 +200,9 @@ public class MonopolyGUI implements ActionListener {
                             current.inJail(false);
                             current.movePlayer(current.getLastRoll());
                         }
-                        _panel.buttons().roll().setText("End Turn");
                     }
+                    _panel.buttons().roll().setText("End Turn");
+                    _panel.buttons().roll().setEnabled(true);
                 } else {
                    current.jailFree(false);
                    current.inJail(false);
