@@ -191,6 +191,8 @@ public class MonopolyGUI implements ActionListener {
                         String line1 = "Doubles! Player " +
                             current.getID() + " is free.";
                         _panel.status().addLine(line1);
+                        current.inJail(false);
+                        current.setDoubles(0);
                         current.movePlayer(current.getLastRoll());
                     } else {
                         current.setTurns(current.jailedTurns() - 1);
