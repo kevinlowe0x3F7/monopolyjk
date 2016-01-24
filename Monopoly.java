@@ -162,6 +162,11 @@ public class Monopoly {
         }
         return next;
     }
+
+    /** Returns the board for this game. */
+    public BoardNode board() {
+        return _board;
+    }
 //============================================================
 
     /** Sets the number of available houses equal to NUM. */
