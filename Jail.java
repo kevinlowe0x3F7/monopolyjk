@@ -6,8 +6,8 @@ public class Jail implements BoardPiece {
     private final String _name = "Jail";
 
     @Override
-    public void effect(Player current) {
-        return;
+    public boolean effect(Player current) {
+        return true;
     }
 
     @Override

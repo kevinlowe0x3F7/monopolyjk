@@ -25,9 +25,16 @@ public abstract class Property implements BoardPiece {
     private boolean _isMortgaged;
     /** The player that owns this property */
     private Player _owner;
+    /** The x coordinate of the property in the GUI */
+    private int _x;
+    /** The y coordinate of the property in the GUI */
+    private int _y;
+    /** The postion (horizontal or vertical) 
+     *for the property in GUI */
+    private String _pos;
 
     public Property(String name, String group, int price, int set,
-            int mortgage) {
+            int mortgage, int x, int y, String pos) {
         _name = name;
         _group = group;
         _price = price;
@@ -36,11 +43,14 @@ public abstract class Property implements BoardPiece {
         _owner = null;
         _mortgage = mortgage;
         _isMortgaged = false;
+        _x = x;
+        _y = y;
+        _pos = pos;
     }
 
     @Override
-    public void effect(Player current) {
-        return;
+    public boolean effect(Player current) {
+        return true;
     }
 
     @Override
@@ -78,10 +88,23 @@ public abstract class Property implements BoardPiece {
         return _price;
     }
 
+    /** Returns the rent of the property */
+    abstract public int getRent(Player owner, Player current);
+
     /** Returns true if this property is part of a full set, false
      *  otherwise. */
     public boolean isFull() {
         return _isFull;
+    }
+
+    /** Returns the x position of the property for GUI */
+    public int x() {
+        return _x;
+    }
+
+    /** Returns the y position of the property for GUI */
+    public int y() {
+        return _y;
     }
 
     /** Check to see if the player has a full set of property, if yes,
@@ -111,22 +134,34 @@ public abstract class Property implements BoardPiece {
     }
 
     /** Mortgage this property owned by PLAYER. */
-    public void mortgage(Player player) {
-        if (!_owner.equals(player) || _isMortgaged) {
-            return;
+    public boolean mortgageToggle(Player player) {
+        if (!isOwned()) {
+            return false;
         }
-        _isMortgaged = true;
-        player.gainMoney(_mortgage);
+        if (!_owner.equals(player)) {
+            return false;
+        }
+        //Unmortgage Property
+        if (_isMortgaged) {
+            _isMortgaged = false;
+            player.loseMoney(_mortgage + ((int) (_mortgage * 0.1)));
+            return true;
+        //Mortgage Property
+        } else {    
+            _isMortgaged = true;
+            player.gainMoney(_mortgage);
+            return true;
+        }
     }
 
     /** Unmortgage this property owned by PLAYER. */
-    public void unmortgage(Player player) {
-        if (!_owner.equals(player) || !_isMortgaged) {
-            return;
-        }
-        _isMortgaged = false;
-        player.loseMoney(_mortgage + ((int) (_mortgage * 0.1)));
-    }
+    // public void unmortgage(Player player) {
+    //     if (!_owner.equals(player) || !_isMortgaged) {
+    //         return;
+    //     }
+    //     _isMortgaged = false;
+    //     player.loseMoney(_mortgage + ((int) (_mortgage * 0.1)));
+    // }
 
     /** Returns true if this property is owned, false otherwise. */
     public boolean isOwned() {
@@ -141,6 +176,11 @@ public abstract class Property implements BoardPiece {
     /** Returns the Player that owns the property */
     public Player owner() {
         return _owner;
+    }
+
+    /** Returns the position of the property */
+    public String position() {
+        return _pos;
     }
 
     public void setOwner(Player owner) {

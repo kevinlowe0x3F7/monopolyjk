@@ -3,13 +3,13 @@
  */
 public class Railroad extends Property {
     public Railroad(String name, String group, int price, int set,
-            int mortgage) {
-        super(name, group, price, set, mortgage);
+            int mortgage, int x, int y, String pos) {
+        super(name, group, price, set, mortgage, x, y, pos);
     }
 
     /** Returns the cost for rental on this property based on the
      *  number of railroads the OWNER owns. */
-    public int getRent(Player owner) {
+    public int getRent(Player owner, Player current) {
         switch (owner().railroads()) {
              case 1: return 25;
              case 2: return 50;
@@ -20,15 +20,17 @@ public class Railroad extends Property {
     }
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         if (isMortgaged()) {
-            return;
+            return false;
         }
         if (current.getID() == owner().getID()) {
-            return;
+            return false;
         } else {
-            current.loseMoney(getRent(owner()));
-            owner().gainMoney(getRent(owner()));
+            int rent = getRent(owner(), current);
+            current.loseMoney(rent);
+            owner().gainMoney(rent);
+            return false;
         }
     }
 
@@ -37,8 +39,8 @@ public class Railroad extends Property {
         if (current.getID() == owner().getID()) {
             return;
         } else {
-            current.loseMoney(2 * getRent(owner()));
-            owner().gainMoney(2 * getRent(owner()));
+            current.loseMoney(2 * getRent(owner(), current));
+            owner().gainMoney(2 * getRent(owner(), current));
         }
     }
 

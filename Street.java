@@ -16,26 +16,27 @@ public class Street extends Property {
     private final int _buildCost;
 
     public Street(String name, String group, int price, int set,
-            int[] rent, int mortgage, int buildCost) {
-        super(name, group, price, set, mortgage);
+            int[] rent, int mortgage, int buildCost, int x, int y, String pos) {
+        super(name, group, price, set, mortgage, x, y, pos);
         _houses = 0;
         _rent = rent;
         _buildCost = buildCost;
     }
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         if (isMortgaged()) {
-            return;
+            return false;
         }
 
         if (current.getID() == owner().getID()) {
-            return;
+            return false;
         } else {
-            current.loseMoney(this.getRent());
-            owner().gainMoney(this.getRent());
+            int rent = getRent(owner(), current);
+            current.loseMoney(rent);
+            owner().gainMoney(rent);
+            return true;
         }
-        return;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class Street extends Property {
 
     /** Returns the value for rent based on the number of houses that this
      *  property has. Also factors in whether it is part of a full set. */
-    public int getRent() {
+    public int getRent(Player owner, Player current) {
         if (_houses == 0) {
             if (isFull()) {
                 return _rent[_houses] * 2;

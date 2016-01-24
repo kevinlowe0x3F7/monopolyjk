@@ -14,7 +14,6 @@ public class Main {
                 + " players allowed.");
             return;
         }
-        Monopoly game = new Monopoly(players);
-        MonopolyGUI m = new MonopolyGUI(game);
+        MonopolyGUI m = new MonopolyGUI(players);
     }
 }

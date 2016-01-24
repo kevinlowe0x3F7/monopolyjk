@@ -43,6 +43,10 @@ public class DistributionCard implements CommunityChest, Chance {
 				}
 			}
 		}
+        if (player.game().gui() != null ) {
+            player.game().gui().panel().status().addLine(_name);
+            player.game().gui().panel().status().addLine(_message);
+        }
 	}
 
 	/** Returns the name of the card */

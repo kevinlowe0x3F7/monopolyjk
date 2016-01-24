@@ -12,12 +12,20 @@ public class TaxPiece implements BoardPiece {
     }
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
+        int money = 0;
         if (_name.equals("Luxury Tax")) {
-            current.loseMoney(100);
+            money = 100;
         } else {
-            current.loseMoney(200);
+            money = 200;
         }
+        current.loseMoney(money);
+        String line = "Player " + current.getID() + " loses $" + money +
+            " from " + _name;
+		if (current.game().gui() != null) {
+		    current.game().gui().panel().status().addLine(line);
+        }
+        return true;
     }
 
     @Override

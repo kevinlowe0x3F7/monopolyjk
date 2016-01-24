@@ -51,10 +51,13 @@ public class Monopoly {
     /** Number of hotels available in the game. */
     private int _hotels;
 
+    /** A GUI, if the game contains one, otherwise it is null. */
+    private MonopolyGUI _gui;
+
     /** The color for each of the players, stays constant for any
      *  Monopoly game. */
     public static final Color[] COLORS = {null, Color.BLUE, Color.RED,
-        new Color(0, 102, 0), Color.YELLOW};
+        new Color(0, 102, 0), new Color(85, 26, 139)};
 
     /** Starts a new Monopoly game with a set number of players given
      *  by NUMPLAYERS. Number of players may not be changed mid-game. */
@@ -73,6 +76,12 @@ public class Monopoly {
         currentIndex = 1;
         _houses = 32;
         _hotels = 12;
+    }
+
+    /** Starts a new Monopoly game along with a GUI. */
+    public Monopoly(int numPlayers, MonopolyGUI gui) {
+        this(numPlayers);
+        _gui = gui;
     }
 
 //======================= Getters=========================
@@ -122,6 +131,17 @@ public class Monopoly {
         return _hotels;
     }
 
+
+    /** Returns the current index of players */
+    public int currentIndex() {
+        return currentIndex;
+    }
+
+    /** Returns the GUI, if I have one. */
+    public MonopolyGUI gui() {
+        return _gui;
+    }
+
     /** Draws the next chance card, resetting the deck if needed. */
     public Chance drawChance() {
         Chance next = _chance[_chanceIndex];
@@ -142,7 +162,7 @@ public class Monopoly {
         }
         return next;
     }
-//=========================================================
+//============================================================
 
     /** Sets the number of available houses equal to NUM. */
     public void setHouses(int num) {
@@ -215,7 +235,8 @@ public class Monopoly {
         if (defeater != null) {
             transferProperty(player, defeater);
         } else {
-            // TODO auction everything
+            // TODO make everything that the player owned as unowned since
+            // we are not doing auctioning
         }
         _players[player.getID()] = null;
         // TODO possibly check for winner
@@ -243,13 +264,16 @@ public class Monopoly {
         Property.checkFull(to, p);
     }
 
+//==================== initialization =======================
+
     /** Initializes the community chest cards */
     private void initializeCommunityChest() throws FileNotFoundException, IOException {
         BufferedReader input = null;
         _chest = new CommunityChest[17];
         _chestIndex = 0;
         try {
-            input = new BufferedReader(new FileReader("communitycardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/communitycardinfo.txt"));
             String next = input.readLine();
             int i = 0;
             while (next != null) {
@@ -296,7 +320,8 @@ public class Monopoly {
         _chance = new Chance[16];
         _chanceIndex = 0;
         try {
-            input = new BufferedReader(new FileReader("chancecardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/chancecardinfo.txt"));
             String next = input.readLine();
             int i = 0;
             while (next != null) {
@@ -352,7 +377,7 @@ public class Monopoly {
         Collections.shuffle(Arrays.asList(_chance));
     }
 
-    /** (Joseph) Initializes players with starting money, locations, etc */
+    /** Initializes players with starting money, locations, etc */
     private void initializePlayers() {
         for (int i = 1; i < _players.length; i++) {
             Player player = new Player(i, 1500, _board, this);
@@ -367,7 +392,8 @@ public class Monopoly {
         BoardNode start = new BoardNode(new GoPiece());
         BoardNode curr = start;
         try {
-            input = new BufferedReader(new FileReader("boardinfo.txt"));
+            input = new BufferedReader(new FileReader(
+                        "resources/boardinfo.txt"));
             String next = input.readLine();
             while (next != null) {
                 String[] info = next.split(",");
@@ -412,9 +438,10 @@ public class Monopoly {
     private BoardNode initializeProperty(String[] info) {
         if (info[0].equals("railroad")) {
             return new BoardNode(new Railroad(info[1], info[0],
-                    200, 4, 100));
+                    200, 4, 100, Integer.parseInt(info[2]), Integer.parseInt(info[3]), info[4]));
         } else if (info[0].equals("utility")) {
-            return new BoardNode(new Utility(info[1],info[0], 150, 2, 75));
+            return new BoardNode(new Utility(info[1],info[0], 150, 2, 75,
+                Integer.parseInt(info[2]), Integer.parseInt(info[3]), info[4]));
         } else {
             String name = info[1];
             String group = info[2];
@@ -428,8 +455,11 @@ public class Monopoly {
             }
             int mortgage = Integer.parseInt(info[11]);
             int build = Integer.parseInt(info[12]);
+            int x = Integer.parseInt(info[13]);
+            int y = Integer.parseInt(info[14]);
+            String pos = info[15];
             return new BoardNode(new Street(name, group, price, groupNum,
-                    rent, mortgage, build));
+                    rent, mortgage, build, x, y, pos));
         }
     }
 
