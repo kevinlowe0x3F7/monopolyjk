@@ -27,21 +27,33 @@ public class MonopolyGUI implements ActionListener {
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
         Player one = _game.players()[1];
-        one.setLocation(_game.board().next());
-        Property med = (Property) one.location().piece();
-        one.buyProperty(med);
-        one.setLocation(_game.board().next().next().next());
-        Property baltic = (Property) one.location().piece();
-        one.buyProperty(baltic);
-        one.upgradeProperty(med);
-        one.upgradeProperty(baltic);
-        one.upgradeProperty(med);
-        one.upgradeProperty(baltic);
-        one.upgradeProperty(med);
-        one.upgradeProperty(baltic);
-        one.upgradeProperty(med);
-        one.upgradeProperty(baltic);
-        one.upgradeProperty(med);
+        BoardNode curr = _game.board();
+        for (int i = 0; i < 21; i++) {
+            curr = curr.next();
+        }
+        Property purp1 = (Property) curr.piece();
+        one.buyProperty(purp1);
+        curr = curr.next();
+        curr = curr.next();
+        Property purp2 = (Property) curr.piece();
+        curr = curr.next();
+        Property purp3 = (Property) curr.piece();
+        one.buyProperty(purp2);
+        one.buyProperty(purp3);
+        one.gainMoney(7000);
+        one.upgradeProperty(purp1);
+        one.upgradeProperty(purp2);
+        one.upgradeProperty(purp3);
+        one.upgradeProperty(purp1);
+        one.upgradeProperty(purp2);
+        one.upgradeProperty(purp3);
+        one.upgradeProperty(purp1);
+        one.upgradeProperty(purp2);
+        one.upgradeProperty(purp3);
+        one.upgradeProperty(purp1);
+        one.upgradeProperty(purp2);
+        one.upgradeProperty(purp3);
+        one.upgradeProperty(purp1);
         
         _frame = new JFrame("Monopoly");
         _frame.setLayout(null);

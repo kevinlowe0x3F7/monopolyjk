@@ -94,6 +94,23 @@ public class BoardPanel extends JPanel {
                             g.drawString("M", loc.x + (SHORT / 4),
                                     loc.y + (LONG / 2) + 5);
                         }
+                        if (p instanceof Street) {
+                            g.setColor(Color.WHITE);
+                            int increment = 8;
+                            Street street = (Street) p;
+                            int x1 = loc.x + 26;
+                            int y1 = loc.y + 46;
+                            int houses = street.getHouses();
+                            if (houses < 5) {
+                                for (int j = 0; j < houses; j++) {
+                                    g.fillRect(x1, y1, HOUSE, HOUSE + 3);
+                                    x1 -= increment;
+                                }
+                            } else {
+                                g.fillRect(loc.x + 7, y1,
+                                        HOTEL, HOUSE + 3);
+                            }
+                        }
                     } else if (loc.side.equals("left")) {
                         x -= 13;
                         g.fillRoundRect(x, y + 3, 8, SHORT - 3, ARC, ARC);
@@ -107,6 +124,23 @@ public class BoardPanel extends JPanel {
                             g.setFont(font);
                             g.drawString("M", loc.x + (SHORT / 4),
                                     loc.y + (LONG / 2));
+                        }
+                        if (p instanceof Street) {
+                            g.setColor(Color.WHITE);
+                            int increment = 8;
+                            Street street = (Street) p;
+                            int x1 = loc.x + 46;
+                            int y1 = loc.y + 2;
+                            int houses = street.getHouses();
+                            if (houses < 5) {
+                                for (int j = 0; j < houses; j++) {
+                                    g.fillRect(x1, y1, HOUSE + 3, HOUSE);
+                                    y1 += increment;
+                                }
+                            } else {
+                                g.fillRect(x1, loc.y + 7,
+                                        HOUSE + 3, HOTEL);
+                            }
                         }
                     } else if (loc.side.equals("right")) {
                         x += (LONG + 5);
