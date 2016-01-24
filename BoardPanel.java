@@ -156,6 +156,23 @@ public class BoardPanel extends JPanel {
                             g.drawString("M", loc.x + (SHORT / 2),
                                     loc.y + (LONG / 2));
                         }
+                        if (p instanceof Street) {
+                            g.setColor(Color.WHITE);
+                            int increment = 8;
+                            Street street = (Street) p;
+                            int x1 = loc.x + 2;
+                            int y1 = loc.y + 26;
+                            int houses = street.getHouses();
+                            if (houses < 5) {
+                                for (int j = 0; j < houses; j++) {
+                                    g.fillRect(x1, y1, HOUSE + 3, HOUSE);
+                                    y1 -= increment;
+                                }
+                            } else {
+                                g.fillRect(x1, loc.y + 7,
+                                        HOUSE + 3, HOTEL);
+                            }
+                        }
                     } else {
                         y += (LONG + 5);
                         g.fillRoundRect(x + 3, y, SHORT - 3, 8, ARC, ARC);
