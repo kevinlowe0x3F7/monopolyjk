@@ -1,39 +1,39 @@
-property,Mediterranean Avenue,brown,60,2,2,10,30,90,160,250,30,50
+property,Mediterranean Avenue,brown,60,2,2,10,30,90,160,250,30,50,363,407,vert
 community chest
-property,Baltic Avenue,brown,60,2,4,20,60,180,320,450,30,50
+property,Baltic Avenue,brown,60,2,4,20,60,180,320,450,30,50,295,407,vert
 tax,Income Tax
-railroad,Reading Railroad
-property,Oriental Avenue,light blue,100,3,6,30,90,270,400,550,50,50
+railroad,Reading Railroad,225,407,vert
+property,Oriental Avenue,light blue,100,3,6,30,90,270,400,550,50,50,192,407,vert
 chance
-property,Vermont Avenue,light blue,100,3,6,30,90,270,400,550,50,50
-property,Connecticut Avenue,light blue,120,3,8,40,100,300,450,600,60,50
+property,Vermont Avenue,light blue,100,3,6,30,90,270,400,550,50,50,123,407,vert
+property,Connecticut Avenue,light blue,120,3,8,40,100,300,450,600,60,50,88,407,vert
 jail
-property,St. Charles Place,pink,140,3,10,50,150,450,625,750,70,100
-utility,Electric Company
-property,States Avenue,pink,140,3,10,50,150,450,625,750,70,100
-property,Virginia Avenue,pink,160,3,12,60,180,500,700,900,80,100
-railroad,Pennsylvania Railroad
-property,St. James Place,orange,180,3,14,70,200,550,750,950,90,100
+property,St. Charles Place,pink,140,3,10,50,150,450,625,750,70,100,30,374,horiz
+utility,Electric Company,30,340,horiz
+property,States Avenue,pink,140,3,10,50,150,450,625,750,70,100,30,306,horiz
+property,Virginia Avenue,pink,160,3,12,60,180,500,700,900,80,100,30,271,horiz
+railroad,Pennsylvania Railroad,30,236,horiz
+property,St. James Place,orange,180,3,14,70,200,550,750,950,90,100,30,201,horiz
 community chest
-property,Tennessee Avenue,orange,180,3,14,70,200,550,750,950,90,100
-property,New York Avenue,orange,200,3,16,80,220,600,800,1000,100,100
+property,Tennessee Avenue,orange,180,3,14,70,200,550,750,950,90,100,30,132,horiz
+property,New York Avenue,orange,200,3,16,80,220,600,800,1000,100,100,30,97,horiz
 free parking
-property,Kentucky Avenue,red,220,3,18,90,250,700,875,1050,110,150
+property,Kentucky Avenue,red,220,3,18,90,250,700,875,1050,110,150,88,40,vert
 chance
-property,Indiana Avenue,red,220,3,18,90,250,700,875,1050,110,150
-property,Illinois Avenue,red,240,3,20,100,300,750,925,1100,120,150
-railroad,B. & O. Railroad
-property,Atlantic Avenue,yellow,260,3,22,110,330,800,975,1150,130,150
-property,Ventnor Avenue,yellow,260,3,22,110,330,800,975,1150,130,150
-utility,Water Works
-property,Marvin Gardens,yellow,280,3,24,120,360,850,1025,1200,140,150
+property,Indiana Avenue,red,220,3,18,90,250,700,875,1050,110,150,158,40,vert
+property,Illinois Avenue,red,240,3,20,100,300,750,925,1100,120,150,193,40,vert
+railroad,B. & O. Railroad,226,40,vert
+property,Atlantic Avenue,yellow,260,3,22,110,330,800,975,1150,130,150,259,40,vert
+property,Ventnor Avenue,yellow,260,3,22,110,330,800,975,1150,130,150,294,40,vert
+utility,Water Works,328,40,vert
+property,Marvin Gardens,yellow,280,3,24,120,360,850,1025,1200,140,150,363,40,vert
 go to jail
-property,Pacific Avenue,green,300,3,26,130,390,900,1100,1275,150,200
-property,North Carolina Avenue,green,300,3,26,130,390,900,1100,1275,150,200
+property,Pacific Avenue,green,300,3,26,130,390,900,1100,1275,150,200,396,97,horiz
+property,North Carolina Avenue,green,300,3,26,130,390,900,1100,1275,150,200,396,132,horiz
 community chest
-property,Pennsylvania Avenue,green,320,3,28,150,450,1000,1200,1400,160,200
-railroad,Short Line
+property,Pennsylvania Avenue,green,320,3,28,150,450,1000,1200,1400,160,200,396,202,horiz
+railroad,Short Line,396,236,horiz
 chance
-property,Park Place,blue,350,2,35,175,500,1100,1300,1500,175,200
+property,Park Place,blue,350,2,35,175,500,1100,1300,1500,175,200,396,306,horiz
 tax,Luxury Tax
-property,Boardwalk,blue,400,2,50,200,600,1400,1700,2000,200,200
+property,Boardwalk,blue,400,2,50,200,600,1400,1700,2000,200,200,396,374,horiz

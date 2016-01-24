@@ -3,21 +3,22 @@
  */
 public class Utility extends Property {
     public Utility(String name, String group, int price, int set,
-            int mortgage) {
-        super(name, group, price, set, mortgage);
+            int mortgage, int x, int y, String pos) {
+        super(name, group, price, set, mortgage, x, y, pos);
     }
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         if (isMortgaged()) {
-            return;
+            return false;
         }
         if (current.getID() == owner().getID()) {
-            return;
+            return false;
         } else {
             int rent = getRent(owner(), current);
             current.loseMoney(rent);
             owner().gainMoney(rent);
+            return true;
         }
     }
 

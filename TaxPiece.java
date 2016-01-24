@@ -12,7 +12,7 @@ public class TaxPiece implements BoardPiece {
     }
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         int money = 0;
         if (_name.equals("Luxury Tax")) {
             money = 100;
@@ -25,6 +25,7 @@ public class TaxPiece implements BoardPiece {
 		if (current.game().gui() != null) {
 		    current.game().gui().panel().status().addLine(line);
         }
+        return true;
     }
 
     @Override

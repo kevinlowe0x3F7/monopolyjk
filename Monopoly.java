@@ -438,9 +438,10 @@ public class Monopoly {
     private BoardNode initializeProperty(String[] info) {
         if (info[0].equals("railroad")) {
             return new BoardNode(new Railroad(info[1], info[0],
-                    200, 4, 100));
+                    200, 4, 100, Integer.parseInt(info[2]), Integer.parseInt(info[3]), info[4]));
         } else if (info[0].equals("utility")) {
-            return new BoardNode(new Utility(info[1],info[0], 150, 2, 75));
+            return new BoardNode(new Utility(info[1],info[0], 150, 2, 75,
+                Integer.parseInt(info[2]), Integer.parseInt(info[3]), info[4]));
         } else {
             String name = info[1];
             String group = info[2];
@@ -454,8 +455,11 @@ public class Monopoly {
             }
             int mortgage = Integer.parseInt(info[11]);
             int build = Integer.parseInt(info[12]);
+            int x = Integer.parseInt(info[13]);
+            int y = Integer.parseInt(info[14]);
+            String pos = info[15];
             return new BoardNode(new Street(name, group, price, groupNum,
-                    rent, mortgage, build));
+                    rent, mortgage, build, x, y, pos));
         }
     }
 

@@ -24,12 +24,15 @@ public class MonopolyGUI implements ActionListener {
     /** Pop up JFrame */
     private JFrame _popUpFrame;
 
+    /** Mortgage Property Pop Up Panel */
+    private MortgagePropertyPanel _mortPanel;
+
     /** Initializes the panels and buttons. */
     public MonopolyGUI(int players) {
         _game = new Monopoly(players, this);
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
-        
+
         _frame = new JFrame("Monopoly");
         _frame.setLayout(null);
         _frame.add(_panel);
@@ -44,7 +47,7 @@ public class MonopolyGUI implements ActionListener {
         return _panel;
     }
 
-    /** Takes care of all button actions. */
+    /** Takes care of all main board button actions. */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -96,8 +99,24 @@ public class MonopolyGUI implements ActionListener {
                 _popUpFrame.dispose();
                 break;
 
-            case "Don't Buy":
-                //Exit the Jframe
+            case "No":
+                _popUpFrame.dispose();
+                break;
+
+            case "Mortgage/Unmortgage Property":
+                if (!(_mortPanel.property().mortgageToggle(_game.current()))) {
+                    _panel.status().addLine("Not able to Mortgage/Unmortgage");
+                    _panel.status().repaint();
+                } else {
+                    _panel.status().addLine("Mortgaged/Unmortgaged " + _mortPanel.property().name());
+                    _panel.status().repaint();
+                    _panel.board().repaint();
+                }
+                _popUpFrame.dispose();
+                break;
+
+            case "Exit":
+                _popUpFrame.dispose();
                 break;
 
             case "End Turn":
@@ -269,6 +288,7 @@ public class MonopolyGUI implements ActionListener {
         _popUpFrame = new JFrame("Buying Property");
         BuyPropertyPanel buyPanel = new BuyPropertyPanel(property, this);
         buyPanel.setBounds(0, 0, 350, 325);
+        _popUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         _popUpFrame.add(buyPanel);
         _popUpFrame.setLayout(null);
         _popUpFrame.setSize(350, 325);
@@ -278,12 +298,21 @@ public class MonopolyGUI implements ActionListener {
     }
 
     private void auctioningPopUp() {
-        //TODO
+        //TODO Optional
     }
 
     /** Handles the case when mortgage is pressed */
     private void mortgagePopUp() {
         //TODO
+        _popUpFrame = new JFrame("Mortgaging Property");
+        _mortPanel = new MortgagePropertyPanel(this, _game);
+        _popUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        _mortPanel.setBounds(0, 0, 800, 650);
+        _popUpFrame.add(_mortPanel);
+        _popUpFrame.setLayout(null);
+        _popUpFrame.setSize(800, 650);
+        _popUpFrame.setResizable(false);
+        _popUpFrame.setVisible(true);
     }
 
     /** Handles the case when trade is pressed */
@@ -299,6 +328,15 @@ public class MonopolyGUI implements ActionListener {
     /** Case when you upgrade property */
     private void houses() {
         //TODO
+        _popUpFrame = new JFrame("Upgrading/Selling Houses");
+        HousePanel housePanel = new HousePanel(this, _game);
+        housePanel.setBounds(0, 0, 800, 650);
+        _popUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        _popUpFrame.add(housePanel);
+        _popUpFrame.setLayout(null);
+        _popUpFrame.setSize(800, 650);
+        _popUpFrame.setResizable(false);
+        _popUpFrame.setVisible(true);
     }
 
     /** Handles the end turn button. */

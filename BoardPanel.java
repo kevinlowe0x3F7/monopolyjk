@@ -9,16 +9,22 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /** Class for the board panel which contains the image and any markers to
  *  help indicate where players are and who owns which property.
  *  @author Kevin Lowe
  */
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel implements ActionListener {
     /** The Monopoly game where I get the information from. */
     private Monopoly _game;
     /** Board image. */
     private Image _board;
+    /** The pop up frame for the property attributes */
+    private JFrame _popUpFrame;
+    /** Checks if the Board Panel has been initialized */
+    private boolean _initalized;
     /** Long length of a short piece on the board.jpg image (ex: property,
      *  chance, community chest). Can be either the width of the height
      *  depending on where the piece is on the board. Also the size of the
@@ -55,6 +61,10 @@ public class BoardPanel extends JPanel {
         drawBoard((Graphics2D) g);
         drawPropertyMarkers((Graphics2D) g);
         drawPlayerMarkers((Graphics2D) g);
+        if (!_initalized) {
+            drawPropertyButtons((Graphics2D) g);
+            _initalized = true;
+        }
     }
 
     /** Draws the board itself. */
@@ -224,4 +234,143 @@ public class BoardPanel extends JPanel {
     public void setGame(Monopoly newGame) {
         _game = newGame;
     }
+
+
+    /** Draws the Buttons onto each property */
+    private void drawPropertyButtons(Graphics2D g) {
+        //Top and Bottom properties
+        for (int i = 1; i < 15; i++) {
+            JButton button = new JButton("");
+            if (i == 1) {
+                button = new JButton("Kentucky Avenue");
+                button.setLocation(88, 40);
+            } else if (i == 2) {
+                button = new JButton("Indiana Avenue");
+                button.setLocation(156, 40);
+            } else if (i == 3) {
+                button = new JButton("Illinois Avenue");
+                button.setLocation(190, 40);
+            } else if (i == 4) {
+                button = new JButton("B. & O. Railroad");
+                button.setLocation(224, 40);
+            } else if (i == 5) {
+                button = new JButton("Atlantic Avenue");
+                button.setLocation(258, 40);
+            } else if (i == 6) {
+                button = new JButton("Ventnor Avenue");
+                button.setLocation(292, 40);
+            } else if (i == 7) {
+                button = new JButton("Water Works");
+                button.setLocation(326, 40);
+            } else if (i == 8) {
+                button = new JButton("Marvin Gardens");
+                button.setLocation(360, 40);
+            } else if (i == 9) {
+                button = new JButton("Connecticut Avenue");
+                button.setLocation(88, 407);
+            } else if (i == 10) {
+                button = new JButton("Vermont Avenue");
+                button.setLocation(122, 407);
+            } else if (i == 11) {
+                button = new JButton("Oriental Avenue");
+                button.setLocation(190, 407);
+            } else if (i == 12) {
+                button = new JButton("Reading Railroad");
+                button.setLocation(224, 407);
+            } else if (i == 13) {
+                button = new JButton("Baltic Avenue");
+                button.setLocation(292, 407);
+            } else if (i == 14) {
+                button = new JButton("Mediterranean Avenue");
+                button.setLocation(360, 407);
+            }
+            button.setSize(36, 59);
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            button.addActionListener(this);
+            add(button);
+        }
+        for (int i = 1; i < 15; i++) {
+            //Left and Right properties
+            JButton button = new JButton("");
+            if (i == 1) {
+                button = new JButton("New York Avenue");
+                button.setLocation(30, 97);
+            } else if (i == 2) {
+                button = new JButton("Tennessee Avenue");
+                button.setLocation(30, 131);
+            } else if (i == 3) {
+                button = new JButton("St. James Place");
+                button.setLocation(30, 199);
+            } else if (i == 4) {
+                button = new JButton("Pennsylvania Railroad");
+                button.setLocation(30, 233);
+            } else if (i == 5) {
+                button = new JButton("Virginia Avenue");
+                button.setLocation(30, 267);
+            } else if (i == 6) {
+                button = new JButton("States Avenue");
+                button.setLocation(30, 301);
+            } else if (i == 7) {
+                button = new JButton("Electric Company");
+                button.setLocation(30, 335);
+            } else if (i == 8) {
+                button = new JButton("St. Charles Place");
+                button.setLocation(30, 369);
+            } else if (i == 9) {
+                button = new JButton("Pacific Avenue");
+                button.setLocation(396, 97);
+            } else if (i == 10) {
+                button = new JButton("North Carolina Avenue");
+                button.setLocation(396, 131);
+            } else if (i == 11) {
+                button = new JButton("Pennsylvania Avenue");
+                button.setLocation(396, 199);
+            } else if (i == 12) {
+                button = new JButton("Short Line");
+                button.setLocation(396, 233);
+            } else if (i == 13) {
+                button = new JButton("Park Place");
+                button.setLocation(396, 302);
+            } else if (i == 14) {
+                button = new JButton("Boardwalk");
+                button.setLocation(396, 370);
+            }
+            button.setSize(59, 36);
+            button.setOpaque(false);
+            button.setContentAreaFilled(false);
+            button.setBorderPainted(false);
+            button.addActionListener(this);
+            add(button);
+        }
+    }
+
+    /** Takes care of mortgage pop up buttons */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Exit")) {
+            _popUpFrame.dispose();
+        } else {
+            _popUpFrame = new JFrame("Property Attributes");
+            PropertyAttributePanel propertyPanel = new PropertyAttributePanel(e.getActionCommand(), this);
+            propertyPanel.setBounds(0, 0, 350, 325);
+            _popUpFrame.add(propertyPanel);
+            _popUpFrame.setLayout(null);
+            _popUpFrame.setSize(350, 325);
+            _popUpFrame.setResizable(false);
+            _popUpFrame.setLocation(213, 200);
+            _popUpFrame.setVisible(true);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+

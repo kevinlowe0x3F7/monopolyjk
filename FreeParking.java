@@ -6,8 +6,8 @@ public class FreeParking implements BoardPiece {
     private final String _name = "Free Parking";
     
     @Override
-    public void effect(Player current) {
-        return;
+    public boolean effect(Player current) {
+        return true;
     }
 
     @Override

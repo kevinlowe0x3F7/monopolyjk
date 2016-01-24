@@ -16,27 +16,27 @@ public class Street extends Property {
     private final int _buildCost;
 
     public Street(String name, String group, int price, int set,
-            int[] rent, int mortgage, int buildCost) {
-        super(name, group, price, set, mortgage);
+            int[] rent, int mortgage, int buildCost, int x, int y, String pos) {
+        super(name, group, price, set, mortgage, x, y, pos);
         _houses = 0;
         _rent = rent;
         _buildCost = buildCost;
     }
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         if (isMortgaged()) {
-            return;
+            return false;
         }
 
         if (current.getID() == owner().getID()) {
-            return;
+            return false;
         } else {
             int rent = getRent(owner(), current);
             current.loseMoney(rent);
             owner().gainMoney(rent);
+            return true;
         }
-        return;
     }
 
     @Override

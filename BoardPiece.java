@@ -9,7 +9,7 @@ public interface BoardPiece {
      *  @param turn the index of the current player
      */
 
-    public void effect(Player player);
+    public boolean effect(Player player);
 
     /** Returns the name of this piece. */
     public String name();

@@ -7,7 +7,7 @@ public class GoToJail implements BoardPiece {
     private final String _name = "Go to Jail";
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         current.inJail(true);
         current.jumpPlayer("Jail");
         String line = "Player " + current.getID() + " has been sent" +
@@ -17,6 +17,7 @@ public class GoToJail implements BoardPiece {
             current.game().nextPlayer();
             current.game().gui().panel().buttons().roll().setText("Roll Dice");
         }
+        return true;
     }
 
     @Override

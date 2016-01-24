@@ -256,8 +256,7 @@ public class Player {
                 protected void done() {
                     String landed = resolveLanding();
                     if (landed.equals("Buying/Auctioning Property")) {
-                        //buyPropertyPopUp();
-                        buyProperty((Property) _location.piece());
+                        _monopoly.gui().buyPropertyPopUp(_location.piece().name());
                     }
                     if (landed.length() != 0 && (!landed.equals(
                                     "Buying/Auctioning Property"))) {
@@ -357,7 +356,7 @@ public class Player {
                         if (landedPiece.isOwned()) {
                             landedPiece.specialEffect(Player.this);
                         } else {
-                            buyProperty(landedPiece);
+                            _monopoly.gui().buyPropertyPopUp(_location.piece().name());
                         }
                     } else {
                         while (!(_location.piece() instanceof Utility)) {
@@ -373,7 +372,7 @@ public class Player {
                             landedPiece.specialEffect(Player.this,
                                     rollDice(), rollDice());
                         } else {
-                            buyProperty(landedPiece);
+                            _monopoly.gui().buyPropertyPopUp(_location.piece().name());
                         }
                     }
                     return null;
@@ -401,7 +400,7 @@ public class Player {
                 if (landedPiece.isOwned()) {
                     landedPiece.specialEffect(this);
                 } else {
-                    buyProperty(landedPiece);
+                    _monopoly.gui().buyPropertyPopUp(_location.piece().name());
                 }
             } else {
                 while (!(_location.piece() instanceof Utility)) {
@@ -414,7 +413,7 @@ public class Player {
                 if (landedPiece.isOwned()) {
                     landedPiece.specialEffect(this, rollDice(), rollDice());
                 } else {
-                    buyProperty(landedPiece);
+                    _monopoly.gui().buyPropertyPopUp(_location.piece().name());
                 }
             }
         }
@@ -602,12 +601,12 @@ public class Player {
                 if (property.owner().equals(this)) {
                     return "";
                 }
-                property.effect(this);
-                return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
+                if (property.effect(this)) {
+                    return "Player " + _id + " pays $" + property.getRent(this, property.owner()) 
                     + " to Player " + property.owner().getID();
-            } else {
-                return "Buying/Auctioning Property";
+                }
             }
+        return "Buying/Auctioning Property";
         } else {
             _location.piece().effect(this);
             return "Landed on " + _location.piece().name();
@@ -616,15 +615,15 @@ public class Player {
 
     /** Mortgage a given PROPERTY, gaining money to the player equal
      *  to the mortgage value of the property. */
-    public void mortgageProperty(Property property) {
-        property.mortgage(this);
-    }
+    // public void mortgageProperty(Property property) {
+    //     property.mortgage(this);
+    // }
 
-    /** Unmortgage a given PROPERTY, requiring the player to pay the
+    /* Unmortgage a given PROPERTY, requiring the player to pay the
      *  mortgage value plus a 10% interest rate. */
-    public void unmortgageProperty(Property property) {
-        property.unmortgage(this);
-    }
+    // public void unmortgageProperty(Property property) {
+    //     property.unmortgage(this);
+    // }
 
     /** Draws a Chance Card */
     public void drawChance() {
