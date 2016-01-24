@@ -30,6 +30,10 @@ public class BoardPanel extends JPanel {
     private static final int ARC = 1;
     /** Radius of the player marker circle. */
     private static final int RADIUS = 10;
+    /** Width and height of the house squares. */
+    private static final int HOUSE = 6;
+    /** Width of a hotel. */
+    private static final int HOTEL = 20;
     /** HashMap containing all of the property locations based on the
      *  X and Y coordinates from boardlocs.txt. */
     private HashMap<String, Location> _locations;
@@ -131,6 +135,23 @@ public class BoardPanel extends JPanel {
                             g.setFont(font);
                             g.drawString("M", loc.x + (SHORT / 4),
                                     loc.y + (LONG / 2) + 15);
+                        }
+                        if (p instanceof Street) {
+                            g.setColor(Color.WHITE);
+                            int increment = 8;
+                            Street street = (Street) p;
+                            int x1 = loc.x + 2;
+                            int y1 = loc.y + 2;
+                            int houses = street.getHouses();
+                            if (street.getHouses() < 5) {
+                                for (int j = 0; j < houses; j++) {
+                                    g.fillRect(x1, y1, HOUSE, HOUSE + 3);
+                                    x1 += increment;
+                                }
+                            } else {
+                                g.fillRect(loc.x + 7, loc.y + 2,
+                                        HOTEL, HOUSE + 3);
+                            }
                         }
                     }
                 }

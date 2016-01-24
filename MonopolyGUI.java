@@ -26,6 +26,22 @@ public class MonopolyGUI implements ActionListener {
         _game = new Monopoly(players, this);
         _panel = new MainPanel(_game, this);
         _panel.setBounds(0, 0, 800, 650);
+        Player one = _game.players()[1];
+        one.setLocation(_game.board().next());
+        Property med = (Property) one.location().piece();
+        one.buyProperty(med);
+        one.setLocation(_game.board().next().next().next());
+        Property baltic = (Property) one.location().piece();
+        one.buyProperty(baltic);
+        one.upgradeProperty(med);
+        one.upgradeProperty(baltic);
+        one.upgradeProperty(med);
+        one.upgradeProperty(baltic);
+        one.upgradeProperty(med);
+        one.upgradeProperty(baltic);
+        one.upgradeProperty(med);
+        one.upgradeProperty(baltic);
+        one.upgradeProperty(med);
         
         _frame = new JFrame("Monopoly");
         _frame.setLayout(null);
