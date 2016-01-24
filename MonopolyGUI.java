@@ -85,7 +85,7 @@ public class MonopolyGUI implements ActionListener {
                 break;
 
             case "Trade":
-                tradePopUp();
+                JOptionPane.showMessageDialog(null, "Will Come Soon");
                 break;
 
             case "Buy":
@@ -273,16 +273,19 @@ public class MonopolyGUI implements ActionListener {
 
     /** Handles the pop up for when the player is in Jail */
     private String jailedPopUp(Player current) {
-        if (current.jailFree()) {
-            Object[] possibleChoices = {"Pay $50", "Roll Dice", "Use Get out of Jail Free Card"}; 
-         }
+        Object[] possibleChoicesFree = {"Pay $50", "Roll Dice", "Use Get out of Jail Free Card"}; 
         Object[] possibleChoices = {"Pay $50", "Roll Dice"}; 
 
         String question = "You have " + current.jailedTurns() + " turns in Jail\n" 
             + "Choose one of the following\n";
-
-        int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
-            JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices, null);
+        int selectedValue;
+        if (current.jailFree()) {
+            selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoicesFree, null);
+        } else {
+            selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices, null);
+        }
 
         // Pay $50
         if (selectedValue == 0) {
@@ -332,7 +335,22 @@ public class MonopolyGUI implements ActionListener {
 
     /** Handles the case when trade is pressed */
     private void tradePopUp() {
-        //TODO
+        // Object[] possibleChoices2 = {"Player 2", "Player 1"};
+        // Object[] possibleChoices3 = {"Player 3", "Player 2", "Player 1"}; 
+        // Object[] possibleChoices4 = {"Player 4", "Player 3", "Player 2", "Player 1"}; 
+        // int numPlayers = _game.getNumPlayers();
+        // String question = "Which Player do you want to trade with";
+
+        // if (numPlayers == 2) {
+        //     int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
+        //         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices2, null);
+        // } else if (numPlayers == 3) {
+        //      int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
+        //         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices3, null);
+        // } else {
+        //     int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
+        //         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices4, null);
+        // }
     }
 
     /** Case when about is pressed */
@@ -342,7 +360,6 @@ public class MonopolyGUI implements ActionListener {
 
     /** Case when you upgrade property */
     private void houses() {
-        //TODO
         _popUpFrame = new JFrame("Upgrading/Selling Houses");
         _housePanel = new HousePanel(this, _game);
         _housePanel.setBounds(0, 0, 800, 650);

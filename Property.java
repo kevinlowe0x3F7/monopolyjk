@@ -186,4 +186,10 @@ public abstract class Property implements BoardPiece {
     public void setOwner(Player owner) {
         _owner = owner;
     } 
+
+    /** Returns the number of houses on this property. Streets will
+     *  override this method. */
+    public int getHouses() {
+        return 0;
+    }
 }
