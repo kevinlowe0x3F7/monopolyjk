@@ -27,6 +27,9 @@ public class MonopolyGUI implements ActionListener {
     /** Mortgage Property Pop Up Panel */
     private MortgagePropertyPanel _mortPanel;
 
+    /** Upgrading and Selling House Pop up Panel */
+    private HousePanel _housePanel;
+
     /** Initializes the panels and buttons. */
     public MonopolyGUI(int players) {
         _game = new Monopoly(players, this);
@@ -64,8 +67,6 @@ public class MonopolyGUI implements ActionListener {
                 System.exit(0);
                 break;
             case "About":
-                //Pop up window and credits
-                //aboutPopUp();
                 buyPropertyPopUp("Mediterranean Avenue");
                 break;
             case "Roll Dice":
@@ -77,15 +78,13 @@ public class MonopolyGUI implements ActionListener {
                 }
                 break;
             case "Mortgage":
-                // Pop up Window
                 mortgagePopUp();
                 break;
             case "Buy/Sell Houses":
-                // Pop up Window for Buy/Sell Houses 
+                houses();
                 break;
 
             case "Trade":
-                // Pop up window for trading
                 tradePopUp();
                 break;
 
@@ -111,6 +110,7 @@ public class MonopolyGUI implements ActionListener {
                     _panel.status().addLine("Mortgaged/Unmortgaged " + _mortPanel.property().name());
                     _panel.status().repaint();
                     _panel.board().repaint();
+                    _panel.players().repaint();
                 }
                 _popUpFrame.dispose();
                 break;
@@ -119,6 +119,18 @@ public class MonopolyGUI implements ActionListener {
                 _popUpFrame.dispose();
                 break;
 
+            case "Upgrade House":
+                if (_housePanel.property() != null) {
+                    _game.current().upgradeProperty(_housePanel.property());
+                }
+                break;
+
+
+            case "Sell House": 
+                if (_housePanel.property() != null) {
+                    _game.current().sellHouse(_housePanel.property());
+                }
+                break;
             case "End Turn":
                 endTurn();
                 break;
@@ -332,10 +344,10 @@ public class MonopolyGUI implements ActionListener {
     private void houses() {
         //TODO
         _popUpFrame = new JFrame("Upgrading/Selling Houses");
-        HousePanel housePanel = new HousePanel(this, _game);
-        housePanel.setBounds(0, 0, 800, 650);
+        _housePanel = new HousePanel(this, _game);
+        _housePanel.setBounds(0, 0, 800, 650);
         _popUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        _popUpFrame.add(housePanel);
+        _popUpFrame.add(_housePanel);
         _popUpFrame.setLayout(null);
         _popUpFrame.setSize(800, 650);
         _popUpFrame.setResizable(false);
