@@ -6,8 +6,9 @@ public class GoPiece implements BoardPiece {
     private final String _name = "Go";
 
     @Override
-    public void effect(Player current) {
+    public boolean effect(Player current) {
         current.gainMoney(200);
+        return true;
     }
 
     @Override

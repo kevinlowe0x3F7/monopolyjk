@@ -303,7 +303,6 @@ public class Player {
                 protected void done() {
                     String landed = resolveLanding();
                     if (landed.equals("Buying/Auctioning Property")) {
-                        // TODO modify once popup is done
                         _monopoly.gui().buyPropertyPopUp(_location.piece().name());
                     }
                     if (landed.length() != 0 && (!landed.equals(

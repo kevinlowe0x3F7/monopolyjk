@@ -88,6 +88,7 @@ public class MonopolyGUI implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Will Come Soon");
                 break;
 
+
             case "Buy":
                 _game.current().buyProperty((Property)_game.current().location().piece());
                 _panel.status().addLine("Player "+ _game.current().getID() + " bought " 
@@ -321,7 +322,6 @@ public class MonopolyGUI implements ActionListener {
 
     /** Handles the case when mortgage is pressed */
     private void mortgagePopUp() {
-        //TODO
         _popUpFrame = new JFrame("Mortgaging Property");
         _mortPanel = new MortgagePropertyPanel(this, _game);
         _popUpFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -348,7 +348,7 @@ public class MonopolyGUI implements ActionListener {
         //      int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
         //         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices3, null);
         // } else {
-        //     int selectedValue = (int) JOptionPane.showOptionDialog(null, question, "In Jail",
+        //     int selectedValue = (int) JOptionPane.showOptionDialog(null, quesstion, "In Jail",
         //         JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleChoices4, null);
         // }
     }
